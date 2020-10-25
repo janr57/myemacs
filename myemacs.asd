@@ -18,8 +18,9 @@
                "rove")
   :components ((:module "tests"
                 :components
-			((:file "main"
-				:depends-on ("packages")))))
+		((:file "packages")
+		 (:file "main"
+		  :depends-on ("packages")))))
   :description "Test system for myemacs"
   :perform (test-op (op c) (symbol-call :rove :run c)))
 
