@@ -1,13 +1,20 @@
 ;;;; main.lisp
 ;;;; Allows the user to run 'myemacs' in three different ways:
-;;;; - run in 'SBCL' or 'Clozure Common Lisp' REPLs.
-;;;; - built as an 'SBCL' or 'Clozure Common Lisp' standalone executable file.
-;;;; - run as a script using 'SBCL'.
+;;;; 1) Run in 'SBCL' or 'Clozure Common Lisp' REPLs.
+;;;;    (ql:quickload :myemacs)
+;;;;    (in-package :myemacs)
+;;;;    (myemacs)
+;;;; 2) Built as an 'SBCL' or 'Clozure Common Lisp' standalone executable file:
+;;;;    $ cd ~/quicklisp/local-project/myemacs
+;;;;    $ make myemacs_sbcl     or     $ make myemacs_ccl
+;;;;    $ ./myemacs_sbcl        or     $ ./myemacs_ccl 
+;;;; 3) Run as a script using 'SBCL' or 'Clozure Common Lisp' (not working yet...)
+;;;;    $ sbcl --load "<script-file>"
 ;;;;
 ;;;; The 'myemacs' program keeps track of different configurations of 'emacs'.
 ;;;; The user can change between them.
 ;;;;
-;;;; Copyright (c) 2020 - José A. Navarro Ramón <josea.navarro1@gmail.com>
+;;;; Copyright (c) 2020 - José A. Navarro Ramón <janr.devel@gmail.com>
 ;;;; License: BSD 3-Clause
 
 ;;; Declaration specifier at compile time (unmark only one of them):
@@ -30,8 +37,6 @@
 ;;; ********************* AUXILIARY FUNCTIONS **************************
 ;;; ********
 
-
-
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; ************************************************************************************************
@@ -45,6 +50,7 @@
 ;;;          is based on symbols.
 ;;; (EXPORTED FUNCTION)
 (defun main (&optional (largs nil) (exec-type nil))
+  (format t "(main) largs -> ~a~%" largs)
   (format t "(main) exec-type -> ~a~%" exec-type))
 
 ;;; ********************
@@ -53,13 +59,19 @@
   `(main (quote ,largs-repl) :repl))
 
 ;;; ********************
+;;; EXECUTABLE PROGRAM
 ;;; Entry point of 'myemacs' as a standalone executable program.
+;;; The 'myemacs_sbcl' or 'myemacs_ccl' executables can be obtained:
+;;; $ cd ~/quicklisp/local-projects/myemacs
+;;; $ make myemacs_sbcl or $ make myemacs_ccl
+;;; $ ./myemacs_sbcl or $ ./myemacs_ccl
 ;;; (EXPORTED FUNCTION)
 (defun myemacs-standalone ()
   (let ((lterminal-args nil))
     (funcall #'main lterminal-args :standalone)))
 
 ;;; ********************
+;;; SCRIPT FILE (not working yet...)
 ;;; Entry point of 'myemacs' as a standalone executable program.
 ;;; (EXPORTED FUNCTION)
   (defun myemacs-script ()
