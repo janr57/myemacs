@@ -1,0 +1,17 @@
+# Myemacs
+
+## Usage
+
+## Installation
+
+## Author
+
+* José A. Navarro Ramón (janr.devel@gmail.com)
+
+## Copyright
+
+Copyright (c) 2020 José A. Navarro Ramón (janr.devel@gmail.com)
+
+## License
+
+Licensed under the BSD 3-Clause License.
