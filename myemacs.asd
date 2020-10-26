@@ -25,7 +25,7 @@
 			 (:file "lang"
 			  :depends-on ("packages" "globals"))
 			 (:file "main"
-			  :depends-on ("packages")))))
+			  :depends-on ("packages" "lang")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -70,7 +70,7 @@
 			  :depends-on ("packages"
 				       "globals"))
 			 (:file "main"
-			  :depends-on ("packages"))))))
+			  :depends-on ("packages" "lang"))))))
 
 
 

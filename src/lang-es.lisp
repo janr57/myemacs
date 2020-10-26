@@ -26,6 +26,7 @@
 (defun msginfo-execution-mode-es (exec-mode &optional (stream t))
   (format stream "El modo de ejecución es: ~a~%" exec-mode))
 
+
 ;;; ******************** CADENAS DE TEXTO
 
 

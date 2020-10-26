@@ -48,4 +48,10 @@
     (alexandria:symbolicate func-prefix "-" *language*)
    :myemacs)))
 
+(defmacro defun-this (fname param-list &body body)
+  `(setf (fdefinition (alexandria:ensure-symbol ',fname :myemacs))
+         (lambda ,param-list
+           (funcall (lambda (this-fn) ,@body) ',fname))))
+
+
 ;;; ********

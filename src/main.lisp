@@ -35,15 +35,22 @@
 ;;; ********
 ;;; Test message.
 ;;; (Runs the appropriate language-aware function)
-(defun msginfo-argument-list (largs &optional (stream t))
-  (funcall
-   (lang-aware-function 'msginfo-argument-list) largs stream))
+;;(defun msginfo-argument-list (largs &optional (stream t))
+;;  (funcall
+;;   (lang-aware-function 'msginfo-argument-list) largs stream))
 
 ;;; Test message.
 ;;; (Runs the appropriate language-aware function)
-(defun msginfo-execution-mode (exec-mode &optional (stream t))
-  (funcall
-   (lang-aware-function 'msginfo-execution-mode) exec-mode stream))
+;;(defun msginfo-execution-mode (exec-mode &optional (stream t))
+;;  (funcall
+;;   (lang-aware-function 'msginfo-execution-mode) exec-mode stream))
+
+(defun-this msginfo-argument-list (largs &optional (stream t))
+  (funcall (lang-aware-function this-fn) largs stream))
+
+(defun-this msginfo-execution-mode (exec-mode &optional (stream t))
+  (funcall (lang-aware-function this-fn) exec-mode stream))
+
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
 ;;; ********
@@ -60,6 +67,7 @@
 ;;;              ('NIL' in case it was 'main' itself).
 ;;; Returns:
 ;;; 'T' or 'NIL' if run without o with errors.
+
 (defun main (&optional (largs nil) (exec-mode nil))
   (msginfo-argument-list largs)
   (msginfo-execution-mode exec-mode))
