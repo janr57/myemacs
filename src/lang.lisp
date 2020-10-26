@@ -46,12 +46,18 @@
   (symbol-function 
    (alexandria:ensure-symbol
     (alexandria:symbolicate func-prefix "-" *language*)
-   :myemacs)))
+    :myemacs)))
 
+;;; MACRO which provides introspection to the
 (defmacro defun-this (fname param-list &body body)
   `(setf (fdefinition (alexandria:ensure-symbol ',fname :myemacs))
          (lambda ,param-list
            (funcall (lambda (this-fn) ,@body) ',fname))))
+
+(defmacro msg-lang (fname param-list &body body)
+  `(funcall (lang-aware-function ,fname) ,param-list))
+
+
 
 
 ;;; ********

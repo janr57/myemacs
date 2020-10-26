@@ -45,11 +45,17 @@
 ;;  (funcall
 ;;   (lang-aware-function 'msginfo-execution-mode) exec-mode stream))
 
+;;(defun-this msginfo-argument-list (largs &optional (stream t))
+;;  (funcall (lang-aware-function this-fn) largs stream))
+;;
+;;(defun-this msginfo-execution-mode (exec-mode &optional (stream t))
+;;  (funcall (lang-aware-function this-fn) exec-mode stream))
+
 (defun-this msginfo-argument-list (largs &optional (stream t))
-  (funcall (lang-aware-function this-fn) largs stream))
+  (msg-lang this-fn largs))
 
 (defun-this msginfo-execution-mode (exec-mode &optional (stream t))
-  (funcall (lang-aware-function this-fn) exec-mode stream))
+  (msg-lang this-fn exec-mode))
 
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
