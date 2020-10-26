@@ -17,7 +17,7 @@
 
 ;;; ******************** MENSAJES DE ERROR
 (defun err-do-not-run-program-with-main-es (&optional (stream t))
-  (format stream "Error, se debe teclear (myemacs ...) para ejecutar el programa."))
+  (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)"))
 
 (defun err-unsupported-exec-mode-es (exec-mode &optional (stream t))
   (format stream "Error, modo de ejecución no reconocido :~a" exec-mode))
