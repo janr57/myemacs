@@ -33,49 +33,75 @@
 
 ;;; ******************** INFO MESSAGES
 ;;; ********
+;;; Test message.
+;;; (Runs the appropriate language-aware function)
+(defun msginfo-argument-list (largs &optional (stream t))
+  (funcall
+   (lang-aware-function 'msginfo-argument-list) largs stream))
+
+;;; Test message.
+;;; (Runs the appropriate language-aware function)
+(defun msginfo-execution-mode (exec-mode &optional (stream t))
+  (funcall
+   (lang-aware-function 'msginfo-execution-mode) exec-mode stream))
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
 ;;; ********
 
+
+;;; ******************** MAIN FUNCTION *********************************
+;;; All different forms of running the program (:repl, :standalone or :script) converge here.
+;;; Arguments:
+;;; 'largs': Argument list coming from :standalone, :script or :repl.
+;;;          When coming from :standalone or :script it is a list of strings, otherwise it
+;;;          is based on symbols (keywords and plain symbols).
+;;; 'exec-mode': The execution mode, which may be ':standalone', ':script', ':repl' or 'NIL',
+;;;              depending on the function which called 'main'
+;;;              ('NIL' in case it was 'main' itself).
+;;; Returns:
+;;; 'T' or 'NIL' if run without o with errors.
+(defun main (&optional (largs nil) (exec-mode nil))
+  (msginfo-argument-list largs)
+  (msginfo-execution-mode exec-mode))
+
+;;; ********
+  
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; ************************************************************************************************
 
-;;; ********************
-;;; Entry point when run through the REPL.
-;;; All different forms of running the program (:repl, :standalone or :script) converge here.
-;;; Arguments:
-;;; 'largs': Argument list coming from :standalone, :script or :repl.
-;;;          When coming from :standalone or :script it is based on strings, otherwise it
-;;;          is based on symbols.
-;;; (EXPORTED FUNCTION)
-(defun main (&optional (largs nil) (exec-type nil))
-  (format t "(main) largs -> ~a~%" largs)
-  (format t "(main) exec-type -> ~a~%" exec-type))
-
-;;; ********************
 ;;; Macro which is the main entry point from the REPL
-(defmacro myemacs (&rest largs-repl)
-  `(main (quote ,largs-repl) :repl))
+;;; It's purpose is to allow a syntax like e.g.:
+;;; (myemacs :use config) instead of (myemacs '(:use config))
+;;; Parameters:
+;;; 'lrepl-args': argument list, which consistes of a list of symbols, which may be:
+;;;                - keywords, representing commands
+;;;                - plain symbols, representing options for the commands
+;;; It passes to 'main', this argument list and the execution mode :repl
+(defmacro myemacs (&rest lrepl-args)
+  `(main (quote ,lrepl-args) :repl))
 
-;;; ********************
 ;;; EXECUTABLE PROGRAM
 ;;; Entry point of 'myemacs' as a standalone executable program.
 ;;; The 'myemacs_sbcl' or 'myemacs_ccl' executables can be obtained:
 ;;; $ cd ~/quicklisp/local-projects/myemacs
 ;;; $ make myemacs_sbcl or $ make myemacs_ccl
 ;;; $ ./myemacs_sbcl or $ ./myemacs_ccl
+;;; Returns:
+;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
 (defun myemacs-standalone ()
   (let ((lterminal-args nil))
-    (funcall #'main lterminal-args :standalone)))
+    (if (funcall #'main lterminal-args :standalone) 0 1)))
 
-;;; ********************
 ;;; SCRIPT FILE (not working yet...)
 ;;; Entry point of 'myemacs' as a standalone executable program.
+;;; Returns:
+;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
   (defun myemacs-script ()
     (let ((lterminal-args nil))
-    (funcall #'main lterminal-args :script)))
+    (if (funcall #'main lterminal-args :script) 0 1)))
+
 ;;; ********
 
