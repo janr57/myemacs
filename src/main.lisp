@@ -35,6 +35,16 @@
 ;;; ********
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
+(defun approve-exec-mode (exec-mode)
+  (setf (gethash 'exec-mode *data*) exec-mode)
+  (let ((supported-exec-mode (member exec-mode *supported-exec-modes*)))
+    (cond
+      ((null exec-mode)
+       (values nil (msg (err-do-not-run-program-with-main nil))))
+      ((null supported-exec-mode)
+       (values nil (msg (err-unsupported-exec-mode exec-mode nil))))
+      (t (values t nil)))))
+    
 ;;; ********
 
 
@@ -51,12 +61,25 @@
 ;;; 'T' or 'NIL' if run without o with errors.
 
 (defun main (&optional (largs nil) (exec-mode nil))
-  (msg (info-argument-list largs))
-  (terpri)
-  (msg (info-execution-mode exec-mode)))
-
-  ;;(msginfo-argument-list largs)
-  ;;(msginfo-execution-mode exec-mode))
+  (multiple-value-bind (supported-exec-mode str-unsupported-exec-mode)
+      (approve-exec-mode exec-mode)
+    (multiple-value-bind (supported-os-type str-unsupported-os-type)
+	(approve-os)
+      ;; Print the appropriate message
+      (cond
+	((null supported-exec-mode)
+	 (format t "~a~%" str-unsupported-exec-mode))
+	((null supported-os-type)
+	 (format t "~a~%" str-unsupported-os-type))
+	(t (format t "OK!~%")))
+      ;;
+      (if (null supported-os-type)
+	  nil t))))
+  
+  
+;;  (msg (info-argument-list largs))
+;;  (terpri)
+;;  (msg (info-execution-mode exec-mode))
 
 ;;; ********
   

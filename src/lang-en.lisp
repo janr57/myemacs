@@ -16,6 +16,14 @@
 (in-package :myemacs)
 
 ;;; ******************** ERROR MESSAGES
+(defun err-do-not-run-program-with-main-en (&optional (stream t))
+  (format stream "Error, type (myemacs ...) to run the program, please."))
+
+(defun err-unsupported-exec-mode-en (exec-mode &optional (stream t))
+  (format stream "Error, unsupported exec-mode :~a" exec-mode))
+
+(defun err-unsupported-os-type-en (os-type-name &optional (stream t))
+  (format stream "Error, unsupported OS ~a" os-type-name))
 
 ;;; ******************** WARNING MESSAGES
 

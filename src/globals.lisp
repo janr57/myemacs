@@ -21,3 +21,13 @@
 (defparameter *args-language* nil)
 (defparameter *language* *default-language*)
 
+;;; Supported characteristics
+(defparameter *supported-exec-modes* '(:repl :standalone :script))
+(defparameter *supported-os-types* '(:unix))
+
+;;; HASH-TABLE *data*
+;;; 'exec-mode
+;;; 'os-type
+;;; 'os-type-name
+;;; 'os
+(defparameter *data* (make-hash-table))

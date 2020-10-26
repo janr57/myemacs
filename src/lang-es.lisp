@@ -16,6 +16,14 @@
 (in-package :myemacs)
 
 ;;; ******************** MENSAJES DE ERROR
+(defun err-do-not-run-program-with-main-es (&optional (stream t))
+  (format stream "Error, se debe teclear (myemacs ...) para ejecutar el programa."))
+
+(defun err-unsupported-exec-mode-es (exec-mode &optional (stream t))
+  (format stream "Error, modo de ejecución no reconocido :~a" exec-mode))
+
+(defun err-unsupported-os-type-es (os-type-name &optional (stream t))
+  (format stream "Error, sistema operativo ~a no soportado." os-type-name))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
 

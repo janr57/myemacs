@@ -15,17 +15,19 @@
   :depends-on ("alexandria")
   :components ((:module "src"
                 :components
-			((:file "packages")
-			 (:file "globals"
-			  :depends-on ("packages"))
-			 (:file "lang-en"
-			  :depends-on ("packages"))
-			 (:file "lang-es"
-			  :depends-on ("packages"))
-			 (:file "lang"
-			  :depends-on ("packages" "globals"))
-			 (:file "main"
-			  :depends-on ("packages" "lang")))))
+		((:file "packages")
+		 (:file "globals"
+		  :depends-on ("packages"))
+		 (:file "lang-en"
+		  :depends-on ("packages"))
+		 (:file "lang-es"
+		  :depends-on ("packages"))
+		 (:file "lang"
+		  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+		 (:file "os"
+		       :depends-on ("packages" "globals" "lang"))
+		 (:file "main"
+		  :depends-on ("packages" "globals" "lang")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -45,9 +47,11 @@
 			 (:file "lang-es"
 			  :depends-on ("packages"))
 			 (:file "lang"
-			  :depends-on ("packages" "globals"))
+			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+			 (:file "os"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "main"
-			  :depends-on ("packages" "lang")))))
+			  :depends-on ("packages" "globals" "lang")))))
   :description "Test system for myemacs"
   :perform (test-op (op c) (symbol-call :rove :run c)))
 
@@ -67,10 +71,11 @@
 			 (:file "lang-es"
 			  :depends-on ("packages"))
 			 (:file "lang"
-			  :depends-on ("packages"
-				       "globals"))
+			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+			 (:file "os"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "main"
-			  :depends-on ("packages" "lang"))))))
+			  :depends-on ("packages" "globals" "lang"))))))
 
 
 
