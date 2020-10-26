@@ -48,9 +48,9 @@
     (alexandria:symbolicate func-prefix "-" *language*)
     :myemacs)))
 
-(defmacro lang-aware (fname param-list)
+(defmacro msg ((fname &rest param-list))
   `(let ((laf (lang-aware-function ',fname)))
-    (setf (fdefinition (alexandria:ensure-symbol ',fname :myemacs)) laf)
-     (funcall laf ,param-list)))
+     (setf (fdefinition (alexandria:ensure-symbol ',fname :myemacs)) laf)
+     (funcall laf ,@param-list)))
 
 ;;; ********

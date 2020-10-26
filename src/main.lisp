@@ -51,8 +51,9 @@
 ;;; 'T' or 'NIL' if run without o with errors.
 
 (defun main (&optional (largs nil) (exec-mode nil))
-  (lang-aware msginfo-argument-list largs)
-  (lang-aware msginfo-execution-mode exec-mode))
+  (msg (info-argument-list largs))
+  (terpri)
+  (msg (info-execution-mode exec-mode)))
 
   ;;(msginfo-argument-list largs)
   ;;(msginfo-execution-mode exec-mode))

@@ -20,11 +20,11 @@
 ;;; ******************** WARNING MESSAGES
 
 ;;; ******************** INFO MESSAGES
-(defun msginfo-argument-list-en (largs &optional (stream t))
-  (format stream "The argument list is: ~a~%" largs))
+(defun info-argument-list-en (largs &optional (stream t))
+  (format stream "The argument list is: ~a" largs))
 
-(defun msginfo-execution-mode-en (exec-mode &optional (stream t))
-  (format stream "The execution mode is: ~a~%" exec-mode))
+(defun info-execution-mode-en (exec-mode &optional (stream t))
+  (format stream "The execution mode is :~a" exec-mode))
 
 
 ;;; ******************** TEXT STRINGS

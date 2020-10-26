@@ -20,11 +20,11 @@
 ;;; ******************** MENSAJES DE ADVERTENCIA
 
 ;;; ******************** MENSAJES DE INFORMACIÓN
-(defun msginfo-argument-list-es (largs &optional (stream t))
-  (format stream "La lista de argumentos es: ~a~%" largs))
+(defun info-argument-list-es (largs &optional (stream t))
+  (format stream "La lista de argumentos es: ~a" largs))
 
-(defun msginfo-execution-mode-es (exec-mode &optional (stream t))
-  (format stream "El modo de ejecución es: ~a~%" exec-mode))
+(defun info-execution-mode-es (exec-mode &optional (stream t))
+  (format stream "El modo de ejecución es: ~a" exec-mode))
 
 
 ;;; ******************** CADENAS DE TEXTO
