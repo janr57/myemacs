@@ -95,7 +95,7 @@
 ;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
 (defun myemacs-standalone ()
-  (let ((terminal-args nil))
+  (let ((terminal-args (cdr (get-lisp-arglist))))
     (if (funcall #'main terminal-args :standalone) 0 1)))
 
 ;;; SCRIPT FILE (not working yet...)
@@ -104,7 +104,7 @@
 ;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
   (defun myemacs-script ()
-    (let ((terminal-args nil))
+    (let ((terminal-args (cdr (get-lisp-arglist))))
     (if (funcall #'main terminal-args :script) 0 1)))
 
 ;;; ********

@@ -18,7 +18,14 @@ target1 = $(sysname)_sbcl
 target2 = $(sysname)_ccl
 
 FILES = src/packages.lisp \
-	src/main.lisp
+		src/globals.lisp \
+		src/lang-en.lisp \
+		src/lang-es.lisp \
+		src/lang.lisp \
+		src/os.lisp \
+		src/cl.lisp \
+		src/args.lisp \
+		src/main.lisp
 
 all: $(target1) $(target2)
 

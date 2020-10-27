@@ -29,6 +29,97 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
+
+;;; ------------------------------------------------ 
+;;; *** ARGS IN STRING FORM ***
+;;; Auxiliary functions needed by 'myemacs-standalone' and 'myemacs-script'.
+
+;;; Detects if the argument is a string-command.
+;;; String-command arguments are strings beginning with a colon symbol ':',
+;;; e.g.: ":save", ":help", ...
+;;; Parameters:
+;;; 'strarg': A string element.
+;;; Returns:
+;;; 'T' if the string-argument is a string-command. Otherwise 'NIL'.
+(defun str-command-p (strarg)
+  (cond
+    ((or (null strarg)
+         (not (stringp strarg))) nil)
+    ((char-equal (char strarg 0) #\:) t)))
+
+;;; Finds a string-command within the list.
+;;; Parameters:
+;;; 'srtargs': list of string-arguments.
+;;; Returns:
+;;; If found a string-command, returns a list from the newly found command to the end of the list.
+;;; Otherwise 'NIL'.
+(defun find-str-command (strargs)
+  (member-if #'str-command-p strargs))
+
+;;; Finds a string-command within the list beginning with the second element
+;;; Parameters:
+;;; 'srtargs': list of string-arguments, beginning preferably, with a string-command.
+;;; Returns:
+;;; If found a string-command, returns a list from the newly found command to the end of the list.
+;;; Otherwise 'NIL'.
+(defun find-next-str-command (strargs)
+  (find-str-command (cdr strargs)))
+
+;;; Finds the list of string-argument-values corresponding to the first element which
+;;; must be a string-command.
+;;; Parameters:
+;;; 'strargs': A list of string arguments beginning, preferably with a string-command.
+;;; Returns:
+;;; A list consistin on all contiguous string-values associated to the string-command.
+;;; 'NIL' otherwise.
+(defun find-str-argvalue-list-from-command (strargs)
+  (loop for str in (cdr strargs) until (str-command-p str) collect str))
+
+;;; Turns a list of strings into a list of keywords
+;;; Parameters:
+;;; 'lstr': A list of strings
+;;; Returns:
+;;; A list of keywords
+(defun string-list-to-standard-list (strargs)
+  (mapcar (lambda (x) (intern x "KEYWORD"))
+	  (mapcar #'string-upcase (remove-char-from-strlst #\: strargs))))
+
+;;; Turns the simplified TERMINAL arguments (list of strings) into a string based
+;;; fake-standard list, consisting in a standard-like list of lists structure but with
+;;; string-colon-commands and string-values in the list.
+(defun strargs-from-str-to-str-fake-standard (strargs)
+  (cond
+    ;; ;; 1) End of list (nil)
+    ((null strargs) nil)
+    ;; 2)
+    ;;   - 1st elt, string-command (string beginning with a colon)
+    ;;   - 2nd elt, end of list (nil) or another string-command .
+    ((and (str-command-p (car strargs))
+	  (or (null (cdr strargs))
+	      (str-command-p (second strargs))))
+     (cons (cons (car strargs) nil)
+	   (strargs-from-str-to-str-fake-standard (cdr strargs))))
+    ;; 3)
+    ;;   - 1st elt, string-command (string beginning with a colon)
+    ;;   - 2nd elt, neither string-command nor end of list (nil), i.e.: a plain string.
+    ((not (str-command-p (second strargs)))
+     (cons (cons (car strargs) (find-str-argvalue-list-from-command strargs))
+	   (strargs-from-str-to-str-fake-standard (find-next-str-command strargs))))))
+
+;;; Converts the string-based-fake-standard list (string-commands and/or plain string) into the standard
+;;; list (all elements are keywords, not just symbols).
+(defun strargs-from-str-fake-standard-to-standard (strargs)
+  (cond
+    ((null strargs) nil)
+    ((null (car strargs))
+     (strargs-from-str-fake-standard-to-standard (cdr strargs)))
+    (t (cons (string-list-to-standard-list (car strargs))
+             (strargs-from-str-fake-standard-to-standard (cdr strargs))))))
+
+;;; ------------------------------------------------ 
+;;; *** ARGS IN SYMBOL FORM ***
+;;; Auxiliary functions needed by '(myemacs)' in the REPL.
+
 ;;; Finds next keyword-command in the list.
 ;;; Parameters:
 ;;; 'args': A list of symbols (keyword and/or plain symbols).
@@ -145,6 +236,16 @@
     (t (args-from-fake-standard-to-standard
 	(args-from-repl-to-fake-standard args)))))
 
+(defun args-in-terminal-form (strargs)
+  (cond
+    ;; Empty list: it would be classified as a standard argument list.
+    ((null strargs) strargs)
+    ;; Detects a first argument which is not a keyword-command
+    ((not (str-command-p (car strargs)))
+     (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
+    (t (strargs-from-fake-str-standard-to-standard
+	(strargs-from-str-to-str-fake-standard strargs)))))
+
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
 ;;; Search for the command in the argument list in its standard form (list of lists of keywords.)
 ;;; Returns:
@@ -161,9 +262,9 @@
       ((list-of-lists-of-type-p #'keywordp args)
        (args-in-standard-form args))
       ((list-of-type-p #'symbolp args)
-       (args-in-repl-form args))))
-      ;;((list-of-type-p #'stringp args)
-      ;; (arglist-in-terminal-form args)))
+       (args-in-repl-form args))
+      ((list-of-type-p #'stringp args)
+       (args-in-terminal-form args))))
 
 ;;; ********
 
