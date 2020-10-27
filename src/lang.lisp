@@ -1,5 +1,5 @@
 ;;;; lang.lisp
-;;;; General purpose functions.
+;;;; Functions dealing with language choosing and language-aware messages.
 ;;;;
 ;;;; The 'myemacs' program keeps track of different configurations of 'emacs'.
 ;;;; The user can change between them.
@@ -25,14 +25,26 @@
 ;;; ********
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
-;;; ********
+;;; 'get-user-language-unix'
+;;; Returns the user language in a UNIX OS, e.g.: ':es', ':en', ...
+(defun get-user-language-unix ()
+  (let* ((lang-env-var (uiop:getenv "LANG"))
+	 (user-language-str (subseq lang-env-var 0 (position #\_ lang-env-var)))
+	 (user-language (intern (string-upcase user-language-str) "KEYWORD")))
+    user-language))
 
+;;; 'get-user-language'
+;;; Returns the user language in approved OS, e.g.: ':es', ':en', ...
+(defun get-user-language ()
+  (let ((user-language nil))
+    (cond
+      ((uiop:os-unix-p)
+       (setf user-language (get-user-language-unix)))
+      (t nil))
+    (when user-language
+      (setf *user-language* user-language))
+    user-language))
 
-;;; ************************************************************************************************
-;;; ********************* SERVICEABLE FUNCTIONS
-;;; ************************************************************************************************
-
-;;; ********************
 ;;; MAIN FUNCTION TO GET MESSAGES IN VARIOUS LANGUAGES
 ;;; Gets the symbol or string of a prefix function name and appends to it a termination
 ;;; corresponding to the actual language used. This function must exist in the appropriate
@@ -48,9 +60,58 @@
     (alexandria:symbolicate func-prefix "-" *language*)
     :myemacs)))
 
+;;; ********
+
+;;; ********************* SERVICEABLE FUNCTIONS
+
+;;; Macro to choose the right language-aware message function
+;;; Parameters:
+;;; 'fname': Symbol representing the prefix-part (non-language part) of the message function name
+;;; 'param-list': List of parameters that are passed to the language-aware (laf) function.
+;;; Returns:
+;;; The result of appling the arguments in the 'param-list' to the language-aware (laf) function.
 (defmacro msg ((fname &rest param-list))
   `(let ((laf (lang-aware-function ',fname)))
      (setf (fdefinition (alexandria:ensure-symbol ',fname :myemacs)) laf)
      (funcall laf ,@param-list)))
+
+;;; Register possible languages from sources: 'default language' 'user language' and 'arguments language',
+;;; and chooses the supported language in the following order (from least to most important ones):
+;;;   - Default language (least important)
+;;;   - User language from OS 
+;;;   - Arguments passed to the program with the option :lang <language> (most important)
+(defun find-and-register-language (lstandard-args)
+  (let* ((language nil)
+	 (user-language (get-user-language))
+	 (user-language-ok (if (member user-language *supported-languages*) t nil))
+	 (args-language (intern
+			 (string-upcase (string (second (find-command :lang lstandard-args))))
+			 "KEYWORD"))
+	 (args-language-ok (if (member args-language *supported-languages*) t nil)))
+    (setf *user-language* user-language)
+    (setf *supported-user-language* user-language-ok)
+    (setf *args-language* args-language)
+    (setf *supported-args-language* args-language-ok)
+    ;;(format t "(find-language) user-language -> ~a~%" user-language)
+    ;;(format t "(find-language) user-language-ok -> ~a~%" user-language-ok)
+    ;;(format t "(find-language) args-language -> ~a~%" args-language)
+    ;;(format t "(find-language) args-language-ok -> ~a~%" args-language-ok)
+    ;;(format t "--------------------------~%")
+    ;;(format t "(find-language) *user-language* -> ~a~%" *user-language*)
+    ;;(format t "(find-language) *supported-user-language* -> ~a~%" *supported-user-language*)
+    ;;(format t "(find-language) *args-language* -> ~a~%" *args-language*)
+    ;;(format t "(find-language) *supported-args-language* -> ~a~%" *supported-args-language*)
+    (cond
+      ((not (null args-language-ok))
+       (setf language args-language))
+      ((not (null user-language-ok))
+       (setf language user-language))
+      (t
+       (setf language *default-language*)))
+    ;;(format t "(find-language) FIN language -> ~a~%" language)
+    (setf *language* language)
+    ;;(format t "--------------------------~%")
+    ;;(format t "(find-language) *language* -> ~a~%" *language*)
+    language))
 
 ;;; ********

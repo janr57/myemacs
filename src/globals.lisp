@@ -18,7 +18,9 @@
 ;;; Language global variables
 (defparameter *default-language* :en)
 (defparameter *user-language* nil)
+(defparameter *supported-user-language* nil)
 (defparameter *args-language* nil)
+(defparameter *supported-args-language* nil)
 (defparameter *language* *default-language*)
 
 ;;; Supported characteristics
@@ -26,6 +28,7 @@
 (defparameter *supported-os-types* '(:unix))
 ;list of pairs (lisp-name minimum-version)
 (defparameter *supported-lisps* '((:sbcl nil) (:ccl nil)))
+(defparameter *supported-languages* `(,*default-language* :es))
 
 ;;; HASH-TABLE *data*
 ;;; *** EXEC-MODE

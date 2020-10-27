@@ -24,13 +24,15 @@
 			 (:file "lang"
 			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
 			 (:file "exec-mode"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
 			 (:file "os"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
 			 (:file "cl"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
+			 (:file "args"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("lang" "exec-mode" "os" "cl")))))
+			  :depends-on ("exec-mode" "os" "cl" "args")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -77,13 +79,16 @@
 			 (:file "lang"
 			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
 			 (:file "exec-mode"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
 			 (:file "os"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
 			 (:file "cl"
-			  :depends-on ("packages" "globals" "lang"))
+			  :depends-on ("lang"))
+			 (:file "args"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("lang" "exec-mode" "os" "cl"))))))
+			  :depends-on ("exec-mode" "os" "cl" "args"))))))
+
 
 
 
