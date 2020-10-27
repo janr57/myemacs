@@ -4,9 +4,8 @@
 ;;;; The 'myemacs' program keeps track of different configurations of 'emacs'.
 ;;;; The user can change between them.
 ;;;;
-;;;; Copyright (c) 2020 - José A. Navarro Ramón <josea.navarro1@gmail.com>
+;;;; Copyright (c) 2020 - José A. Navarro Ramón <janr.devel@gmail.com>
 ;;;; License: BSD 3-Clause
-
 
 (defsystem :myemacs
   :version "0.1.0"
@@ -14,29 +13,31 @@
   :license "BSD 3-Clause"
   :depends-on ("alexandria")
   :components ((:module "src"
-                :components
-		((:file "packages")
-		 (:file "globals"
-		  :depends-on ("packages"))
-		 (:file "lang-en"
-		  :depends-on ("packages"))
-		 (:file "lang-es"
-		  :depends-on ("packages"))
-		 (:file "lang"
-		  :depends-on ("packages" "globals" "lang-en" "lang-es"))
-		 (:file "os"
-		       :depends-on ("packages" "globals" "lang"))
-		 (:file "main"
-		  :depends-on ("packages" "globals" "lang")))))
+		:components
+			((:file "packages")
+			 (:file "globals"
+			  :depends-on ("packages"))
+			 (:file "lang-en"
+			  :depends-on ("packages"))
+			 (:file "lang-es"
+			  :depends-on ("packages"))
+			 (:file "lang"
+			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+			 (:file "exec-mode"
+			  :depends-on ("packages" "globals" "lang"))
+			 (:file "os"
+			  :depends-on ("packages" "globals" "lang"))
+			 (:file "cl"
+			  :depends-on ("packages" "globals" "lang"))
+			 (:file "main"
+			  :depends-on ("lang" "exec-mode" "os" "cl")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
 (defsystem :myemacs/tests
   :author "José A. Navarro Ramón"
   :license "BSD 3-Clause"
-  :depends-on ("myemacs"
-	       "alexandria"
-               "rove")
+  :depends-on ("myemacs" "alexandria" "rove")
   :components ((:module "tests"
                 :components
 			((:file "packages")
@@ -48,13 +49,16 @@
 			  :depends-on ("packages"))
 			 (:file "lang"
 			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+			 (:file "exec-mode"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "os"
 			  :depends-on ("packages" "globals" "lang"))
+			 (:file "cl"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "main"
-			  :depends-on ("packages" "globals" "lang")))))
+			  :depends-on ("lang" "exec-mode" "os" "cl")))))
   :description "Test system for myemacs"
   :perform (test-op (op c) (symbol-call :rove :run c)))
-
 
 (defsystem :myemacs/executable
   :build-operation program-op
@@ -65,17 +69,24 @@
 		:components
 			((:file "packages")
 			 (:file "globals"
-				:depends-on ("packages"))	
+			  :depends-on ("packages"))
 			 (:file "lang-en"
 			  :depends-on ("packages"))
 			 (:file "lang-es"
 			  :depends-on ("packages"))
 			 (:file "lang"
 			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
+			 (:file "exec-mode"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "os"
 			  :depends-on ("packages" "globals" "lang"))
+			 (:file "cl"
+			  :depends-on ("packages" "globals" "lang"))
 			 (:file "main"
-			  :depends-on ("packages" "globals" "lang"))))))
+			  :depends-on ("lang" "exec-mode" "os" "cl"))))))
+
+
+
 
 
 

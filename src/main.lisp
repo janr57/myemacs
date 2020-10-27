@@ -25,30 +25,7 @@
 
 (in-package :myemacs)
 
-;;; ******************** ERROR MESSAGES
-;;; ********
-
-;;; ******************** WARNING MESSAGES
-;;; ********
-
-;;; ******************** INFO MESSAGES
-;;; ********
-
-;;; ********************* AUXILIARY FUNCTIONS **************************
-(defun approve-exec-mode (exec-mode)
-  (setf (gethash 'exec-mode *data*) exec-mode)
-  (let ((supported-exec-mode (member exec-mode *supported-exec-modes*)))
-    (cond
-      ((null exec-mode)
-       (values nil (msg (err-do-not-run-program-with-main nil))))
-      ((null supported-exec-mode)
-       (values nil (msg (err-unsupported-exec-mode exec-mode nil))))
-      (t (values t nil)))))
-    
-;;; ********
-
-
-;;; ******************** MAIN FUNCTION *********************************
+;; ********************* AUXILIARY FUNCTIONS
 ;;; All different forms of running the program (:repl, :standalone or :script) converge here.
 ;;; Arguments:
 ;;; 'largs': Argument list coming from :standalone, :script or :repl.
@@ -59,34 +36,35 @@
 ;;;              ('NIL' in case it was 'main' itself).
 ;;; Returns:
 ;;; 'T' or 'NIL' if run without o with errors.
-
 (defun main (&optional (largs nil) (exec-mode nil))
-  (multiple-value-bind (supported-exec-mode str-unsupported-exec-mode)
-      (approve-exec-mode exec-mode)
-    (multiple-value-bind (supported-os-type str-unsupported-os-type)
-	(approve-os)
-      ;; Print the appropriate message
-      (cond
-	((null supported-exec-mode)
-	 (format t "~a~%" str-unsupported-exec-mode))
-	((null supported-os-type)
-	 (format t "~a~%" str-unsupported-os-type))
-	(t (format t "OK!~%")))
-      ;;
-      (if (null supported-os-type)
-	  nil t))))
-  
-  
+  (multiple-value-bind (supported-exec-mode exec-mode-error-closure)
+      (register-and-approve-exec-mode exec-mode)
+    (multiple-value-bind (supported-os-type os-type-error-closure)
+	(register-and-approve-os)
+      (multiple-value-bind (supported-lisp lisp-error-closure)
+	  (register-and-approve-lisp)
+	;; Print the appropriate message
+	(cond
+	  ((null supported-exec-mode)
+	   (format t "~a~%" (funcall exec-mode-error-closure)))
+	  ((null supported-os-type)
+	   (format t "~a~%" (funcall os-type-error-closure)))
+	  ((null supported-lisp)
+	   (format t "~a~%" (funcall lisp-error-closure)))
+	  (t (format t "OK!~%")))
+	;;
+	(if (or (null supported-exec-mode)
+		(null supported-os-type)
+		(null supported-lisp))
+	    nil t)))))
+
 ;;  (msg (info-argument-list largs))
 ;;  (terpri)
 ;;  (msg (info-execution-mode exec-mode))
 
 ;;; ********
   
-;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
-;;; ************************************************************************************************
-
 ;;; Macro which is the main entry point from the REPL
 ;;; It's purpose is to allow a syntax like e.g.:
 ;;; (myemacs :use config) instead of (myemacs '(:use config))

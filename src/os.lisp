@@ -15,6 +15,16 @@
 
 (in-package :myemacs)
 
+;;; ********************* AUXILIARY FUNCTIONS **************************
+(defun unrecognized-os-type-closure ()
+  (let ((closure-func (lambda () (msg (err-unrecognized-os-type nil)))))
+    closure-func))
+
+(defun unsupported-os-type-closure (os-type-name)
+  (let ((closure-func (lambda () (msg (err-unsupported-os-type os-type-name nil)))))
+    closure-func))
+
+;;; ********************* SERVICEABLE FUNCTIONS **************************
 ;;; Gets the operating system.
 ;;; Returns the next values:
 ;;;   1) The OS type as a keyword.
@@ -31,15 +41,20 @@
     (t
      (values nil nil nil))))
 
-(defun approve-os ()
+(defun register-and-approve-os ()
   (multiple-value-bind (os-type os-type-name os) (get-os)
+    ;; Register OS in the *data* hash-table
     (setf (gethash 'os-type *data*) os-type)
     (setf (gethash 'os-type-name *data*) os-type-name)
     (setf (gethash 'os *data*) os)
+    ;;
     (let ((supported-os-type (member os-type *supported-os-types*)))
       (cond
+	((null os-type)
+	 (values nil (unrecognized-os-type-closure)))
 	((null supported-os-type)
-	 (values nil (msg (err-unsupported-os-type os-type-name nil))))
+	 (values nil (unsupported-os-type-closure os-type-name)))
 	(t (values t nil))))))
 
-	 
+
+

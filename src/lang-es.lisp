@@ -16,14 +16,23 @@
 (in-package :myemacs)
 
 ;;; ******************** MENSAJES DE ERROR
-(defun err-do-not-run-program-with-main-es (&optional (stream t))
+(defun err-do-not-use-main-es (&optional (stream t))
   (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)"))
 
 (defun err-unsupported-exec-mode-es (exec-mode &optional (stream t))
   (format stream "Error, modo de ejecución no reconocido :~a" exec-mode))
 
+(defun err-unrecognized-os-type-es (&optional (stream t))
+  (format stream "Error, sistema operativo desconocido"))
+
 (defun err-unsupported-os-type-es (os-type-name &optional (stream t))
   (format stream "Error, sistema operativo ~a no soportado." os-type-name))
+
+(defun err-unsupported-lisp-es (lisp-name &optional (stream t))
+  (format stream "Error, common lisp no soportado ~a" (string-upcase lisp-name)))
+
+(defun err-unsupported-lisp-version-es (lisp-name lisp-version &optional (stream t))
+  (format stream "Error, versión de common lisp no soportada ~a (~a)" (string-upcase lisp-name) lisp-version))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
 

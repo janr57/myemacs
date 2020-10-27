@@ -16,14 +16,23 @@
 (in-package :myemacs)
 
 ;;; ******************** ERROR MESSAGES
-(defun err-do-not-run-program-with-main-en (&optional (stream t))
+(defun err-do-not-use-main-en (&optional (stream t))
   (format stream "Execution mode error: type (myemacs ...) to run the program, please."))
 
 (defun err-unsupported-exec-mode-en (exec-mode &optional (stream t))
   (format stream "Error, unsupported exec-mode :~a" exec-mode))
 
+(defun err-unrecognized-os-type-en (&optional (stream t))
+  (format stream "Error, unrecognized OS"))
+
 (defun err-unsupported-os-type-en (os-type-name &optional (stream t))
-  (format stream "Error, unsupported OS ~a" os-type-name))
+  (format stream "Error, unsupported ~a OS" (string-upcase os-type-name)))
+
+(defun err-unsupported-lisp-en (lisp-name &optional (stream t))
+  (format stream "Error, unsupported ~a common-lisp" (string-upcase lisp-name)))
+
+(defun err-unsupported-lisp-version-en (lisp-name lisp-version &optional (stream t))
+  (format stream "Error, unsupported common-lisp version ~a (~a)" (string-upcase lisp-name) lisp-version))
 
 ;;; ******************** WARNING MESSAGES
 

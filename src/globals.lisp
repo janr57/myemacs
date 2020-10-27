@@ -24,10 +24,20 @@
 ;;; Supported characteristics
 (defparameter *supported-exec-modes* '(:repl :standalone :script))
 (defparameter *supported-os-types* '(:unix))
+;list of pairs (lisp-name minimum-version)
+(defparameter *supported-lisps* '((:sbcl nil) (:ccl nil)))
 
 ;;; HASH-TABLE *data*
+;;; *** EXEC-MODE
 ;;; 'exec-mode
+;;; *** OS
 ;;; 'os-type
 ;;; 'os-type-name
 ;;; 'os
+;;; *** COMMON-LISP
+;;; 'lisp-name
+;;; 'lisp-version
+;;; lisp-name-ok-p
+;;; lisp-version-ok
+;;; supported-lisp-p
 (defparameter *data* (make-hash-table))
