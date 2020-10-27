@@ -1,12 +1,7 @@
-;;;; args.lisp
-;;;; Functions involving the lexical analysis of arguments passed to the  program.
+;;;; actions.lisp
+;;;; Functions involving the syntactical analysis of arguments passed to the  program.
 ;;;;
-;;;; When the lexical analysis is performed, the different argument lists depending
-;;;; on the execution method are transformed into a so called, standard-argument-list.
-;;;; This standard-argument-list is then passed to the syntactical analysis which
-;;;; resides in other module.
-;;;;
-;;;; A little more detail:
+;;;; It is done by:
 ;;;; 1) Transformation of the argument list passed to the program to a standard form
 ;;;;    involving list of keyword lists:
 ;;;;    a) When run as a standalone or script program, the arguments consist of a list
@@ -14,9 +9,8 @@
 ;;;;       these commands, if any, without it.
 ;;;;    b) When run as a REPL expression, then the arguments are a list of symbols,
 ;;;;       where the commands are keywords and their options are, if any, plain symbols.
-;;;; 2) At the same time, a lexical analysis is performed.
-;;;; 3) If errors were found, they are saved in order to be presented at the end of the
-;;;;    process. So the analysis goes on in order to let a function
+;;;; 2) A lexical analysys of the standard form of this argument list is performed.
+;;;; 3) Even if errors were found, the analysis returns in order to let a function
 ;;;;    from 'lang.lisp' to search for a valid ':lang ??' command
 ;;;;    to switch from the user language found in the OS to this new one.
 ;;;;

@@ -31,8 +31,10 @@
 			  :depends-on ("lang"))
 			 (:file "args"
 			  :depends-on ("lang"))
+			 (:file "actions"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "args")))))
+			  :depends-on ("exec-mode" "os" "cl" "args" "actions")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -42,23 +44,7 @@
   :depends-on ("myemacs" "alexandria" "rove")
   :components ((:module "tests"
                 :components
-			((:file "packages")
-			 (:file "globals"
-			  :depends-on ("packages"))
-			 (:file "lang-en"
-			  :depends-on ("packages"))
-			 (:file "lang-es"
-			  :depends-on ("packages"))
-			 (:file "lang"
-			  :depends-on ("packages" "globals" "lang-en" "lang-es"))
-			 (:file "exec-mode"
-			  :depends-on ("packages" "globals" "lang"))
-			 (:file "os"
-			  :depends-on ("packages" "globals" "lang"))
-			 (:file "cl"
-			  :depends-on ("packages" "globals" "lang"))
-			 (:file "main"
-			  :depends-on ("lang" "exec-mode" "os" "cl")))))
+			 ()))
   :description "Test system for myemacs"
   :perform (test-op (op c) (symbol-call :rove :run c)))
 
@@ -86,8 +72,10 @@
 			  :depends-on ("lang"))
 			 (:file "args"
 			  :depends-on ("lang"))
+			 (:file "actions"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "args"))))))
+			  :depends-on ("exec-mode" "os" "cl" "args" "actions"))))))
 
 
 
