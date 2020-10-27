@@ -32,7 +32,12 @@
   (format stream "Error, unsupported ~a common-lisp" (string-upcase lisp-name)))
 
 (defun err-unsupported-lisp-version-en (lisp-name lisp-version &optional (stream t))
-  (format stream "Error, unsupported common-lisp version ~a (~a)" (string-upcase lisp-name) lisp-version))
+  (format stream "Error, unsupported common-lisp version ~a (~a)"
+	  (string-upcase lisp-name) lisp-version))
+
+(defun err-first-arg-not-a-command-en (first-arg &optional (stream t))
+  (format stream "Error, the first argument '~a' is not a command (it must begin with a colon)."
+	  first-arg))
 
 ;;; ******************** WARNING MESSAGES
 

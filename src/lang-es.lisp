@@ -32,7 +32,12 @@
   (format stream "Error, common lisp no soportado ~a" (string-upcase lisp-name)))
 
 (defun err-unsupported-lisp-version-es (lisp-name lisp-version &optional (stream t))
-  (format stream "Error, versión de common lisp no soportada ~a (~a)" (string-upcase lisp-name) lisp-version))
+  (format stream "Error, versión de common lisp no soportada ~a (~a)"
+	  (string-upcase lisp-name) lisp-version))
+
+(defun err-first-arg-not-a-command-es (first-arg &optional (stream t))
+  (format stream "Error, el primer argumento '~a' no es un comando (debe comenzar por dos puntos)."
+	  first-arg))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
 

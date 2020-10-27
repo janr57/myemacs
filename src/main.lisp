@@ -36,28 +36,37 @@
 ;;;              ('NIL' in case it was 'main' itself).
 ;;; Returns:
 ;;; 'T' or 'NIL' if run without o with errors.
-(defun main (&optional (largs nil) (exec-mode nil))
+(defun main (&optional (args nil) (exec-mode nil))
   (multiple-value-bind (supported-exec-mode exec-mode-error-closure)
       (register-and-approve-exec-mode exec-mode)
     (multiple-value-bind (supported-os-type os-type-error-closure)
 	(register-and-approve-os)
       (multiple-value-bind (supported-lisp lisp-error-closure)
 	  (register-and-approve-lisp)
-	;; Print the appropriate message
-	(cond
-	  ((null supported-exec-mode)
-	   (format t "~a~%" (funcall exec-mode-error-closure)))
-	  ((null supported-os-type)
-	   (format t "~a~%" (funcall os-type-error-closure)))
-	  ((null supported-lisp)
-	   (format t "~a~%" (funcall lisp-error-closure)))
-	  (t (format t "OK!~%")))
-	;;
-	(if (or (null supported-exec-mode)
-		(null supported-os-type)
-		(null supported-lisp))
-	    nil t)))))
-
+	(multiple-value-bind (process-ok args-error-closure standard-args)
+	    (standarize-and-register-args args)
+	  ;;(format t "(main) process-ok -> ~a~%" process-ok)
+	  ;;(format t "(main) args-error-closure -> ~a~%" args-error-closure)
+	  ;;(format t "(main) standard-args -> ~a~%" standard-args)
+	  
+	  ;; Print the appropriate message
+	  (cond
+	    ((null supported-exec-mode)
+	     (format t "~a~%" (funcall exec-mode-error-closure)))
+	    ((null supported-os-type)
+	     (format t "~a~%" (funcall os-type-error-closure)))
+	    ((null supported-lisp)
+	     (format t "~a~%" (funcall lisp-error-closure)))
+	    ((null process-ok)
+	     (format t "~a~%" (funcall args-error-closure)))
+	    (t (format t "OK!~%")))
+	  ;;
+	  (if (or (null supported-exec-mode)
+		  (null supported-os-type)
+		  (null supported-lisp)
+		  (null process-ok))
+	      nil t))))))
+    
 ;;  (msg (info-argument-list largs))
 ;;  (terpri)
 ;;  (msg (info-execution-mode exec-mode))
@@ -73,8 +82,8 @@
 ;;;                - keywords, representing commands
 ;;;                - plain symbols, representing options for the commands
 ;;; It passes to 'main', this argument list and the execution mode :repl
-(defmacro myemacs (&rest lrepl-args)
-  `(main (quote ,lrepl-args) :repl))
+(defmacro myemacs (&rest repl-args)
+  `(main (quote ,repl-args) :repl))
 
 ;;; EXECUTABLE PROGRAM
 ;;; Entry point of 'myemacs' as a standalone executable program.
@@ -86,8 +95,8 @@
 ;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
 (defun myemacs-standalone ()
-  (let ((lterminal-args nil))
-    (if (funcall #'main lterminal-args :standalone) 0 1)))
+  (let ((terminal-args nil))
+    (if (funcall #'main terminal-args :standalone) 0 1)))
 
 ;;; SCRIPT FILE (not working yet...)
 ;;; Entry point of 'myemacs' as a standalone executable program.
@@ -95,8 +104,8 @@
 ;;; 0 or 1 if run without or with errors.
 ;;; (EXPORTED FUNCTION)
   (defun myemacs-script ()
-    (let ((lterminal-args nil))
-    (if (funcall #'main lterminal-args :script) 0 1)))
+    (let ((terminal-args nil))
+    (if (funcall #'main terminal-args :script) 0 1)))
 
 ;;; ********
 

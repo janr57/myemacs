@@ -80,12 +80,12 @@
 ;;;   - Default language (least important)
 ;;;   - User language from OS 
 ;;;   - Arguments passed to the program with the option :lang <language> (most important)
-(defun find-and-register-language (lstandard-args)
+(defun find-and-register-language (standard-args)
   (let* ((language nil)
 	 (user-language (get-user-language))
 	 (user-language-ok (if (member user-language *supported-languages*) t nil))
 	 (args-language (intern
-			 (string-upcase (string (second (find-command :lang lstandard-args))))
+			 (string-upcase (string (second (find-command :lang standard-args))))
 			 "KEYWORD"))
 	 (args-language-ok (if (member args-language *supported-languages*) t nil)))
     (setf *user-language* user-language)
