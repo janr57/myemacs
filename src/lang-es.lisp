@@ -51,6 +51,9 @@
 (defun err-repeated-command-es (cmd &optional (stream t))
   (format stream "Error, se ha repetido el comando ':~a'." cmd))
 
+(defun err-too-many-commands-es (&optional (stream t))
+  (format stream "Error ¡se han tecleado demasiados comandos!"))
+
 ;;; ******************** MENSAJES DE ADVERTENCIA
 
 ;;; ******************** MENSAJES DE INFORMACIÓN

@@ -17,6 +17,8 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
+;;; *** CLOSURES ***
+
 ;;; Error closure when found an invalid command.
 ;;; Parameters:
 ;;; 'cmd': Invalid command.
@@ -43,6 +45,26 @@
 (defun incorrect-option-closure (cmd)
   (let ((closure-func (lambda () (msg (err-incorrect-option cmd nil)))))
     closure-func))
+
+;;; Error closure when a command has been repeated in the argument list.
+;;; Parameters:
+;;; 'cmd': Repeated command.
+;;; Returns:
+;;; Closure error message.
+(defun repeated-command-closure (cmd)
+  (let ((closure-func (lambda () (msg (err-repeated-command cmd nil)))))
+    closure-func))
+
+;;; Error closure when the cleaned argument list (the :lang :debug and :verbose flags removed)
+;;; has many commands.
+;;; Returns:
+;;; Closure error message.
+(defun too-many-commands-closure ()
+  (let ((closure-func (lambda () (msg (err-too-many-commands nil)))))
+    closure-func))
+
+
+;;; *** OTHER AUXILIARY FUNCTIONS
 
 ;;; Detects whether a given command is correct or there is a problem with it.
 ;;; These problems may be:
@@ -74,15 +96,6 @@
 	    (not (loop for opt in options always (member opt valid-options))))
        (values nil (incorrect-option-closure cmd)))
       (t (values t nil)))))
-
-;;; Error closure when a command has been repeated in the argument list.
-;;; Parameters:
-;;; 'cmd': Repeated command.
-;;; Returns:
-;;; Closure error message.
-(defun repeated-command-closure (cmd)
-  (let ((closure-func (lambda () (msg (err-repeated-command cmd nil)))))
-    closure-func))
 
 ;;; Produce a hash-table whith the name of the commands as keys and
 ;;; their values are the number of repetitions in the argument list.
@@ -149,6 +162,43 @@
        (values nil (repeated-command-closure repeated-command)))
       (t (values t nil)))))
 
+;;; Finds the language and the presence of :debug and/or :verbose flags in the standard arg list.
+;;; Parameters:
+;;; 'standard-args': Argument list in standard form.
+;;; Returns three values:
+;;;  1) The name of the language, e.g.: :es.
+;;;  2) The presence of the :debug flag.
+;;;  3) The presence of the :verbose flag.
+(defun find-global-commands (standard-args)
+  (let ((language (find-and-register-language standard-args))
+	(debug-flag (if (find-command :debug standard-args) t nil))
+	(verbose-flag (if (find-command :verbose standard-args) t nil)))
+    (values language debug-flag verbose-flag)))
+
+;;; Removes the global-commands (:lang :debug :verbose) from the standard argument list.
+;;; Parameters:
+;;; 'standard-args': Argument list in standard form.
+;;; Returns:
+;;; The standard argument list without these global commands.
+(defun remove-global-commands (standard-args)
+  (remove-if #'(lambda (x) (or (eql x :lang)
+			       (eql x :debug)
+			       (eql x :verbose)))
+	     standard-args :key #'car))
+
+;;; Detects the presence of many commands
+;;; Parameters:
+;;; 'cleaned-standard-args': Standard argument list deprived of the global commands,
+;;; :lang, :debug and :verbose.
+;;; Returns two values:
+;;;  1) 'T' if the number of commands is correct. 'NIL' otherwise.
+;;;  2) 'NIL' if the number of commands is corect or an appropriate message error closure
+;;;     to be displayed later on.
+(defun approve-num-commands (cleaned-standard-args)
+  (let ((num-commands (length cleaned-standard-args)))
+    (if (not (<= num-commands 1))
+	(values nil (too-many-commands-closure))
+	(t nil))))
 
 ;;; ********
 
