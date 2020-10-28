@@ -58,22 +58,26 @@
 
 ;;; ******************** INFO MESSAGES
 (defun info-action-show-active-config-en (active-config available-configs &optional (stream t))
-  (format stream "- INFO: Default 'emacs' configuration: NOT FOUND.~%")
-  (format stream "- INFO: Active configuration FOUND (~a)~%" active-config)
-  (terpri stream)
-  (format stream "Possible actions:~%")
-  (format stream "1) Continue using this configuration -> Run emacs~%")
-  (format stream "   -> Run emacs~%")
-  (format stream "2) Use another saved configuration~%")
-  (format stream "   myemacs :use <config>~%")
-  (format stream "   Possible configurations: ~a~%" (extract-available-configs available-configs))) 
-
+  (let ((available-configs-str (join-strings-from-list available-configs))
+	(other-configs-str (join-strings-from-list
+			    (remove active-config available-configs :test #'string-equal))))
+    (format stream "- INFO: 'emacs' native configuration -> NO ENCONTRADA~%")
+    (format stream "- INFO: Saved configurations         -> ~a~%" available-configs-str)
+    (format stream "- INFO: Active configuration         ->(~a)~%" active-config)
+    (terpri stream)
+    (format stream "Posible actions:~%")
+    (format stream "1) Activate another configuración -> 'myemacs :use <config>~%") 
+    (format stream "   Alternative configurations: ~a~%" other-configs-str)
+    (format stream "2) Delete any saved configuration, whether active or not -> myemacs :del <cfg>~%")
+    (format stream "   Available configurations: ~a~%" available-configs-str)
+    (format stream "3) Do not change anything and continue using this configuration.~%~%")))
 
 (defun info-action-version-en (&optional (stream t))
   (format stream "~a v~a ~a (~a)~%" *progname* *version* *production* *version-date*))
 
 (defun info-action-help-en (&optional (stream t))
-  (format stream "USAGE: [ :help || :version || :show || :use <cfg> || :save <cfg> || :del <cfg> ]~%")
+  (format stream "USAGE: [ :help      || :version    || :show      ||~%")
+  (format stream "         :use <cfg> || :save <cfg> || :del <cfg> || :copy <orig> <dest> ]~%")
   (format stream "       [ :debug || :verbose || :lang <en || es> ]~%")
   (format stream "~%")
   (format stream "(blank)     -> This message.~%")
@@ -85,7 +89,22 @@
   (format stream ":del <cfg>  -> Delete configuration with name <cfg>.~%")
   (format stream ":debug      -> Show debug info.~%")
   (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
-  (format stream ":lang < en || es > -> Show messages in this language.~%"))
+  (format stream ":lang < en || es > -> Show messages in this language.~%~%"))
+
+;;(defun info-action-help-en (&optional (stream t))
+;;  (format stream "USAGE: [ :help || :version || :show || :use <cfg> || :save <cfg> || :del <cfg> ]~%")
+;;  (format stream "       [ :debug || :verbose || :lang <en || es> ]~%")
+;;  (format stream "~%")
+;;  (format stream "(blank)     -> This message.~%")
+;;  (format stream ":help       -> This message.~%")
+;;  (format stream ":version    -> Program version.~%")
+;;  (format stream ":show       -> Show active configuration and possible actions to take.~%")
+;;  (format stream ":use <cfg>  -> Change active configuration to <cfg>.~%")
+;;  (format stream ":save <cfg> -> Save default emacs config with the name <cfg>.~%")
+;;  (format stream ":del <cfg>  -> Delete configuration with name <cfg>.~%")
+;;  (format stream ":debug      -> Show debug info.~%")
+;;  (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
+;;  (format stream ":lang < en || es > -> Show messages in this language.~%~%"))
 
 ;;; ******************** TEXT STRINGS
 

@@ -17,17 +17,21 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
-(defun extract-available-configs (lconf-names)
-  "Mensaje para presentar las configuraciones disponibles."
+;;; Converts a list of strings into a string with the elements separated by spaces.
+;;; Parameters:
+;;; 'lstr': List of strings.
+;;; Returns:
+;;; A string of the list elements separated by spaces.
+(defun join-strings-from-list (lstr &optional (separation-str " "))
   (cond
-    ((null lconf-names)
+    ((null lstr)
      (format nil ""))
-    ((null (cdr lconf-names))
-     (concatenate 'string (car lconf-names) ""))
+    ((null (cdr lstr))
+     (concatenate 'string (car lstr) ""))
     (t (concatenate 'string
-		  (car lconf-names)
-		  " "
-		  (extract-available-configs (cdr lconf-names))))))
+		  (car lstr)
+		  separation-str
+		  (join-strings-from-list (cdr lstr) separation-str)))))
 
 ;;; Complete standard emacs directory path as a string
 ;;; Parameters:
