@@ -57,6 +57,18 @@
 ;;; ******************** WARNING MESSAGES
 
 ;;; ******************** INFO MESSAGES
+(defun info-action-show-active-config-en (active-config available-configs &optional (stream t))
+  (format stream "- INFO: Default 'emacs' configuration: NOT FOUND.~%")
+  (format stream "- INFO: Active configuration FOUND (~a)~%" active-config)
+  (terpri stream)
+  (format stream "Possible actions:~%")
+  (format stream "1) Continue using this configuration -> Run emacs~%")
+  (format stream "   -> Run emacs~%")
+  (format stream "2) Use another saved configuration~%")
+  (format stream "   myemacs :use <config>~%")
+  (format stream "   Possible configurations: ~a~%" (extract-available-configs available-configs))) 
+
+
 (defun info-action-version-en (&optional (stream t))
   (format stream "~a v~a ~a (~a)~%" *progname* *version* *production* *version-date*))
 

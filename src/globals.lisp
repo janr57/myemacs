@@ -27,6 +27,15 @@
 (defparameter *year* 2020)
 (defparameter *license* "BSD Clause-3")
 
+;;;
+;;; Default init emacs file
+(defparameter *dotemacs-name-str* ".emacs")
+;;; Init emacs file inside directory
+(defparameter *init.el-name-str* "init.el")
+;;; Emacs directory
+(defparameter *emacsdir-name-str* ".emacs.d")
+;;; Regular expression to find saved configurations
+(defparameter *emacsdir-star-str* (concatenate 'string *emacsdir-name-str* "-*"))
 
 ;;; Language global variables
 (defparameter *default-language* :en)
@@ -47,17 +56,33 @@
     (:use = 1 nil) (:add = 1 nil) (:del = 1 nil)
     (:verbose = 0 nil) (:debug = 0 nil) (:lang = 1 ,*supported-languages*)))
 
+;;;
 ;;; HASH-TABLE *data*
-;;; *** EXEC-MODE
+;;; ******* EXEC-MODE
 ;;; 'exec-mode
 ;;; *** OS
 ;;; 'os-type
 ;;; 'os-type-name
 ;;; 'os
-;;; *** COMMON-LISP
+;;; ******* COMMON-LISP
 ;;; 'lisp-name
 ;;; 'lisp-version
-;;; lisp-name-ok-p
-;;; lisp-version-ok
-;;; supported-lisp-p
+;;; 'lisp-name-ok-p
+;;; 'lisp-version-ok
+;;; 'supported-lisp-p
+;;; ******* CONFIG
+;;; 'homedir-str
+;;; 'emacsdir-str
+;;; 'dotemacs-str
+;;; 'init.el-str
+;;; 'possible-saved-config-dirs
+;;; 'possible-init-files
+;;; 'found-init-files
+;;; 'saved-dirs
+;;; 'conf-names
+;;; 'found-default-dotemacs
+;;; 'found-emacsdir
+;;; 'found-default-init.el
+;;; 'active-config
 (defparameter *data* (make-hash-table))
+

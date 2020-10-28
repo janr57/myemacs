@@ -57,6 +57,20 @@
 ;;; ******************** MENSAJES DE ADVERTENCIA
 
 ;;; ******************** MENSAJES DE INFORMACIÓN
+(defun info-action-show-active-config-es (active-config available-configs &optional (stream t))
+  (format stream "- INFO: Configuración nativa        -> NO ENCONTRADA~%")
+  (format stream "- INFO: Configuración activa        -> ~a~%" active-config)
+  (format stream "- INFO: Configuraciones almacenadas -> ~a~%" (extract-available-configs
+								available-configs))
+  (terpri stream)
+  (format stream "Posibles acciones:~%")
+  (format stream "1) Continuar usando esta configuración.~%")
+  (format stream "2) Usar otra configuración disponible -> 'myemacs :use <config>~%") 
+  (format stream "   Configuraciones alternativas: ~a~%" (extract-available-configs
+							  (remove active-config
+								  available-configs
+								  :test #'string-equal))))
+
 (defun info-action-version-es (&optional (stream t))
   (format stream "~a v~a ~a (~a)~%" *progname* *version* *production* *version-date*))
 
