@@ -75,18 +75,41 @@
        (values nil (incorrect-option-closure cmd)))
       (t (values t nil)))))
 
-(defun count-commands (largs-repl)
+;;; Error closure when a command has been repeated in the argument list.
+;;; Parameters:
+;;; 'cmd': Repeated command.
+;;; Returns:
+;;; Closure error message.
+(defun repeated-command-closure (cmd)
+  (let ((closure-func (lambda () (msg (err-repeated-command cmd nil)))))
+    closure-func))
+
+;;; Produce a hash-table whith the name of the commands as keys and
+;;; their values are the number of repetitions in the argument list.
+;;; Parameters:
+;;; 'standard-args': Argument list in standard-form.
+;;; Returns:
+;;; Hash-table of the commands in the argument list as keys,
+;;; and the number of their repetitions as values.
+(defun count-commands-hash-table (standard-args)
   (let ((h (make-hash-table)))
-    (dolist (lcmd largs-repl)
+    (dolist (lcmd standard-args)
       (cond
 	((null (gethash (car lcmd) h))
 	 (setf (gethash (car lcmd) h) 1))
 	(t (incf (gethash (car lcmd) h)))))
     h))
 
-(defun list-repeated-commands (largs-repl)
-  (let ((h (count-commands largs-repl)))
-    (loop for k being the hash-keys in h using (hash-value v) collect (list k v))))
+;;; Produce a list of repeated commands along with the
+;;; number of their invocations in the argument list.
+;;; Parameters:
+;;; 'standard-args': Argument list in standard-form.
+;;; Returns:
+;;; A list of pairs (command . number-of-invocations), where the number of invocations.
+;;; is greater than one.
+(defun repeated-commands (standard-args)
+  (let ((h (count-commands-hash-table standard-args)))
+    (loop for k being the hash-keys in h using (hash-value v) when (> v 1) collect (list k v))))
 
 ;;; ********
 
@@ -112,7 +135,19 @@
 	  (values command-list-ok err-closure)))))
   (values t nil))
 
-
+;;; Detects if there are repeated commands in the argument list and returns a message closure
+;;; to be run later on
+;;; 'standard-args': Argument list in standard form.
+;;; Returns two values:
+;;;   1) 'T' if the standard argument list has no repeated commands; otherwise 'NIL'.
+;;;   2) 'NIL' if there are no repeated commands. Otherwise, a message error closure to be
+;;;      displayed later on. 
+(defun find-repeated-command (standard-args)
+  (let ((repeated-command (caar (repeated-commands standard-args))))
+    (cond
+      ((not (null repeated-command))
+       (values nil (repeated-command-closure repeated-command)))
+      (t (values t nil)))))
 
 
 ;;; ********

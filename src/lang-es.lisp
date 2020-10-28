@@ -40,13 +40,16 @@
 	  first-arg))
 
 (defun err-invalid-command-es (cmd &optional (stream t))
-  (format stream "Error, comando no válido :~a." cmd))
+  (format stream "Error, comando no válido ':~a'." cmd))
 
 (defun err-num-options-es (cmd &optional (stream t))
-  (format stream "Error, número de opciones incorrecto para el comando :~a." cmd))
+  (format stream "Error, número de opciones incorrecto para el comando ':~a.'" cmd))
 
 (defun err-incorrect-option-es (cmd &optional (stream t))
   (format stream "Error, el comando ':~a' tiene una opción incorrecta." cmd))
+
+(defun err-repeated-command-es (cmd &optional (stream t))
+  (format stream "Error, se ha repetido el comando ':~a'." cmd))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
 

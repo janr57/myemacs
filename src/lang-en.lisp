@@ -43,10 +43,13 @@
   (format stream "Error, invalid command :~a." cmd))
 
 (defun err-num-options-en (cmd &optional (stream t))
-  (format stream "Error, incorrect options number for command :~a." cmd))
+  (format stream "Error, incorrect options number for command ':~a'." cmd))
 
 (defun err-incorrect-option-en (cmd &optional (stream t))
-  (format stream "Error, incorrect option found for command :~a." cmd))
+  (format stream "Error, incorrect option found for command ':~a'." cmd))
+
+(defun err-repeated-command-en (cmd &optional (stream t))
+  (format stream "Error, command ':~a' has been repeated." cmd))
 
 ;;; ******************** WARNING MESSAGES
 
