@@ -39,6 +39,15 @@
   (format stream "Error, the first argument '~a' is not a command (it must begin with a colon)."
 	  first-arg))
 
+(defun err-invalid-command-en (cmd &optional (stream t))
+  (format stream "Error, invalid command :~a." cmd))
+
+(defun err-num-options-en (cmd &optional (stream t))
+  (format stream "Error, incorrect options number for command :~a." cmd))
+
+(defun err-incorrect-option-en (cmd &optional (stream t))
+  (format stream "Error, incorrect option found for command :~a." cmd))
+
 ;;; ******************** WARNING MESSAGES
 
 ;;; ******************** INFO MESSAGES

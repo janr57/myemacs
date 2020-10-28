@@ -17,6 +17,8 @@
 			((:file "packages")
 			 (:file "globals"
 			  :depends-on ("packages"))
+			 (:file "funcs"
+			  :depends-on ("packages"))
 			 (:file "lang-en"
 			  :depends-on ("packages"))
 			 (:file "lang-es"
@@ -30,7 +32,7 @@
 			 (:file "cl"
 			  :depends-on ("lang"))
 			 (:file "args"
-			  :depends-on ("lang"))
+			  :depends-on ("lang" "funcs"))
 			 (:file "actions"
 			  :depends-on ("lang"))
 			 (:file "main"
@@ -41,10 +43,10 @@
 (defsystem :myemacs/tests
   :author "José A. Navarro Ramón"
   :license "BSD 3-Clause"
-  :depends-on ("myemacs" "alexandria" "rove")
+  :depends-on ("myemacs" "rove")
   :components ((:module "tests"
                 :components
-			 ()))
+			 ((:file "main"))))
   :description "Test system for myemacs"
   :perform (test-op (op c) (symbol-call :rove :run c)))
 
@@ -58,6 +60,8 @@
 			((:file "packages")
 			 (:file "globals"
 			  :depends-on ("packages"))
+			 (:file "funcs"
+			  :depends-on ("packages"))
 			 (:file "lang-en"
 			  :depends-on ("packages"))
 			 (:file "lang-es"
@@ -71,7 +75,7 @@
 			 (:file "cl"
 			  :depends-on ("lang"))
 			 (:file "args"
-			  :depends-on ("lang"))
+			  :depends-on ("lang" "funcs"))
 			 (:file "actions"
 			  :depends-on ("lang"))
 			 (:file "main"

@@ -29,6 +29,10 @@
 ;list of pairs (lisp-name minimum-version)
 (defparameter *supported-lisps* '((:sbcl nil) (:ccl nil)))
 (defparameter *supported-languages* `(,*default-language* :es))
+(defparameter *valid-commands*
+  `((:help = 0 nil) (:version = 0 nil) (:show = 0 nil)
+    (:use = 1 nil) (:add = 1 nil) (:del = 1 nil)
+    (:verbose = 0 nil) (:debug = 0 nil) (:lang = 1 ,*supported-languages*)))
 
 ;;; HASH-TABLE *data*
 ;;; *** EXEC-MODE

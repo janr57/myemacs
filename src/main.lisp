@@ -37,6 +37,8 @@
 ;;; Returns:
 ;;; 'T' or 'NIL' if run without o with errors.
 (defun main (&optional (args nil) (exec-mode nil))
+  ;;(format t "(main) args -> ~a~%" args)
+  ;;(format t "(main) exec-mode -> ~a~%" exec-mode)
   (multiple-value-bind (supported-exec-mode exec-mode-error-closure)
       (register-and-approve-exec-mode exec-mode)
     (multiple-value-bind (supported-os-type os-type-error-closure)
@@ -45,27 +47,32 @@
 	  (register-and-approve-lisp)
 	(multiple-value-bind (process-ok args-error-closure standard-args)
 	    (standarize-and-register-args args)
-	  ;;(format t "(main) process-ok -> ~a~%" process-ok)
-	  ;;(format t "(main) args-error-closure -> ~a~%" args-error-closure)
-	  ;;(format t "(main) standard-args -> ~a~%" standard-args)
-	  
-	  ;; Print the appropriate message
-	  (cond
-	    ((null supported-exec-mode)
-	     (format t "~a~%" (funcall exec-mode-error-closure)))
-	    ((null supported-os-type)
-	     (format t "~a~%" (funcall os-type-error-closure)))
-	    ((null supported-lisp)
-	     (format t "~a~%" (funcall lisp-error-closure)))
-	    ((null process-ok)
-	     (format t "~a~%" (funcall args-error-closure)))
-	    (t (format t "OK!~%")))
-	  ;;
-	  (if (or (null supported-exec-mode)
-		  (null supported-os-type)
-		  (null supported-lisp)
-		  (null process-ok))
-	      nil t))))))
+	  (multiple-value-bind (lcmd-ok lcmd-closure)
+	      (approve-standard-args standard-args)
+	    ;;(multiple-value-bind (no-repeated-commands repeated-commands-closure)
+		;;(find-repeated-commands standard-args)
+	    ;;(format t "(main) no-repeated-commands -> ~a~%" no-repeated-commands)
+	    ;;(format t "(main) repeated-commands-closure -> ~a~%" repeated-commands-closure)
+	    ;; Print the appropriate message
+	    (cond
+	      ((null supported-exec-mode)
+	       (format t "~a~%" (funcall exec-mode-error-closure)))
+	      ((null supported-os-type)
+	       (format t "~a~%" (funcall os-type-error-closure)))
+	      ((null supported-lisp)
+	       (format t "~a~%" (funcall lisp-error-closure)))
+	      ((null process-ok)
+	       (format t "~a~%" (funcall args-error-closure)))
+	      ((null lcmd-ok)
+	       (format t "~a~%" (funcall lcmd-closure)))
+	      (t (format t "OK!~%")))
+	    ;;
+	    (if (or (null supported-exec-mode)
+		    (null supported-os-type)
+		    (null supported-lisp)
+		    (null process-ok)
+		    (null lcmd-ok))
+		nil t)))))))
     
 ;;  (msg (info-argument-list largs))
 ;;  (terpri)
@@ -83,6 +90,7 @@
 ;;;                - plain symbols, representing options for the commands
 ;;; It passes to 'main', this argument list and the execution mode :repl
 (defmacro myemacs (&rest repl-args)
+  ;;(format t "(myemacs) repl-args -> ~a~%" repl-args)
   `(main (quote ,repl-args) :repl))
 
 ;;; EXECUTABLE PROGRAM

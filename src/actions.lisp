@@ -1,18 +1,6 @@
 ;;;; actions.lisp
-;;;; Functions involving the syntactical analysis of arguments passed to the  program.
-;;;;
-;;;; It is done by:
-;;;; 1) Transformation of the argument list passed to the program to a standard form
-;;;;    involving list of keyword lists:
-;;;;    a) When run as a standalone or script program, the arguments consist of a list
-;;;;       of strings, whith commands beginning with a colon symbol and the options of
-;;;;       these commands, if any, without it.
-;;;;    b) When run as a REPL expression, then the arguments are a list of symbols,
-;;;;       where the commands are keywords and their options are, if any, plain symbols.
-;;;; 2) A lexical analysys of the standard form of this argument list is performed.
-;;;; 3) Even if errors were found, the analysis returns in order to let a function
-;;;;    from 'lang.lisp' to search for a valid ':lang ??' command
-;;;;    to switch from the user language found in the OS to this new one.
+;;;; Functions involving the syntactical analysis of arguments passed to the  program
+;;;; and the actions associated with these arguments.
 ;;;;
 ;;;; The 'myemacs' program keeps track of different configurations of emacs.
 ;;;; The user can change between them.
@@ -29,242 +17,103 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
-
-;;; ------------------------------------------------ 
-;;; *** ARGS IN STRING FORM ***
-;;; Auxiliary functions needed by 'myemacs-standalone' and 'myemacs-script'.
-
-;;; Detects if the argument is a string-command.
-;;; String-command arguments are strings beginning with a colon symbol ':',
-;;; e.g.: ":save", ":help", ...
+;;; Error closure when found an invalid command.
 ;;; Parameters:
-;;; 'strarg': A string element.
+;;; 'cmd': Invalid command.
 ;;; Returns:
-;;; 'T' if the string-argument is a string-command. Otherwise 'NIL'.
-(defun str-command-p (strarg)
-  (cond
-    ((or (null strarg)
-         (not (stringp strarg))) nil)
-    ((char-equal (char strarg 0) #\:) t)))
-
-;;; Finds a string-command within the list.
-;;; Parameters:
-;;; 'srtargs': list of string-arguments.
-;;; Returns:
-;;; If found a string-command, returns a list from the newly found command to the end of the list.
-;;; Otherwise 'NIL'.
-(defun find-str-command (strargs)
-  (member-if #'str-command-p strargs))
-
-;;; Finds a string-command within the list beginning with the second element
-;;; Parameters:
-;;; 'srtargs': list of string-arguments, beginning preferably, with a string-command.
-;;; Returns:
-;;; If found a string-command, returns a list from the newly found command to the end of the list.
-;;; Otherwise 'NIL'.
-(defun find-next-str-command (strargs)
-  (find-str-command (cdr strargs)))
-
-;;; Finds the list of string-argument-values corresponding to the first element which
-;;; must be a string-command.
-;;; Parameters:
-;;; 'strargs': A list of string arguments beginning, preferably with a string-command.
-;;; Returns:
-;;; A list consistin on all contiguous string-values associated to the string-command.
-;;; 'NIL' otherwise.
-(defun find-str-argvalue-list-from-command (strargs)
-  (loop for str in (cdr strargs) until (str-command-p str) collect str))
-
-;;; Turns a list of strings into a list of keywords
-;;; Parameters:
-;;; 'lstr': A list of strings
-;;; Returns:
-;;; A list of keywords
-(defun string-list-to-standard-list (strargs)
-  (mapcar (lambda (x) (intern x "KEYWORD"))
-	  (mapcar #'string-upcase (remove-char-from-strlst #\: strargs))))
-
-;;; Turns the simplified TERMINAL arguments (list of strings) into a string based
-;;; fake-standard list, consisting in a standard-like list of lists structure but with
-;;; string-colon-commands and string-values in the list.
-(defun strargs-from-str-to-str-fake-standard (strargs)
-  (cond
-    ;; ;; 1) End of list (nil)
-    ((null strargs) nil)
-    ;; 2)
-    ;;   - 1st elt, string-command (string beginning with a colon)
-    ;;   - 2nd elt, end of list (nil) or another string-command .
-    ((and (str-command-p (car strargs))
-	  (or (null (cdr strargs))
-	      (str-command-p (second strargs))))
-     (cons (cons (car strargs) nil)
-	   (strargs-from-str-to-str-fake-standard (cdr strargs))))
-    ;; 3)
-    ;;   - 1st elt, string-command (string beginning with a colon)
-    ;;   - 2nd elt, neither string-command nor end of list (nil), i.e.: a plain string.
-    ((not (str-command-p (second strargs)))
-     (cons (cons (car strargs) (find-str-argvalue-list-from-command strargs))
-	   (strargs-from-str-to-str-fake-standard (find-next-str-command strargs))))))
-
-;;; Converts the string-based-fake-standard list (string-commands and/or plain string) into the standard
-;;; list (all elements are keywords, not just symbols).
-(defun strargs-from-str-fake-standard-to-standard (strargs)
-  (cond
-    ((null strargs) nil)
-    ((null (car strargs))
-     (strargs-from-str-fake-standard-to-standard (cdr strargs)))
-    (t (cons (string-list-to-standard-list (car strargs))
-             (strargs-from-str-fake-standard-to-standard (cdr strargs))))))
-
-;;; ------------------------------------------------ 
-;;; *** ARGS IN SYMBOL FORM ***
-;;; Auxiliary functions needed by '(myemacs)' in the REPL.
-
-;;; Finds next keyword-command in the list.
-;;; Parameters:
-;;; 'args': A list of symbols (keyword and/or plain symbols).
-;;; Returns:
-;;; If a command is found, it returns the list from the already found commnad to the end.
-;;; Otherwise it returns 'NIL'.
-(defun find-keyw-command (args)
-  (member-if #'keywordp args))
-
-;;; Finds the next keyword-command in the list beyond the first element which must be
-;;; another command.
-;;; Parameters:
-;;; 'args': A list of symbols (keywords and/or plain symbols) where the 1st element is a command.
-;;; Returns:
-;;; If a command is found, it returns the list from the already found command until the end.
-;;; Otherwise, it returns 'NIL'.
-(defun find-next-keyw-command (args)
-  (find-keyw-command (cdr args)))
-
-;;; Finds the list of nonkeyword-symbol-argument-values associated to the first element which
-;;; must be a keyword-command.
-;;; Parameters:
-;;; 'args': List of symbols (keyword and/or plainsymbols) where the first element is
-;;;         a keyword-command.
-;;; Returns:
-;;; A list consisting of all contiguous values associated to the keyword-command. Otherwise 'NIL'
-(defun find-sym-argvalue-list-from-command (args)
-  (loop for sym in (cdr args) until (keywordp sym) collect sym))
-
-;;; Turns a list of symbols into a list of keywords.
-;;; Parameters:
-;;; 'args': A list of symbols.
-;;; Returns:
-;;; A list of keywords
-(defun symbol-list-to-repl-list (args)
-      (mapcar (lambda (arg) (intern (symbol-name arg) "KEYWORD")) args))
-
-;;; Turns the simplified REPL argument (list of simbols) into a fake standard REPL list,
-;;; consisting in a standard-like list of lists structure but with keyword-commands and
-;;; plain-symbol-values in the list.
-(defun args-from-repl-to-fake-standard (args)
-  (cond
-    ;; 1) End of list (nil)
-    ((null args) nil)
-    ;; 2)
-    ;;   - 1st elt, command (keyword)
-    ;;   - 2nd elt, end of list (nil) or another command (keyword)
-    ((and (keywordp (car args))
-	  (or (null (cdr args))
-	      (keywordp (second args))))
-     (cons (cons (car args) nil)
-	   (args-from-repl-to-fake-standard (cdr args))))
-    ;; 3)
-    ;;   - 1st elt, command (keyword)
-    ;;   - 2nd elt, neither command (keyword) nor end of list (nil), i.e.: a plain symbol (symbol)
-    ((not (keywordp (second args)))
-     (cons (cons (car args) (find-sym-argvalue-list-from-command args))
-	   (args-from-repl-to-fake-standard (find-next-keyw-command args))))))
-
-;;; Converts the fake standard list (keywords and/or plain symbols) into the standard
-;;; list (all elements are keywords, not just symbols).
-(defun args-from-fake-standard-to-standard (args)
-  (cond
-    ((null args) nil)
-    ((null (car args))
-     (args-from-fake-standard-to-standard (cdr args)))
-    (t
-     (cons (symbol-list-to-repl-list (car args))
-           (args-from-fake-standard-to-standard (cdr args))))))
-
-;;; Checks if the argument is a list of objects with a given property.
-;;; Parameters:
-;;; 'func-type-p': A predicate function to test whether an element has a certain property or not.
-;;; 'x': Any S-expression.
-;;; Returns 'T' if the elements of the list are of type 'func-type-p', 'NIL' otherwise.
-;;; Use examples:
-;;; (list-of-type-p #'keywordp lst), (list-of-type-p #'stringp lst), ...
-(defun list-of-type-p (func-type-p x)
-  (cond
-    ((null x) t)
-    ((atom x) nil)
-    ((not (funcall func-type-p (car x))) nil)
-    (t (list-of-type-p func-type-p (cdr x)))))
-
-;;; Checks if the argument is a list of lists of elements with a given property.
-;;; Parameters:
-;;; 'func-type-p': A predicate function to test whether an element has a certain property or not.
-;;; 'x': Any S-expression.
-;;; Returns 'T' if the elements of the list of lists are of type 'func-type-p', 'NIL' otherwise.
-;;; Use examples:
-;;; (list-of-lists-of-type-p #'keywordp x), (list-of-lists-of-type-p #'numberp x), ...
-(defun list-of-lists-of-type-p (func-type-p x)
-  (cond
-    ((null x) t)
-    ((atom x) nil)
-    ((not (list-of-type-p func-type-p (car x))) nil)
-    (t (list-lists-of-type-p func-type-p (cdr x)))))
-
-(defun first-arg-not-a-command-closure (first-arg)
-  (let ((closure-func (lambda () (msg (err-first-arg-not-a-command first-arg nil)))))
+;;; Closure error message.
+(defun invalid-command-closure (cmd)
+  (let ((closure-func (lambda () (msg (err-invalid-command cmd nil)))))
     closure-func))
 
-(defun args-in-standard-form (args)
-  (values t nil args))
+;;; Error closure when a command had an invalid number of options.
+;;; Parameters:
+;;; 'cmd': Command with an invalid number of options.
+;;; Returns:
+;;; Closure error message.
+(defun incorrect-num-options-closure (cmd)
+  (let ((closure-func (lambda () (msg (err-num-options cmd nil)))))
+    closure-func))
 
-(defun args-in-repl-form (args)
-  (cond
-    ;; Empty list: it would be classified as a standard argument list.
-    ((null args) args)
-    ;; Detects a first argument which is not a keyword-command
-    ((and (symbolp (car args))
-	  (not (keywordp (car args))))
-     (values nil (first-arg-not-a-command-closure (car args)) args))
-    (t (args-from-fake-standard-to-standard
-	(args-from-repl-to-fake-standard args)))))
+;;; Error closure when a command had an invalid option.
+;;; Parameters:
+;;; 'cmd': Command with an invalid option.
+;;; Returns:
+;;; Closure error message.
+(defun incorrect-option-closure (cmd)
+  (let ((closure-func (lambda () (msg (err-incorrect-option cmd nil)))))
+    closure-func))
 
-(defun args-in-terminal-form (strargs)
-  (cond
-    ;; Empty list: it would be classified as a standard argument list.
-    ((null strargs) strargs)
-    ;; Detects a first argument which is not a keyword-command
-    ((not (str-command-p (car strargs)))
-     (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
-    (t (strargs-from-fake-str-standard-to-standard
-	(strargs-from-str-to-str-fake-standard strargs)))))
+;;; Detects whether a given command is correct or there is a problem with it.
+;;; These problems may be:
+;;;   - invalid command.
+;;;   - incorrect number of options.
+;;;   - an incorrect option.
+;;; Parameters:
+;;; 'lcmd': A list which consists of the command in the first place, followed
+;;;         by any number of options for this command including zero options,
+;;;         i.e.: (command option1 option2 ...).
+;;;         Note: The standard argument list contains 'lcmd's elements.
+;;; Returns two values:
+;;;   1) 'T' if the command is syntactically correct, or 'NIL' if there is a problem.
+;;;   2) 'NIL' if the command is correct, or a message error closure to be displayed later on.
+(defun approve-command-list (lcmd)
+  (let* ((cmd (car lcmd))
+	 (options (cdr lcmd))
+	 (num-options (length options))
+	 (command-restriction-list (car (member cmd *valid-commands* :key #'car)))
+	 (func (second command-restriction-list))
+	 (num (third command-restriction-list))
+	 (valid-options (fourth command-restriction-list)))
+    (cond
+      ((null command-restriction-list)
+       (values nil (invalid-command-closure cmd)))
+      ((not (funcall func num-options num))
+       (values nil (incorrect-num-options-closure cmd)))
+      ((and (not (null valid-options))
+	    (not (loop for opt in options always (member opt valid-options))))
+       (values nil (incorrect-option-closure cmd)))
+      (t (values t nil)))))
+
+(defun count-commands (largs-repl)
+  (let ((h (make-hash-table)))
+    (dolist (lcmd largs-repl)
+      (cond
+	((null (gethash (car lcmd) h))
+	 (setf (gethash (car lcmd) h) 1))
+	(t (incf (gethash (car lcmd) h)))))
+    h))
+
+(defun list-repeated-commands (largs-repl)
+  (let ((h (count-commands largs-repl)))
+    (loop for k being the hash-keys in h using (hash-value v) collect (list k v))))
+
+;;; ********
 
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
-;;; Search for the command in the argument list in its standard form (list of lists of keywords.)
-;;; Returns:
-;;; A list with the command and its option(s) or 'NIL' if was not found.
-(defun find-command (command standard-args)
-  (cond
-    ((null standard-args) nil)
-    ((eql (car (car standard-args)) command)
-     (car standard-args))
-    (t (find-command command (cdr standard-args)))))
+;;; Detects whether the standard argument list has syntactically correct commands or not
+;;; Specifically, it can detect the following problems with commands:
+;;;   - invalid command.
+;;;   - incorrect number of options.
+;;;   - an incorrect option.
+;;; Parameters:
+;;; 'standard-args': Argument list in standard form.
+;;; Returns two values:
+;;;   1) 'T' if the standard argument list is syntactically correct, 'NIL' if a command is
+;;;      not syntactically correct.
+;;;   2) 'NIL' if the standard argument list is correct, or a message error closure to be
+;;;      displayed later on.
+(defun approve-standard-args (standard-args)
+  (dolist (lcmd standard-args)
+    (multiple-value-bind (command-list-ok err-closure)
+	(approve-command-list lcmd)
+      (when (not command-list-ok)
+	(return-from approve-standard-args
+	  (values command-list-ok err-closure)))))
+  (values t nil))
 
-(defun standarize-and-register-args (args)
-    (cond
-      ((list-of-lists-of-type-p #'keywordp args)
-       (args-in-standard-form args))
-      ((list-of-type-p #'symbolp args)
-       (args-in-repl-form args))
-      ((list-of-type-p #'stringp args)
-       (args-in-terminal-form args))))
+
+
 
 ;;; ********
 

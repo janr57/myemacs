@@ -239,8 +239,9 @@
     ((and (symbolp (car args))
 	  (not (keywordp (car args))))
      (values nil (first-arg-not-a-command-closure (car args)) args))
-    (t (args-from-fake-standard-to-standard
-	(args-from-repl-to-fake-standard args)))))
+    (t (values
+	t nil (args-from-fake-standard-to-standard
+	       (args-from-repl-to-fake-standard args))))))
 
 (defun args-in-terminal-form (strargs)
   (cond
@@ -249,7 +250,7 @@
     ;; Detects a first argument which is not a keyword-command
     ((not (str-command-p (car strargs)))
      (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
-    (t (strargs-from-fake-str-standard-to-standard
+    (t (strargs-from-str-fake-standard-to-standard
 	(strargs-from-str-to-str-fake-standard strargs)))))
 
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
@@ -271,6 +272,8 @@
        (args-in-repl-form args))
       ((list-of-type-p #'stringp args)
        (args-in-terminal-form args))))
+
+
 
 ;;; ********
 

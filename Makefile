@@ -19,12 +19,14 @@ target2 = $(sysname)_ccl
 
 FILES = src/packages.lisp \
 		src/globals.lisp \
+		src/funcs.lisp \
 		src/lang-en.lisp \
 		src/lang-es.lisp \
 		src/lang.lisp \
 		src/os.lisp \
 		src/cl.lisp \
 		src/args.lisp \
+		src/actions.lisp \
 		src/main.lisp
 
 all: $(target1) $(target2)
