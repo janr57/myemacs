@@ -1,5 +1,5 @@
-;;;; main.lisp
-;;;; Allows the user to run 'myemacs' in three different ways:
+;;;; myemacs.asd
+;;;; ASDF system definitions for 'myemacs'.
 ;;;;
 ;;;; The 'myemacs' program keeps track of different configurations of 'emacs'.
 ;;;; The user can change between them.
@@ -31,12 +31,12 @@
 			  :depends-on ("lang"))
 			 (:file "cl"
 			  :depends-on ("lang"))
-			 (:file "args"
+			 (:file "lex-args"
 			  :depends-on ("lang" "funcs"))
-			 (:file "actions"
+			 (:file "syn-args"
 			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "args" "actions")))))
+			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -74,12 +74,12 @@
 			  :depends-on ("lang"))
 			 (:file "cl"
 			  :depends-on ("lang"))
-			 (:file "args"
+			 (:file "lex-args"
 			  :depends-on ("lang" "funcs"))
-			 (:file "actions"
+			 (:file "syn-args"
 			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "args" "actions"))))))
+			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args"))))))
 
 
 
