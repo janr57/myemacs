@@ -27,6 +27,7 @@ FILES = src/packages.lisp \
 		src/cl.lisp \
 		src/lex-args.lisp \
 		src/syn-args.lisp \
+		src/actions.lisp \
 		src/main.lisp
 
 all: $(target1) $(target2)

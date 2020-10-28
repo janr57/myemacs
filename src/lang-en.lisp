@@ -57,13 +57,28 @@
 ;;; ******************** WARNING MESSAGES
 
 ;;; ******************** INFO MESSAGES
-(defun info-argument-list-en (largs &optional (stream t))
-  (format stream "The argument list is: ~a" largs))
+(defun info-action-version-en (&optional (stream t))
+  (format stream "~a v~a ~a (~a)~%" *progname* *version* *production* *version-date*))
 
-(defun info-execution-mode-en (exec-mode &optional (stream t))
-  (format stream "The execution mode is :~a" exec-mode))
-
+(defun info-action-help-en (&optional (stream t))
+  (format stream "USAGE: [ :help || :version || :show || :use <cfg> || :save <cfg> || :del <cfg> ]~%")
+  (format stream "       [ :debug || :verbose || :lang <en || es> ]~%")
+  (format stream "~%")
+  (format stream "(blank)     -> This message.~%")
+  (format stream ":help       -> This message.~%")
+  (format stream ":version    -> Program version.~%")
+  (format stream ":show       -> Show active configuration and possible actions to take.~%")
+  (format stream ":use <cfg>  -> Change active configuration to <cfg>.~%")
+  (format stream ":save <cfg> -> Save default emacs config with the name <cfg>.~%")
+  (format stream ":del <cfg>  -> Delete configuration with name <cfg>.~%")
+  (format stream ":debug      -> Show debug info.~%")
+  (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
+  (format stream ":lang < en || es > -> Show messages in this language.~%"))
 
 ;;; ******************** TEXT STRINGS
 
+(defun info-copyright-en (&optional (stream t))
+  (format stream "Copyright (C) ~d ~a <~a>" *year* *author* *email*))
 
+(defun info-license-en (&optional (stream t))
+  (format stream "License ~a." *license*))

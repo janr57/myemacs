@@ -15,6 +15,19 @@
 
 (in-package :myemacs)
 
+;;; 
+(defparameter *progname* "myemacs")
+(defparameter *version* "0.1.0")
+(defparameter *production* "alpha")
+(defparameter *version-date* "28-10-2020")
+
+;;;
+(defparameter *author* "José A. Navarro Ramón")
+(defparameter *email*  "josea.navarro1@gmail.com")
+(defparameter *year* 2020)
+(defparameter *license* "BSD Clause-3")
+
+
 ;;; Language global variables
 (defparameter *default-language* :en)
 (defparameter *user-language* nil)

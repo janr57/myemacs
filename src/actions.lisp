@@ -27,16 +27,19 @@
   (format t "(action-show)~%"))
 
 ;;(defun action-help ()
-;;  (msg-info-action-help t))
+;;  (msg (info-action-help))
 
 ;;(defun action-help ()
 ;;  (show-help))
 
-(defun action-help ()
-  (format t "(action-help)~%"))
+;;(defun action-help ()
+;;  (format t "(action-help)~%"))
 
+(defun action-help ()
+  (msg (info-action-help)))
+  
 (defun action-version ()
-  (format t "(action-version)~%"))
+  (msg (info-action-version)))
 
 (defun action-use (option)
   (format t "(action-use) option -> ~a~%" option))
