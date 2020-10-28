@@ -250,8 +250,20 @@
     ;; Detects a first argument which is not a keyword-command
     ((not (str-command-p (car strargs)))
      (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
-    (t (strargs-from-str-fake-standard-to-standard
-	(strargs-from-str-to-str-fake-standard strargs)))))
+    (t (values
+	t nil (strargs-from-str-fake-standard-to-standard
+	       (strargs-from-str-to-str-fake-standard strargs))))))
+
+;;(defun args-in-terminal-form (strargs)
+;;  (cond
+;;    ;; Empty list: it would be classified as a standard argument list.
+;;    ((null strargs) strargs)
+;;    ;; Detects a first argument which is not a keyword-command
+;;    ((not (str-command-p (car strargs)))
+;;     (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
+;;    (t (strargs-from-str-fake-standard-to-standard
+;;	(strargs-from-str-to-str-fake-standard strargs)))))
+
 
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
 ;;; Search for the command in the argument list in its standard form (list of lists of keywords.)
