@@ -35,8 +35,10 @@
 			  :depends-on ("lang" "funcs"))
 			 (:file "syn-args"
 			  :depends-on ("lang"))
+			 (:file "actions"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args")))))
+			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args" "actions")))))
   :description ""
   :in-order-to ((test-op (test-op "myemacs/tests"))))
 
@@ -78,8 +80,10 @@
 			  :depends-on ("lang" "funcs"))
 			 (:file "syn-args"
 			  :depends-on ("lang"))
+			 (:file "actions"
+			  :depends-on ("lang"))
 			 (:file "main"
-			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args"))))))
+			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args" "actions"))))))
 
 
 
