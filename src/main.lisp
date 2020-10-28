@@ -73,7 +73,8 @@
 		       (format t "~a~%" (funcall repeated-command-closure)))
 		      ((not commands-number-ok)
 		       (format t "~a~%" (funcall too-many-commands-closure)))
-		      (t (format t "OK!~%")))
+		      ;;(t (format t "OK!~%")))
+		      (t (action-delivery-center (car cleaned-standard-args))))
 		    ;;
 		    (if (or (null supported-exec-mode)
 			    (null supported-os-type)

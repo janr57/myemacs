@@ -198,7 +198,7 @@
   (let ((num-commands (length cleaned-standard-args)))
     (if (not (<= num-commands 1))
 	(values nil (too-many-commands-closure))
-	(t nil))))
+	(values t nil))))
 
 ;;; ********
 
