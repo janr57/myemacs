@@ -36,8 +36,7 @@
 	  (string-upcase lisp-name) lisp-version))
 
 (defun err-first-arg-not-a-command-es (first-arg &optional (stream t))
-  (format stream "Error, el primer argumento '~a' no es un comando (debe comenzar por dos puntos)."
-	  first-arg))
+  (format stream "Error, el primer argumento '~a' no es un comando." first-arg))
 
 (defun err-invalid-command-es (cmd &optional (stream t))
   (format stream "Error, comando no válido ':~a'." cmd))

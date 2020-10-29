@@ -36,8 +36,7 @@
 	  (string-upcase lisp-name) lisp-version))
 
 (defun err-first-arg-not-a-command-en (first-arg &optional (stream t))
-  (format stream "Error, the first argument '~a' is not a command (it must begin with a colon)."
-	  first-arg))
+  (format stream "Error, the first argument '~a' is not a command." first-arg))
 
 (defun err-invalid-command-en (cmd &optional (stream t))
   (format stream "Error, invalid command :~a." cmd))

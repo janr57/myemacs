@@ -53,75 +53,6 @@
          (not (stringp strarg))) nil)
     ((char-equal (char strarg 0) #\:) t)))
 
-;;; Finds a string-command within the list.
-;;; Parameters:
-;;; 'srtargs': list of string-arguments.
-;;; Returns:
-;;; If found a string-command, returns a list from the newly found command to the end of the list.
-;;; Otherwise 'NIL'.
-(defun find-str-command (strargs)
-  (member-if #'str-command-p strargs))
-
-;;; Finds a string-command within the list beginning with the second element
-;;; Parameters:
-;;; 'srtargs': list of string-arguments, beginning preferably, with a string-command.
-;;; Returns:
-;;; If found a string-command, returns a list from the newly found command to the end of the list.
-;;; Otherwise 'NIL'.
-(defun find-next-str-command (strargs)
-  (find-str-command (cdr strargs)))
-
-;;; Finds the list of string-argument-values corresponding to the first element which
-;;; must be a string-command.
-;;; Parameters:
-;;; 'strargs': A list of string arguments beginning, preferably with a string-command.
-;;; Returns:
-;;; A list consistin on all contiguous string-values associated to the string-command.
-;;; 'NIL' otherwise.
-(defun find-str-argvalue-list-from-command (strargs)
-  (loop for str in (cdr strargs) until (str-command-p str) collect str))
-
-;;; Turns a list of strings into a list of keywords
-;;; Parameters:
-;;; 'lstr': A list of strings
-;;; Returns:
-;;; A list of keywords
-(defun string-list-to-standard-list (strargs)
-  (mapcar (lambda (x) (intern x "KEYWORD"))
-	  (mapcar #'string-upcase (remove-char-from-strlst #\: strargs))))
-
-;;; Turns the simplified TERMINAL arguments (list of strings) into a string based
-;;; fake-standard list, consisting in a standard-like list of lists structure but with
-;;; string-colon-commands and string-values in the list.
-(defun strargs-from-str-to-str-fake-standard (strargs)
-  (cond
-    ;; ;; 1) End of list (nil)
-    ((null strargs) nil)
-    ;; 2)
-    ;;   - 1st elt, string-command (string beginning with a colon)
-    ;;   - 2nd elt, end of list (nil) or another string-command .
-    ((and (str-command-p (car strargs))
-	  (or (null (cdr strargs))
-	      (str-command-p (second strargs))))
-     (cons (cons (car strargs) nil)
-	   (strargs-from-str-to-str-fake-standard (cdr strargs))))
-    ;; 3)
-    ;;   - 1st elt, string-command (string beginning with a colon)
-    ;;   - 2nd elt, neither string-command nor end of list (nil), i.e.: a plain string.
-    ((not (str-command-p (second strargs)))
-     (cons (cons (car strargs) (find-str-argvalue-list-from-command strargs))
-	   (strargs-from-str-to-str-fake-standard (find-next-str-command strargs))))))
-
-;;; Converts the string-based-fake-standard list (string-commands and/or plain string) into the standard
-;;; list (all elements are keywords, not just symbols).
-(defun strargs-from-str-fake-standard-to-standard (strargs)
-  (cond
-    ((null strargs) nil)
-    ((null (car strargs))
-     (strargs-from-str-fake-standard-to-standard (cdr strargs)))
-    (t (cons (string-list-to-standard-list (car strargs))
-             (strargs-from-str-fake-standard-to-standard (cdr strargs))))))
-
 ;;; ------------------------------------------------ 
 ;;; *** ARGS IN SYMBOL FORM ***
 ;;; Auxiliary functions needed by '(myemacs)' in the REPL.
@@ -228,42 +159,41 @@
   (let ((closure-func (lambda () (msg (err-first-arg-not-a-command first-arg nil)))))
     closure-func))
 
+(defun found-first-arg-not-a-command (args)
+  (let* ((new-args (cons (intern (symbol-name (car args)) "KEYWORD") (cdr args)))
+	 (standard-args (args-from-fake-standard-to-standard
+			 (args-from-repl-to-fake-standard new-args))))
+    (values nil (first-arg-not-a-command-closure (car args)) standard-args)))
+
 (defun args-in-standard-form (args)
   (values t nil args))
 
-(defun args-in-repl-form (args)
+(defun args-in-repl-form-to-standard (args)
   (cond
     ;; Empty list: it would be classified as a standard argument list.
     ((null args) args)
     ;; Detects a first argument which is not a keyword-command
     ((and (symbolp (car args))
 	  (not (keywordp (car args))))
-     (values nil (first-arg-not-a-command-closure (car args)) args))
+     (found-first-arg-not-a-command args))
     (t (values
 	t nil (args-from-fake-standard-to-standard
 	       (args-from-repl-to-fake-standard args))))))
 
-(defun args-in-terminal-form (strargs)
+(defun args-in-terminal-form-to-repl (strargs)
   (cond
-    ;; Empty list: it would be classified as a standard argument list.
-    ((null strargs) strargs)
-    ;; Detects a first argument which is not a keyword-command
-    ((not (str-command-p (car strargs)))
-     (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
-    (t (values
-	t nil (strargs-from-str-fake-standard-to-standard
-	       (strargs-from-str-to-str-fake-standard strargs))))))
+    ((null strargs) nil)
+    ((str-command-p (car strargs))
+     (cons (intern (remove #\: (string-upcase (car strargs))) "KEYWORD")
+	   (args-in-terminal-form-to-repl (cdr strargs))))
+    (t (cons (intern (string-upcase (car strargs)))
+	     (args-in-terminal-form-to-repl (cdr strargs))))))
 
-;;(defun args-in-terminal-form (strargs)
-;;  (cond
-;;    ;; Empty list: it would be classified as a standard argument list.
-;;    ((null strargs) strargs)
-;;    ;; Detects a first argument which is not a keyword-command
-;;    ((not (str-command-p (car strargs)))
-;;     (values nil (first-arg-not-a-command-closure (car strargs)) strargs))
-;;    (t (strargs-from-str-fake-standard-to-standard
-;;	(strargs-from-str-to-str-fake-standard strargs)))))
-
+(defun args-in-terminal-form-to-standard (strargs)
+  (let (args (strargs-to-replargs strargs))
+    (format t "(args-in-terminal-form) strargs -> ~a~%" strargs)
+    (format t "(args-in-terminal-form) args -> ~a~%" args)
+    (args-in-repl-form args)))
 
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
 ;;; Search for the command in the argument list in its standard form (list of lists of keywords.)
@@ -281,10 +211,10 @@
       ((list-of-lists-of-type-p #'keywordp args)
        (args-in-standard-form args))
       ((list-of-type-p #'symbolp args)
-       (args-in-repl-form args))
+       (args-in-repl-form-to-standard args))
       ((list-of-type-p #'stringp args)
-       (args-in-terminal-form args))))
-
+       (args-in-repl-form-to-standard
+	(args-in-terminal-form-to-repl args)))))
 
 
 ;;; ********
