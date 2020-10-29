@@ -47,12 +47,6 @@
 	  (register-and-approve-lisp)
 	(multiple-value-bind (process-ok args-error-closure standard-args)
 	    (standarize-and-register-args args)
-	  ;;(format t "(main) process-ok -> ~a~%" process-ok)
-	  ;;(format t "(main) args-error-closure -> ~a~%" args-error-closure)
-	  (format t "(main) standard-args -> ~a~%" standard-args)
-	  ;;(when args-error-closure
-	  ;;  (funcall args-error-closure))
-	  ;;(format t "(main) TERMINA~%")
 	  (multiple-value-bind (lcmd-ok lcmd-closure)
 	      (approve-standard-args standard-args)
 	    (multiple-value-bind (no-repeated-command repeated-command-closure)
@@ -62,7 +56,6 @@
 		(let ((cleaned-standard-args (remove-global-commands standard-args)))
 		  (multiple-value-bind (commands-number-ok too-many-commands-closure)
 		      (approve-num-commands cleaned-standard-args)
-		    ;;(format t "(main) cleaned-standard-args -> ~a~%" cleaned-standard-args)
 		    ;; Print the appropriate message
 		    (cond
 		      ((null supported-exec-mode)

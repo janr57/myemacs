@@ -160,6 +160,16 @@
     (setf (gethash 'found-default-init.el *data*) found-default-init.el)
     (setf (gethash 'active-config *data*) active-config)))
 
+(defun action-show-active-alt (active-config available-configs found-default-dotemacs)
+  (when found-default-dotemacs
+    (delete-dotemacs-unix dotemacs-str))
+  (msg (info-action-show-active-alt active-config available-configs)))
+
+(defun action-show-active-noalt (active-config available-configs found-default-dotemacs)
+  (when found-default-dotemacs
+    (delete-dotemacs-unix dotemacs-str))
+  (msg (info-action-show-active-noalt active-config available-configs)))
+
 (defun show-config-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
 	(dotemacs-str (gethash 'dotemacs-str *data*))
@@ -180,11 +190,13 @@
 ;;       (format t "(show-config-unix) NO CONFIGURATION FOUND~%"))
       ;; An active configuration
       ((and found-emacsdir
-	    active-config)
-       (progn
-         (when found-default-dotemacs
-           (delete-dotemacs-unix dotemacs-str))
- 	 (msg (info-action-show-active-config active-config conf-names)))))
+	    active-config
+	    (> (length conf-names) 1))
+       (action-show-active-alt active-config conf-names found-default-dotemacs))
+      ((and found-emacsdir
+	    active-config
+	    (= (length conf-names) 1))
+       (action-show-active-noalt active-config conf-names found-default-dotemacs)))
 ;;       ;;(format t "(show-config-unix) ONE ACTIVE CONFIGURATION~%"))
 ;;      ;; No configuration, but some saved ones
 ;;      ((and (not found-default-dotemacs)
