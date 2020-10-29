@@ -150,6 +150,33 @@
     (format stream "   Available configurations: ~a~%" available-cfgs-str)
     (format stream "4) Use 'emacs' and create a native configuration.~%~%")))
 
+;;; Message in response to the ':show' command when there is a native configuration
+;;; and other alternative saved configurations.
+(defun info-action-show-native-alt-en (available-cfgs &optional (stream t))
+  (let ((available-cfgs-str (join-strings-from-list available-cfgs)))
+    
+    (format stream "~a~%" (strinfo-version-en nil))
+    (format stream "~a~%" (strinfo-copyright-en nil))
+    (format stream "~a~%~%" (strinfo-license-en nil))
+    
+    (format stream "- INFO: 'emacs' native configuration -> FOUND~%")
+    (format stream "- INFO: Saved configurations         -> ~a~%" available-cfgs-str)
+    (format stream "- INFO: Active configuration         -> NOT FOUND~%")
+    (terpri stream)
+    (format stream "Possible actions:~%")
+    (format stream "1) Delete native configuration:~%")
+    (format stream "   --> myemacs :del *~%")
+    (format stream "2) Copy native configuration as <dest>:~%")
+    (format stream "   --> myemacs :copy * <dest>~%")
+    (format stream "   Names to avoid: ~a~%" available-cfgs-str)
+    (format stream "3) Delete any saved configuration:~%")
+    (format stream "   --> myemacs :del <cfg>~%")
+    (format stream "   Available configurations: ~a~%" available-cfgs-str)
+    (format stream "4) Copy a saved configuration:~%")
+    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "   Available configurations: ~a~%" available-cfgs-str)
+    (format stream "5) Use 'emacs' with the native configuration.~%~%")))
+
 ;;; Message in response to :version command
 (defun info-action-version-en (&optional (stream t))
   (format stream "~a~%" (strinfo-version-en nil))
@@ -170,8 +197,8 @@
   (format stream ":version    -> Program version.~%")
   (format stream ":show       -> Show  configurations and possible actions to take.~%")
   (format stream ":use <cfg>  -> Change active configuration to <cfg>.~%")
-  (format stream ":save <cfg> -> Save default emacs config with the name <cfg>.~%")
-  (format stream ":del <cfg>  -> Delete configuration with name <cfg>.~%")
+  (format stream ":save <cfg> -> Save native emacs config as <cfg>.~%")
+  (format stream ":del <cfg>  -> Delete <cfg> configuration.~%")
   (format stream ":debug      -> Show debug info.~%")
   (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
   (format stream ":lang < en || es > -> Show messages in the chosen language.~%~%"))

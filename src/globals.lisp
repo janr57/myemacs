@@ -23,7 +23,7 @@
 
 ;;;
 (defparameter *author* "José A. Navarro Ramón")
-(defparameter *email*  "josea.navarro1@gmail.com")
+(defparameter *email*  "janr.devel@gmail.com")
 (defparameter *year* 2020)
 (defparameter *license* "BSD Clause-3")
 

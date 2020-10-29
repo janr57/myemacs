@@ -127,9 +127,9 @@
 	 (found-init-files (remove-if-not #'probe-file possible-init-files))
 	 (saved-dirs (mapcar #'directory-namestring found-init-files))
 	 (conf-names (mapcar #'get-emacs-cfg-name-unix saved-dirs))
-	 (found-default-dotemacs (probe-file dotemacs-str))
+	 (found-native-dotemacs (probe-file dotemacs-str))
 	 (found-emacsdir (probe-file emacsdir-str))
-	 (found-default-init.el (probe-file init.el-str))
+	 (found-native-init.el (probe-file init.el-str))
 	 	 (active-cfg (get-emacs-cfg-name-unix found-emacsdir)))
     
 ;;    (format t "(get-and-register-cfg-unix) homedir-str -> ~a~%" homedir-str)
@@ -141,9 +141,9 @@
 ;;    (format t "(get-and-register-cfg-unix) found-init-files -> ~a~%" found-init-files)
 ;;    (format t "(get-and-register-cfg-unix) saved-dirs -> ~a~%" saved-dirs)
 ;;    (format t "(get-and-register-cfg-unix) conf-names -> ~a~%" conf-names)
-;;    (format t "(get-and-register-cfg-unix) found-default-dotemacs -> ~a~%" found-default-dotemacs)
+;;    (format t "(get-and-register-cfg-unix) found-native-dotemacs -> ~a~%" found-native-dotemacs)
 ;;    (format t "(get-and-register-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
-;;    (format t "(get-and-register-cfg-unix) found-init.el -> ~a~%" found-default-init.el)
+;;    (format t "(get-and-register-cfg-unix) found-init.el -> ~a~%" found-native-init.el)
 ;;    (format t "(get-and-register-cfg-unix) active-cfg -> ~a~%" active-cfg)
     
     (setf (gethash 'homedir-str *data*) homedir-str)
@@ -155,48 +155,51 @@
     (setf (gethash 'found-init-files *data*) found-init-files)
     (setf (gethash 'saved-dirs *data*) saved-dirs)
     (setf (gethash 'conf-names *data*) conf-names)
-    (setf (gethash 'found-default-dotemacs *data*) found-default-dotemacs)
+    (setf (gethash 'found-native-dotemacs *data*) found-native-dotemacs)
     (setf (gethash 'found-emacsdir *data*) found-emacsdir)
-    (setf (gethash 'found-default-init.el *data*) found-default-init.el)
+    (setf (gethash 'found-native-init.el *data*) found-native-init.el)
     (setf (gethash 'active-cfg *data*) active-cfg)))
 
 (defun action-show-no-cfg ()
   (msg (info-action-show-no-cfg)))
 
-(defun action-show-active-alt (active-cfg available-cfgs found-default-dotemacs)
-  (when found-default-dotemacs
-    (delete-dotemacs-unix found-default-dotemacs))
+(defun action-show-active-alt (active-cfg available-cfgs found-native-dotemacs)
+  (when found-native-dotemacs
+    (delete-dotemacs-unix found-native-dotemacs))
   (msg (info-action-show-active-alt active-cfg available-cfgs)))
 
-(defun action-show-active-noalt (active-cfg available-cfgs found-default-dotemacs)
-  (when found-default-dotemacs
-    (delete-dotemacs-unix found-default-dotemacs-str))
+(defun action-show-active-noalt (active-cfg available-cfgs found-native-dotemacs)
+  (when found-native-dotemacs
+    (delete-dotemacs-unix found-native-dotemacs-str))
   (msg (info-action-show-active-noalt active-cfg available-cfgs)))
   
-  (defun action-show-only-saved-cfgs (available-cfgs)
+(defun action-show-only-saved-cfgs (available-cfgs)
   (msg (info-action-show-only-saved-cfgs available-cfgs)))
+
+(defun action-native-alt (available-cfgs)
+  (msg (info-action-show-native-alt available-cfgs)))
 
 (defun show-cfg-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
 	(dotemacs-str (gethash 'dotemacs-str *data*))
 	(init.el-str (gethash 'init.el-str *data*))
 	(emacsdir-str (gethash 'emacsdir-str *data*))
-	(found-default-dotemacs (gethash 'found-default-dotemacs *data*))
-	(found-default-init.el (gethash 'found-default-init.el *data*))
+	(found-native-dotemacs (gethash 'found-native-dotemacs *data*))
+	(found-native-init.el (gethash 'found-native-init.el *data*))
 	(found-emacsdir (gethash 'found-emacsdir *data*))
 	(active-cfg (gethash 'active-cfg *data*))
 	(conf-names (gethash 'conf-names *data*)))
 	
-	;;(format t "(show-cfg-unix) found-default-dotemacs -> ~a~%" found-default-dotemacs)
-	;;(format t "(show-cfg-unix) found-default-init.el -> ~a~%" found-default-init.el)
+	;;(format t "(show-cfg-unix) found-native-dotemacs -> ~a~%" found-native-dotemacs)
+	;;(format t "(show-cfg-unix) found-native-init.el -> ~a~%" found-native-init.el)
 	;;(format t "(show-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
 	;;(format t "(show-cfg-unix) active-cfg -> ~a~%" active-cfg)
 	;;(format t "(show-cfg-unix) conf-names -> ~a~%" conf-names)
 	
     (cond
       ;; No configuration found
-      ((and (not found-default-dotemacs)
-	    (not found-default-init.el)
+      ((and (not found-native-dotemacs)
+	    (not found-native-init.el)
 	    (not found-emacsdir)
 	    (not active-cfg)
 	    (not conf-names))
@@ -205,25 +208,25 @@
       ((and found-emacsdir
 	    active-cfg
 	    (> (length conf-names) 1))
-       (action-show-active-alt active-cfg conf-names found-default-dotemacs))
+       (action-show-active-alt active-cfg conf-names found-native-dotemacs))
       ((and found-emacsdir
 	    active-cfg
 	    (= (length conf-names) 1))
-       (action-show-active-noalt active-cfg conf-names found-default-dotemacs))
+       (action-show-active-noalt active-cfg conf-names found-native-dotemacs))
       ;; No configuration, but some saved ones
-      ((and (not found-default-dotemacs)
+      ((and (not found-native-dotemacs)
 	    (not found-emacsdir)
 	    conf-names)
-       (action-show-only-saved-cfgs conf-names)))
-;;      ;; A default configuration and some saved ones
-;;      ((and (or found-default-dotemacs
-;;		found-emacsdir)
-;;	    lconf-names
-;;	    (not active-cfg))
-;;       (format t "(show-cfg-unix) FOUND A DEFAULT CONFIGURATION AND SOME SAVED ONES~%"))
-;;      ;; A default configuration and no saved ones
+       (action-show-only-saved-cfgs conf-names))
+      ;; A native configuration and some saved ones
+      ((and (or found-native-dotemacs
+		found-emacsdir)
+	    conf-names
+	    (not active-cfg))
+       (action-show-native-alt)))
+      ;; A native configuration and no saved ones
 ;;      (t
-;;       (format t "(show-cfg-unix) FOUND A DEFAULT CONFIGURATION, BUT FOUND SOME SAVED ONES~%"))
+;;       (format t "(show-cfg-unix) FOUND A NATIVE CONFIGURATION, BUT FOUND SOME SAVED ONES~%"))
 ;;  (format t "(show-cfg-unix) ...~%"))))
 ))
 
