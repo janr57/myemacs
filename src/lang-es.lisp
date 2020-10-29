@@ -81,9 +81,6 @@
 ;;; Mensaje de respuesta al comando :show cuando hay una configuración activa
 ;;; y, al menos, otra alternativa que se pueda activar.
 (defun info-action-show-active-alt-es (active-cfg available-cfgs &optional (stream t))
-  (format t "(info-action-show-active-alt-es) active-cfg -> ~a~%" active-cfg)
-  (format t "(info-action-show-active-alt-es) available-cfgs -> ~a~%" available-cfgs)
-  (format t "(info-action-show-active-alt-es) stream -> ~a~%" stream)
   (let ((available-cfgs-str (join-strings-from-list available-cfgs))
 	(other-cfgs-str (join-strings-from-list
 			    (remove active-cfg available-cfgs :test #'string-equal))))

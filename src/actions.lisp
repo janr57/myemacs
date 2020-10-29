@@ -130,7 +130,7 @@
 	 (found-native-dotemacs (probe-file dotemacs-str))
 	 (found-emacsdir (probe-file emacsdir-str))
 	 (found-native-init.el (probe-file init.el-str))
-	 	 (active-cfg (get-emacs-cfg-name-unix found-emacsdir)))
+	 (active-cfg (get-emacs-cfg-name-unix found-emacsdir)))
     
 ;;    (format t "(get-and-register-cfg-unix) homedir-str -> ~a~%" homedir-str)
 ;;    (format t "(get-and-register-cfg-unix) emacsdir-str -> ~a~%" emacsdir-str)
@@ -145,6 +145,19 @@
 ;;    (format t "(get-and-register-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
 ;;    (format t "(get-and-register-cfg-unix) found-init.el -> ~a~%" found-native-init.el)
 ;;    (format t "(get-and-register-cfg-unix) active-cfg -> ~a~%" active-cfg)
+
+    ;; When a native .emacs.d directory is found (not a symbolic link) but no
+    ;; initialization file (neither ~/.emacs nor ~/.emacs.d/init.el, then
+    ;; we try to delete the directory only if it is empty.
+    ;; If it wasn't empty, then we suppose that there is a native configuration.
+    ;; If it could be deleted, it tells us that it was empty.
+    ;; We can check this by probing again the emacsdir.
+    (when (and (not found-native-dotemacs)
+               (not found-native-init.el)
+               (not active-cfg)
+               found-emacsdir)
+      (uiop:delete-empty-directory found-emacsdir)
+      (setf found-emacsdir (probe-file emacsdir-str)))
     
     (setf (gethash 'homedir-str *data*) homedir-str)
     (setf (gethash 'emacsdir-str *data*) emacsdir-str)
@@ -176,7 +189,7 @@
 (defun action-show-only-saved-cfgs (available-cfgs)
   (msg (info-action-show-only-saved-cfgs available-cfgs)))
 
-(defun action-native-alt (available-cfgs)
+(defun action-show-native-alt (available-cfgs)
   (msg (info-action-show-native-alt available-cfgs)))
 
 (defun show-cfg-unix ()
@@ -223,23 +236,26 @@
 		found-emacsdir)
 	    conf-names
 	    (not active-cfg))
-       (action-show-native-alt)))
+       (action-show-native-alt conf-names))
       ;; A native configuration and no saved ones
-;;      (t
-;;       (format t "(show-cfg-unix) FOUND A NATIVE CONFIGURATION, BUT FOUND SOME SAVED ONES~%"))
-;;  (format t "(show-cfg-unix) ...~%"))))
-))
+      (t
+       (format t "(show-cfg-unix) FOUND A NATIVE CONFIGURATION, AND NO SAVED ONES~%")))))
+
 
 
 (defun show-cfg ()
   (cond
     ((uiop:os-unix-p)
      (get-and-register-cfg-unix)
-     (show-cfg-unix)
-     )))
+     (show-cfg-unix))))
 
-
-
+(defun use-cfg (option)
+  (cond
+    ((uiop:os-unix-p)
+     (get-and-register-cfg-unix))))
+     ;;(use-cfg-unix))))
+ 
+  
 
 ;;;
 
@@ -253,7 +269,7 @@
   (msg (info-action-version)))
 
 (defun action-use (option)
-  (format t "(action-use) option -> ~a~%" option))
+  (use-cfg option))
 
 (defun action-del (option)
   (format t "(action-del) option -> ~a~%" option))
