@@ -79,7 +79,7 @@
 ;;; 'possible-init-files
 ;;; 'found-init-files
 ;;; 'saved-dirs
-;;; 'conf-names
+;;; 'saved-cfgs
 ;;; 'found-default-dotemacs
 ;;; 'found-emacsdir
 ;;; 'found-default-init.el

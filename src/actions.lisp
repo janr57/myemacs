@@ -126,7 +126,7 @@
 	 (possible-init-files (get-possible-init.el-file-list-unix possible-saved-cfg-dirs))
 	 (found-init-files (remove-if-not #'probe-file possible-init-files))
 	 (saved-dirs (mapcar #'directory-namestring found-init-files))
-	 (conf-names (mapcar #'get-emacs-cfg-name-unix saved-dirs))
+	 (saved-cfgs (mapcar #'get-emacs-cfg-name-unix saved-dirs))
 	 (found-native-dotemacs (probe-file dotemacs-str))
 	 (found-emacsdir (probe-file emacsdir-str))
 	 (found-native-init.el (probe-file init.el-str))
@@ -140,7 +140,7 @@
 ;;    (format t "(get-and-register-cfg-unix) possible-init-files -> ~a~%" possible-init-files)
 ;;    (format t "(get-and-register-cfg-unix) found-init-files -> ~a~%" found-init-files)
 ;;    (format t "(get-and-register-cfg-unix) saved-dirs -> ~a~%" saved-dirs)
-;;    (format t "(get-and-register-cfg-unix) conf-names -> ~a~%" conf-names)
+;;    (format t "(get-and-register-cfg-unix) saved-cfgs -> ~a~%" conf-names)
 ;;    (format t "(get-and-register-cfg-unix) found-native-dotemacs -> ~a~%" found-native-dotemacs)
 ;;    (format t "(get-and-register-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
 ;;    (format t "(get-and-register-cfg-unix) found-init.el -> ~a~%" found-native-init.el)
@@ -152,12 +152,24 @@
     ;; If it wasn't empty, then we suppose that there is a native configuration.
     ;; If it could be deleted, it tells us that it was empty.
     ;; We can check this by probing again the emacsdir.
-    (when (and (not found-native-dotemacs)
+    (cond
+      ;; A native .emacs.d dir is found but no native init files.
+      ;; Delete it if empty and recheck.
+      ((and (not found-native-dotemacs)
                (not found-native-init.el)
                (not active-cfg)
                found-emacsdir)
-      (uiop:delete-empty-directory found-emacsdir)
-      (setf found-emacsdir (probe-file emacsdir-str)))
+       (progn
+	 (uiop:delete-empty-directory found-emacsdir)
+	 (setf found-emacsdir (probe-file emacsdir-str))))
+      ;; An active cfg found (symbolic link .emacs.d dir) together wit a
+      ;; native init file .emacs. Delete it and recheck.
+      ((and active-cfg
+	    found-emacsdir
+	    found-native-dotemacs)
+       (progn
+	 (delete-dotemacs-unix found-native-dotemacs)
+	 (setf found-native-dotemacs (probe-file dotemacs-str)))))
     
     (setf (gethash 'homedir-str *data*) homedir-str)
     (setf (gethash 'emacsdir-str *data*) emacsdir-str)
@@ -167,30 +179,11 @@
     (setf (gethash 'possible-init-files *data*) possible-init-files)
     (setf (gethash 'found-init-files *data*) found-init-files)
     (setf (gethash 'saved-dirs *data*) saved-dirs)
-    (setf (gethash 'conf-names *data*) conf-names)
+    (setf (gethash 'saved-cfgs *data*) conf-names)
     (setf (gethash 'found-native-dotemacs *data*) found-native-dotemacs)
     (setf (gethash 'found-emacsdir *data*) found-emacsdir)
     (setf (gethash 'found-native-init.el *data*) found-native-init.el)
     (setf (gethash 'active-cfg *data*) active-cfg)))
-
-(defun action-show-no-cfg ()
-  (msg (info-action-show-no-cfg)))
-
-(defun action-show-active-alt (active-cfg available-cfgs found-native-dotemacs)
-  (when found-native-dotemacs
-    (delete-dotemacs-unix found-native-dotemacs))
-  (msg (info-action-show-active-alt active-cfg available-cfgs)))
-
-(defun action-show-active-noalt (active-cfg available-cfgs found-native-dotemacs)
-  (when found-native-dotemacs
-    (delete-dotemacs-unix found-native-dotemacs-str))
-  (msg (info-action-show-active-noalt active-cfg available-cfgs)))
-  
-(defun action-show-only-saved-cfgs (available-cfgs)
-  (msg (info-action-show-only-saved-cfgs available-cfgs)))
-
-(defun action-show-native-alt (available-cfgs)
-  (msg (info-action-show-native-alt available-cfgs)))
 
 (defun show-cfg-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
@@ -201,13 +194,13 @@
 	(found-native-init.el (gethash 'found-native-init.el *data*))
 	(found-emacsdir (gethash 'found-emacsdir *data*))
 	(active-cfg (gethash 'active-cfg *data*))
-	(conf-names (gethash 'conf-names *data*)))
+	(saved-cfgs (gethash 'saved-cfgs *data*)))
 	
 	;;(format t "(show-cfg-unix) found-native-dotemacs -> ~a~%" found-native-dotemacs)
 	;;(format t "(show-cfg-unix) found-native-init.el -> ~a~%" found-native-init.el)
 	;;(format t "(show-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
 	;;(format t "(show-cfg-unix) active-cfg -> ~a~%" active-cfg)
-	;;(format t "(show-cfg-unix) conf-names -> ~a~%" conf-names)
+	;;(format t "(show-cfg-unix) saved-cfgs -> ~a~%" conf-names)
 	
     (cond
       ;; No configuration found
@@ -216,32 +209,30 @@
 	    (not found-emacsdir)
 	    (not active-cfg)
 	    (not conf-names))
-       (action-show-no-cfg))
+       (msg (info-action-show-no-cfg)))
       ;; An active configuration
       ((and found-emacsdir
 	    active-cfg
 	    (> (length conf-names) 1))
-       (action-show-active-alt active-cfg conf-names found-native-dotemacs))
+       (msg (info-action-show-active-alt active-cfg saved-cfgs)))
       ((and found-emacsdir
 	    active-cfg
 	    (= (length conf-names) 1))
-       (action-show-active-noalt active-cfg conf-names found-native-dotemacs))
+       (msg (info-action-show-active-noalt active-cfg saved-cfgs)))
       ;; No configuration, but some saved ones
       ((and (not found-native-dotemacs)
 	    (not found-emacsdir)
 	    conf-names)
-       (action-show-only-saved-cfgs conf-names))
+       (msg (info-action-show-only-saved-cfgs saved-cfgs)))
       ;; A native configuration and some saved ones
       ((and (or found-native-dotemacs
 		found-emacsdir)
 	    conf-names
 	    (not active-cfg))
-       (action-show-native-alt conf-names))
+       (msg (info-action-show-native-alt saved-cfgs)))
       ;; A native configuration and no saved ones
       (t
        (format t "(show-cfg-unix) FOUND A NATIVE CONFIGURATION, AND NO SAVED ONES~%")))))
-
-
 
 (defun show-cfg ()
   (cond

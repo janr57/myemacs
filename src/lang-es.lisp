@@ -108,9 +108,7 @@
 ;;; Mensaje de respuesta al comando :show cuando hay una configuración activa
 ;;; y no hay ninguna otra alternativa que se pueda activar.
 (defun info-action-show-active-noalt-es (active-cfg available-cfgs &optional (stream t))
-  (let ((available-cfgs-str (join-strings-from-list available-cfgs))
-	(other-cfgs-str (join-strings-from-list
-			    (remove active-cfg available-cfgs :test #'string-equal))))
+  (let ((available-cfgs-str (join-strings-from-list available-cfgs)))
     
     (format stream "~a~%" (strinfo-version-es nil))
     (format stream "~a~%" (strinfo-copyright-es nil))
