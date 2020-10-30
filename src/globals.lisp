@@ -34,8 +34,14 @@
 (defparameter *init.el-name-str* "init.el")
 ;;; Emacs directory
 (defparameter *emacsdir-name-str* ".emacs.d")
+;;; Myemacs basic directory
+(defparameter *myemacs-base-dir-name-str* ".myemacs.d")
 ;;; Regular expression to find saved configurations
 (defparameter *emacsdir-star-str* (concatenate 'string *emacsdir-name-str* "-*"))
+
+
+
+(defparameter *myemacs-base-dir-str* nil)
 
 ;;; Language global variables
 (defparameter *default-language* :en)
@@ -58,6 +64,7 @@
 
 ;;;
 ;;; HASH-TABLE *data*
+;;; 'homedir-str
 ;;; ******* EXEC-MODE
 ;;; 'exec-mode
 ;;; *** OS
@@ -70,11 +77,24 @@
 ;;; 'lisp-name-ok-p
 ;;; 'lisp-version-ok
 ;;; 'supported-lisp-p
-;;; ******* CONFIG
-;;; 'homedir-str
-;;; 'emacsdir-str
-;;; 'dotemacs-str
-;;; 'init.el-str
+;;; ******* NATIVE CFG
+;;; 'native-emacsdir-str
+;;; 'native-dotemacs-str
+;;; 'native-init-str
+;;; 'found-native-emacsdir
+;;; 'emacsdir-symlink
+;;; 'found-native-dotemacs
+;;; 'found-native-init
+;;; ******* SAVED CFGS
+;;; 'myemacs-base-dir-str
+;;; 'found-myemacs-base-dir
+;;; 'possible-saved-cfg-dirs
+;;; 'possible-init-files
+;;; 'init-files
+;;; 'saved-dirs
+;;; 'saved-cfgs
+;;; 'active-cfg
+
 ;;; 'possible-saved-config-dirs
 ;;; 'possible-init-files
 ;;; 'found-init-files

@@ -25,3 +25,21 @@
 
 (defun repeat-string (string ntimes)
   (format nil "~v@{~A~:*~}" ntimes string))
+
+
+;;; Converts a list of strings into a string with the elements separated by spaces.
+;;; Parameters:
+;;; 'lstr': List of strings.
+;;; Returns:
+;;; A string of the list elements separated by spaces.
+(defun join-strings-from-list (lstr &optional (separation-str " "))
+  (cond
+    ((null lstr)
+     (format nil ""))
+    ((null (cdr lstr))
+     (concatenate 'string (car lstr) ""))
+    (t (concatenate 'string
+		  (car lstr)
+		  separation-str
+		  (join-strings-from-list (cdr lstr) separation-str)))))
+
