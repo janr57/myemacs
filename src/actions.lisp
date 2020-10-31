@@ -162,7 +162,6 @@
       (look-for-and-register-native-cfg)
     (multiple-value-bind (saved-dirs saved-cfgs active-cfg)
 	(look-for-and-register-saved-cfgs)
-
     ;;; Cleaning spurious native files/directory
     (cond
       ;; A native .emacs.d dir is found but no native init files.
@@ -174,31 +173,14 @@
        (progn
 	 (uiop:delete-empty-directory native-emacsdir)
 	 (setf native-emacsdir (probe-file emacsdir-str))
-	 (setf (gethash 'native-emacsdir *data*) native-emacsdir)))))))
-;;      ;; An active cfg found (symbolic link .emacs.d dir) together wit a
-;;      ;; native init file .emacs. Delete it and recheck.
-;;      ((and active-cfg
-;;	    found-emacsdir
-;;	    found-native-dotemacs)
-;;       (progn
-;;	 (uiop:delete-file-if-exists found-native-dotemacs)
-;;	 (setf found-native-dotemacs (probe-file dotemacs-str)))))
-;;
-;;    ;;; Saving relevant information in the *data* hashtable.
-;;    (setf (gethash 'homedir-str *data*) homedir-str)
-;;    (setf (gethash 'emacsdir-str *data*) emacsdir-str)
-;;    (setf (gethash 'dotemacs-str *data*) dotemacs-str)
-;;    (setf (gethash 'init.el-str *data*) init.el-str)
-;;    (setf (gethash 'possible-saved-cfg-dirs *data*) possible-saved-cfg-dirs)
-;;    (setf (gethash 'possible-init-files *data*) possible-init-files)
-;;    (setf (gethash 'found-init-files *data*) found-init-files)
-;;    (setf (gethash 'saved-dirs *data*) saved-dirs)
-;;    (setf (gethash 'saved-cfgs *data*) saved-cfgs)
-;;    (setf (gethash 'found-native-dotemacs *data*) found-native-dotemacs)
-;;    (setf (gethash 'found-emacsdir *data*) found-emacsdir)
-;;    (setf (gethash 'found-native-init *data*) found-native-init)
-;;    (setf (gethash 'active-cfg *data*) active-cfg)))
-
+	 (setf (gethash 'native-emacsdir *data*) native-emacsdir)))
+      ;; An active cfg found (symbolic link .emacs.d dir) together with
+      ;; a native init file .emacs. Delete it and recheck.
+      ((and active-cfg
+	    native-dotemacs)
+       (progn
+	 (uiop:delete-file-if-exists found-native-dotemacs)
+	 (setf found-native-dotemacs (probe-file dotemacs-str))))))))
 
 (defun show-cfg-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
