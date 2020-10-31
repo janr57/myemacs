@@ -29,6 +29,9 @@
 (defun err-action-use-native-cfg-en (&optional (stream t))
   (format stream "Error, cannot activate a saved configuration when a native one is present.~%~%"))
 
+(defun err-action-use-cfg-not-available-en (cfg &optional (stream t))
+  (format stream "Error, not an available configuration: ~a~%~%" (string-downcase cfg)))
+
 (defun err-do-not-use-main-en (&optional (stream t))
   (format stream "Execution mode error: type (myemacs ...) to run the program, please."))
 
@@ -67,6 +70,8 @@
   (format stream "Error, too many commands have been typed!"))
 
 ;;; ******************** WARNING MESSAGES
+(defun warn-action-use-cfg-already-active-en (cfg &optional (stream t))
+  (format stream "Warning, configuration already active -> ~a.~%~%" cfg))
 
 ;;; ******************** INFO MESSAGES
 ;;; Message in response to the ':show' command when there is no configuration at all.

@@ -29,6 +29,9 @@
 (defun err-action-use-native-cfg-es (&optional (stream t))
   (format stream "Error, se quiere activar una configuración, habiendo ya una nativa de emacs.~%~%"))
 
+(defun err-action-use-cfg-not-available-es (cfg &optional (stream t))
+  (format stream "Error, configuración no disponible: ~a~%~%" (string-downcase cfg)))
+
 (defun err-do-not-use-main-es (&optional (stream t))
   (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)"))
 
@@ -67,6 +70,8 @@
   (format stream "Error ¡se han tecleado demasiados comandos!"))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
+(defun warn-action-use-cfg-already-active-es (cfg &optional (stream t))
+  (format stream "Aviso: La configuración ya está activada -> ~a.~%~%" cfg))
 
 ;;; ******************** MENSAJES DE INFORMACIÓN
 ;;; Message in response to the ':show' command when there is no configuration at all.

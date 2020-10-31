@@ -17,6 +17,12 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
+(defun cfg-keyw-to-str (cfg-symb)
+  (string-downcase cfg-symb))
+
+(defun cfg-str-to-keyw (cfg-str)
+  (intern (string-upcase cfg-str) "KEYWORD"))
+
 ;;; Forms a directory, as a string, joining two strings:
 ;;; a base-path and the string directory name.
 ;;; Parameters:
@@ -124,6 +130,7 @@
 	       (or native-dotemacs
 		   native-init))
       (setf native-cfg t))
+
     ;; Register values
     (setf (gethash 'homedir-str *data*) (uiop:getenv "HOME"))
     (setf (gethash 'native-emacsdir-str *data*) native-emacsdir-str)
@@ -195,9 +202,9 @@
 
 (defun show-cfg-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
-	(dotemacs-str (gethash 'dotemacs-str *data*))
-	(init.el-str (gethash 'init.el-str *data*))
-	(emacsdir-str (gethash 'emacsdir-str *data*))
+	(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	(native-init-str (gethash 'native-init-str *data*))
+	(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
 	(native-dotemacs (gethash 'native-dotemacs *data*))
 	(native-init (gethash 'native-init *data*))
 	(native-emacsdir (gethash 'native-emacsdir *data*))
@@ -234,22 +241,64 @@
       (t
        (format t "(show-cfg-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%"))))))
 
+(defun use-cfg-unix (cfg)
+  (let* ((native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 (native-init-str (gethash 'native-init-str *data*))
+	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	 (native-dotemacs (gethash 'native-dotemacs *data*))
+	 (native-init (gethash 'native-init *data*))
+	 (native-emacsdir (gethash 'native-emacsdir *data*))
+	 (native-cfg (gethash 'native-cfg *data*))
+	 (active-cfg (gethash 'active-cfg *data*))
+	 (saved-cfgs (gethash 'saved-cfgs *data*))
+	 (saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
+	 (cfg-in-saved-cfgs (find cfg saved-cfgs-keyw))
+	 (active-cfg-keyw (cfg-str-to-keyw active-cfg))
+	 (directory-separator (string (uiop:directory-separator-for-host))))
 
-(defun use-cfg-unix ()
-  (let ((dotemacs-str (gethash 'dotemacs-str *data*))
-	(init.el-str (gethash 'init.el-str *data*))
-	(emacsdir-str (gethash 'emacsdir-str *data*))
-	(native-dotemacs (gethash 'native-dotemacs *data*))
-	(native-init (gethash 'native-init *data*))
-	(native-emacsdir (gethash 'native-emacsdir *data*))
-	(native-cfg (gethash 'native-cfg *data*))
-	(active-cfg (gethash 'active-cfg *data*))
-	(saved-cfgs (gethash 'saved-cfgs *data*)))
+    (format t "(use-cfg-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
     
+    ;; Detect errors
     (cond
       ;; Error: A native emacs configuration exists
-      ((not (null native-cfg))
-	(msg (err-action-use-native-cfg))))))
+      (native-cfg
+       (msg (err-action-use-native-cfg)))
+      ;; Error: cfg does not exist
+      ((null cfg-in-saved-cfgs)
+       (msg (err-action-use-cfg-not-available  cfg)))
+      ;; La configuración ya está activa
+      ((eql cfg active-cfg-keyw)
+       (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
+      ;; Si hay una configuración activa, hay que borrar el directorio de emacs
+      (active-cfg
+       (delete-file (string-right-trim directory-separator native-emacsdir-str))))))
+
+;;(defun use-cfg-unix (cfg)
+;;  (let* ((dotemacs-str (gethash 'dotemacs-str *data*))
+;;	 (init.el-str (gethash 'init.el-str *data*))
+;;	 (emacsdir-str (gethash 'emacsdir-str *data*))
+;;	 (native-dotemacs (gethash 'native-dotemacs *data*))
+;;	 (native-init (gethash 'native-init *data*))
+;;	 (native-emacsdir (gethash 'native-emacsdir *data*))
+;;	 (native-cfg (gethash 'native-cfg *data*))
+;;	 (active-cfg (gethash 'active-cfg *data*))
+;;	 (saved-cfgs (gethash 'saved-cfgs *data*))
+;;	 (keyword-saved-cfgs (mapcar #'(lambda (x) (intern (string-upcase x) "KEYWORD")) saved-cfgs))
+;;	 (cfg-in-saved-cfgs (find cfg keyword-saved-cfgs))
+;;	 (keyword-active-cfg (intern (string-upcase cfg) "KEYWORD")))
+;;
+;;    ;; Detect errors
+;;    (cond
+;;      ;; Error: A native emacs configuration exists
+;;      (native-cfg
+;;       (msg (err-action-use-native-cfg)))
+;;      ;; Error: cfg does not exist
+;;      ((null cfg-in-saved-cfgs)
+;;       (msg (err-action-use-cfg-not-available  cfg)))
+;;      ;; La configuración ya está activa
+;;      ((eql cfg keyword-active-cfg)
+;;       (msg (warn-action-use-cfg-already-active cfg))))))
+
 
 (defun show-cfg ()
   (cond
@@ -257,11 +306,11 @@
      (get-and-register-cfg-unix)
      (show-cfg-unix))))
 
-(defun use-cfg (option)
+(defun use-cfg (cfg)
   (cond
     ((uiop:os-unix-p)
      (get-and-register-cfg-unix)
-     (use-cfg-unix))))
+     (use-cfg-unix cfg))))
 
 ;;;
 (defun action-help ()
@@ -273,14 +322,14 @@
 (defun action-version ()
   (msg (info-action-version)))
 
-(defun action-use (option)
-  (use-cfg option))
+(defun action-use (cfg)
+  (use-cfg cfg))
 
-(defun action-del (option)
-  ())
+(defun action-del (cfg)
+  (format t "(action-del) cfg -> ~a~%" cfg))
 
-(defun action-add (option)
-  (format t "(action-add) option -> ~a~%" option))
+(defun action-add (cfg)
+  (format t "(action-add) cfg -> ~a~%" cfg))
 
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
@@ -288,12 +337,12 @@
 
 (defun action-delivery-center (lcmd)
   (let ((action (car lcmd))
-	(option (second lcmd)))
+	(cfg (second lcmd)))
   (cond
     ((null lcmd) (action-help))
     ((eql action :help) (action-help))
     ((eql action :show) (action-show))
     ((eql action :version) (action-version))
-    ((eql action :use) (action-use option))
-    ((eql action :del)  (action-del option))
-    ((eql action :add) (action-add option)))))
+    ((eql action :use) (action-use cfg))
+    ((eql action :del)  (action-del cfg))
+    ((eql action :add) (action-add cfg)))))

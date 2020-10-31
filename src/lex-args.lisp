@@ -185,10 +185,10 @@
     ((null strargs) nil)
     ((str-command-p (car strargs))
      (cons (intern (remove #\: (string-upcase (car strargs))) "KEYWORD")
-	   (args-in-terminal-form-to-repl (cdr strargs))))
+           (args-in-terminal-form-to-repl (cdr strargs))))
     (t (cons (intern (string-upcase (car strargs)))
-	     (args-in-terminal-form-to-repl (cdr strargs))))))
-
+             (args-in-terminal-form-to-repl (cdr strargs))))))
+  
 ;;(defun args-in-terminal-form-to-standard (strargs)
 ;;  (let ((args (strargs-to-replargs strargs)))
 ;;    ;;(format t "(args-in-terminal-form) strargs -> ~a~%" strargs)

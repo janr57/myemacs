@@ -43,3 +43,6 @@
 		  separation-str
 		  (join-strings-from-list (cdr lstr) separation-str)))))
 
+
+;;; ******************** COMMON MYEMACS FUNCTIONS
+
