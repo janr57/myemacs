@@ -26,6 +26,9 @@
   (format stream "License ~a." *license*))
 
 ;;; ******************** ERROR MESSAGES
+(defun err-action-use-native-cfg-en (&optional (stream t))
+  (format stream "Error, cannot activate a saved configuration when a native one is present.~%~%"))
+
 (defun err-do-not-use-main-en (&optional (stream t))
   (format stream "Execution mode error: type (myemacs ...) to run the program, please."))
 

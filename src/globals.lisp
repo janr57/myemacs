@@ -39,9 +39,7 @@
 ;;; Regular expression to find saved configurations
 (defparameter *emacsdir-star-str* (concatenate 'string *emacsdir-name-str* "-*"))
 
-
-
-(defparameter *myemacs-base-dir-str* nil)
+;;(defparameter *myemacs-base-dir-str* nil)
 
 ;;; Language global variables
 (defparameter *default-language* :en)
@@ -81,28 +79,20 @@
 ;;; 'native-emacsdir-str
 ;;; 'native-dotemacs-str
 ;;; 'native-init-str
-;;; 'found-native-emacsdir
+;;; 'native-emacsdir
+;;; 'native-emacsdir-p
+;;; 'native-dotemacs
+;;; 'native-init
 ;;; 'emacsdir-symlink
-;;; 'found-native-dotemacs
-;;; 'found-native-init
+;;; 'native-cfg
 ;;; ******* SAVED CFGS
 ;;; 'myemacs-base-dir-str
-;;; 'found-myemacs-base-dir
+;;; 'myemacs-base-dir
 ;;; 'possible-saved-cfg-dirs
 ;;; 'possible-init-files
 ;;; 'init-files
 ;;; 'saved-dirs
 ;;; 'saved-cfgs
 ;;; 'active-cfg
-
-;;; 'possible-saved-config-dirs
-;;; 'possible-init-files
-;;; 'found-init-files
-;;; 'saved-dirs
-;;; 'saved-cfgs
-;;; 'found-default-dotemacs
-;;; 'found-emacsdir
-;;; 'found-default-init.el
-;;; 'active-config
 (defparameter *data* (make-hash-table))
 

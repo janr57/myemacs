@@ -17,15 +17,16 @@
 (in-package :myemacs)
 
 ;;; ********************* AUXILIARY FUNCTIONS **************************
-;;; Complete standard emacs directory path as a string
+;;; Forms a directory, as a string, joining two strings:
+;;; a base-path and the string directory name.
 ;;; Parameters:
 ;;; 'homedir-str': The user's 'HOME' directory as a string
 ;;; 'emacsdir-name-str': The name of the standard emacs directory as a string
 ;;; Returns:
 ;;; The complete emacs directory path as a string
-(defun get-directory-in-path-str-unix (dir-name-str &optional (path-str (uiop:getenv "HOME")))
+(defun get-directory-in-path-str-unix (dir-name-str &optional (base-path-str (uiop:getenv "HOME")))
   (let ((directory-separator (string (uiop:directory-separator-for-host))))
-    (concatenate 'string (string path-str)
+    (concatenate 'string (string base-path-str)
 		 directory-separator
 		 dir-name-str
 		 directory-separator)))
@@ -96,42 +97,52 @@
          (subseq any-emacsdir-str (+ pos 1)))))))
 
 ;;; Finds and registers files and directories relevant to the native 'emacs' configuration.
-;;; Returns three values:
-;;;  1) 'found-native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
-;;;  2) 'found-native-dotemacs': If found, path of this native emacs init file, 'NIL' otherwise.
-;;;  3) 'found-native-init.el': If found, path of this native emacs init file, 'NIL' otherwise.
+;;; Returns four values:
+;;;  1) 'native-cfg': 'T' if a native configuration is found, otherwise 'NIL'.
+;;;  2) 'native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
+;;;  3) 'native-dotemacs': If found, path of this native emacs init file, 'NIL' otherwise.
+;;;  4) 'native-init.el': If found, path of this native emacs init file, 'NIL' otherwise.
 (defun look-for-and-register-native-cfg ()
   ;; Aqcuire values
   (let* ((native-emacsdir-str (get-directory-in-path-str-unix *emacsdir-name-str*))
 	 (native-dotemacs-str (get-file-in-path-str-unix *dotemacs-name-str*))
 	 (native-init-str (get-file-in-path-str-unix *init.el-name-str* native-emacsdir-str))
-	 (found-native-emacsdir (probe-file native-emacsdir-str))
-	 (found-native-emacsdir-p (uiop:pathname-equal found-native-emacsdir
+	 (native-emacsdir (probe-file native-emacsdir-str))
+	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
 						       (uiop:ensure-pathname native-emacsdir-str)))
-	 (found-native-dotemacs (probe-file native-dotemacs-str))
-	 (found-native-init (uiop:pathname-equal (probe-file native-init-str)
+	 (native-dotemacs (probe-file native-dotemacs-str))
+	 (native-init (uiop:pathname-equal (probe-file native-init-str)
 						    (uiop:ensure-pathname native-init-str)))
-	 (emacsdir-symlink nil))
-    (when (not found-native-emacsdir-p)
-      (setf emacsdir-symlink found-native-emacsdir)
-      (setf found-native-emacsdir nil))
+	 (emacsdir-symlink nil)
+	 (native-cfg nil))
+    ;; Consider changing value for 'emacsdir-symlink' and 'native-emacsdir':
+    (when (not native-emacsdir-p)
+      (setf emacsdir-symlink native-emacsdir)
+      (setf native-emacsdir nil))
+    ;; Detect if there is definitely a native emacs configuration:
+    (when (and native-emacsdir
+	       (or native-dotemacs
+		   native-init))
+      (setf native-cfg t))
     ;; Register values
     (setf (gethash 'homedir-str *data*) (uiop:getenv "HOME"))
     (setf (gethash 'native-emacsdir-str *data*) native-emacsdir-str)
     (setf (gethash 'native-dotemacs-str *data*) native-dotemacs-str)
     (setf (gethash 'native-init-str *data*) native-init-str)
-    (setf (gethash 'found-native-emacsdir *data*) found-native-emacsdir)
+    (setf (gethash 'native-emacsdir *data*) native-emacsdir)
+    (setf (gethash 'native-emacsdir-p *data*) native-emacsdir-p)
+    (setf (gethash 'native-dotemacs *data*) native-dotemacs)
+    (setf (gethash 'native-init *data*) native-init)
     (setf (gethash 'emacsdir-symlink *data*) emacsdir-symlink)
-    (setf (gethash 'found-native-dotemacs *data*) found-native-dotemacs)
-    (setf (gethash 'found-native-init *data*) found-native-init)
+    (setf (gethash 'native-cfg *data*) native-cfg)
     ;; Return some values
-    (values found-native-emacsdir found-native-dotemacs found-native-init)))
+    (values native-cfg native-emacsdir native-dotemacs native-init)))
 
 ;;; Finds and registers files and directories relevant to the saved 'myemacs' configuration.
 ;;; Returns three values:
-;;;  1) 'found-native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
-;;;  2) 'found-native-dotemacs': If found, path of this native emacs init file,'NIL' otherwise.
-;;;  3) 'found-native-init': If found, path of this native emacs init file, 'NIL' otherwise.
+;;;  1) 'native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
+;;;  2) 'native-dotemacs': If found, path of this native emacs init file,'NIL' otherwise.
+;;;  3) 'native-init': If found, path of this native emacs init file, 'NIL' otherwise.
 (defun look-for-and-register-saved-cfgs ()
   ;; Acquire values
   (let* ((myemacs-base-dir-str (get-directory-in-path-str-unix *myemacs-base-dir-name-str*))
@@ -158,78 +169,87 @@
     (values saved-dirs saved-cfgs active-cfg)))
 
 (defun get-and-register-cfg-unix ()
-  (multiple-value-bind (native-emacsdir native-dotemacs native-init)
+  (multiple-value-bind (native-cfg native-emacsdir native-dotemacs native-init)
       (look-for-and-register-native-cfg)
     (multiple-value-bind (saved-dirs saved-cfgs active-cfg)
 	(look-for-and-register-saved-cfgs)
-    ;;; Cleaning spurious native files/directory
-    (cond
-      ;; A native .emacs.d dir is found but no native init files.
-      ;; Delete it if empty and recheck.
-      ((and (not native-dotemacs)
-            (not native-init)
-            (not active-cfg)
-            native-emacsdir)
-       (progn
-	 (uiop:delete-empty-directory native-emacsdir)
-	 (setf native-emacsdir (probe-file emacsdir-str))
-	 (setf (gethash 'native-emacsdir *data*) native-emacsdir)))
-      ;; An active cfg found (symbolic link .emacs.d dir) together with
-      ;; a native init file .emacs. Delete it and recheck.
-      ((and active-cfg
-	    native-dotemacs)
-       (progn
-	 (uiop:delete-file-if-exists found-native-dotemacs)
-	 (setf found-native-dotemacs (probe-file dotemacs-str))))))))
+      ;; Cleaning spurious native files/directory
+      (cond
+	;; A native .emacs.d dir is found but no native init files.
+	;; Delete it if empty and recheck.
+	((and (not native-dotemacs)
+              (not native-init)
+              (not active-cfg)
+              native-emacsdir)
+	 (progn
+	   (uiop:delete-empty-directory native-emacsdir)
+	   (setf native-emacsdir (probe-file emacsdir-str))
+	   (setf (gethash 'native-emacsdir *data*) native-emacsdir)))
+	;; An active cfg found (symbolic link .emacs.d dir) together with
+	;; a native init file .emacs. Delete it and recheck.
+	((and active-cfg
+	      native-dotemacs)
+	 (progn
+	   (uiop:delete-file-if-exists native-dotemacs)
+	   (setf native-dotemacs (probe-file dotemacs-str))))))))
 
 (defun show-cfg-unix ()
   (let ((homedir-str (gethash 'homedir-str *data*))
 	(dotemacs-str (gethash 'dotemacs-str *data*))
 	(init.el-str (gethash 'init.el-str *data*))
 	(emacsdir-str (gethash 'emacsdir-str *data*))
-	(found-native-dotemacs (gethash 'found-native-dotemacs *data*))
-	(found-native-init (gethash 'found-native-init *data*))
-	(found-emacsdir (gethash 'found-emacsdir *data*))
+	(native-dotemacs (gethash 'native-dotemacs *data*))
+	(native-init (gethash 'native-init *data*))
+	(native-emacsdir (gethash 'native-emacsdir *data*))
+	(native-cfg (gethash 'native-cfg *data*))
 	(active-cfg (gethash 'active-cfg *data*))
 	(saved-cfgs (gethash 'saved-cfgs *data*)))
-	
-	;;(format t "(show-cfg-unix) found-native-dotemacs -> ~a~%" found-native-dotemacs)
-	;;(format t "(show-cfg-unix) found-native-init -> ~a~%" found-native-init)
-	;;(format t "(show-cfg-unix) found-emacsdir -> ~a~%" found-emacsdir)
-	;;(format t "(show-cfg-unix) active-cfg -> ~a~%" active-cfg)
-	;;(format t "(show-cfg-unix) saved-cfgs -> ~a~%" saved-cfgs)
-	
+
     (cond
       ;; No configuration found
-      ((and (not found-native-dotemacs)
-	    (not found-native-init)
-	    (not found-emacsdir)
+      ((and (not native-cfg)
 	    (not active-cfg)
 	    (not saved-cfgs))
        (msg (info-action-show-no-cfg)))
-      ;; An active configuration
-      ((and found-emacsdir
-	    active-cfg
+      ;; An active configuration and alternative saved configurations
+      ((and active-cfg
 	    (> (length saved-cfgs) 1))
        (msg (info-action-show-active-alt active-cfg saved-cfgs)))
-      ((and found-emacsdir
-	    active-cfg
+      ;; An active configuration but no alternative saved configurations
+      ((and active-cfg
 	    (= (length saved-cfgs) 1))
        (msg (info-action-show-active-noalt active-cfg saved-cfgs)))
       ;; No configuration, but some saved ones
-      ((and (not found-native-dotemacs)
-	    (not found-emacsdir)
+      ((and (not native-cfg)
+	    (not active-cfg)
 	    saved-cfgs)
        (msg (info-action-show-only-saved-cfgs saved-cfgs)))
       ;; A native configuration and some saved ones
-      ((and (or found-native-dotemacs
-		found-emacsdir)
-	    saved-cfgs
-	    (not active-cfg))
+      ((and native-cfg
+	    saved-cfgs)
        (msg (info-action-show-native-alt saved-cfgs)))
       ;; A native configuration and no saved ones
+      ((and native-cfg
+	    (not saved-cfgs))
       (t
-       (format t "(show-cfg-unix) FOUND A NATIVE CONFIGURATION, AND NO SAVED ONES~%")))))
+       (format t "(show-cfg-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%"))))))
+
+
+(defun use-cfg-unix ()
+  (let ((dotemacs-str (gethash 'dotemacs-str *data*))
+	(init.el-str (gethash 'init.el-str *data*))
+	(emacsdir-str (gethash 'emacsdir-str *data*))
+	(native-dotemacs (gethash 'native-dotemacs *data*))
+	(native-init (gethash 'native-init *data*))
+	(native-emacsdir (gethash 'native-emacsdir *data*))
+	(native-cfg (gethash 'native-cfg *data*))
+	(active-cfg (gethash 'active-cfg *data*))
+	(saved-cfgs (gethash 'saved-cfgs *data*)))
+    
+    (cond
+      ;; Error: A native emacs configuration exists
+      ((not (null native-cfg))
+	(msg (err-action-use-native-cfg))))))
 
 (defun show-cfg ()
   (cond
@@ -240,9 +260,9 @@
 (defun use-cfg (option)
   (cond
     ((uiop:os-unix-p)
-     (get-and-register-cfg-unix))))
-     ;;(use-cfg-unix))))
-  
+     (get-and-register-cfg-unix)
+     (use-cfg-unix))))
+
 ;;;
 (defun action-help ()
   (msg (info-action-help)))
@@ -257,7 +277,7 @@
   (use-cfg option))
 
 (defun action-del (option)
-  (format t "(action-del) option -> ~a~%" option))
+  ())
 
 (defun action-add (option)
   (format t "(action-add) option -> ~a~%" option))
@@ -265,8 +285,6 @@
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; ************************************************************************************************
-
-
 
 (defun action-delivery-center (lcmd)
   (let ((action (car lcmd))

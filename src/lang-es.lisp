@@ -26,6 +26,9 @@
   (format stream "Licencia ~a." *license*))
 
 ;;; ******************** MENSAJES DE ERROR
+(defun err-action-use-native-cfg-es (&optional (stream t))
+  (format stream "Error, se quiere activar una configuración, habiendo ya una nativa de emacs.~%~%"))
+
 (defun err-do-not-use-main-es (&optional (stream t))
   (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)"))
 
