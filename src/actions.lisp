@@ -276,7 +276,13 @@
        (progn
 	   (delete-file (rem-last-sep native-emacsdir-str))
 	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-	   (setf changed-p t))))
+	   (setf changed-p t)))
+      ((not active-cfg)
+       (not native-cfg)
+      (progn
+	(osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+	(setf changed-p t))))
+    
     (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
