@@ -43,6 +43,49 @@
 		  separation-str
 		  (join-strings-from-list (cdr lstr) separation-str)))))
 
+(defun rem-last-sep (dirstr)
+  (let ((dirsep (string (uiop:directory-separator-for-host))))
+    (string-right-trim dirsep dirstr)))
+
+(defun add-last-sep (dirstr)
+  (let ((dirsep (string (uiop:directory-separator-for-host))))
+    (concatenate 'string dirstr dirsep)))
+
+;;; Forms a directory, as a string, joining two strings:
+;;; a base-path and the string directory name.
+;;; Parameters:
+;;; 'homedir-str': The user's 'HOME' directory as a string
+;;; 'emacsdir-name-str': The name of the standard emacs directory as a string
+;;; Returns:
+;;; The complete emacs directory path as a string
+(defun get-directory-in-path-str-unix (dir-name-str &key (basepath (uiop:getenv "HOME"))
+						      (lastsep t))
+  (let* ((dirsep (string (uiop:directory-separator-for-host)))
+	 (end-dirsep (if lastsep dirsep "")))
+    (concatenate 'string basepath dirsep dir-name-str end-dirsep)))
+
+;;; Complete standard .emacs init emacs file path as a string
+;;; Parameters:
+;;; 'homedir-str': The user's 'HOME' directory as a string.
+;;; 'dotemacs-name-str': The name of the .emacs init file.
+;;; Returns:
+;;; The complete standard .emacs init file path as a string.
+(defun get-file-in-path-str-unix (file-name-str &optional (path-str (uiop:getenv "HOME")))
+  (let ((dirsep (string (uiop:directory-separator-for-host))))
+    (concatenate 'string (string-right-trim dirsep path-str) dirsep file-name-str)))
+
+(defun prompt-read-yes-no (prompt yes no)
+  (format *query-io* "~a: " prompt)
+  (force-output *query-io*)
+  (let ((answer (string-upcase (read-line *query-io*))))
+    (cond
+      ((find answer '("YES" "Y" "SI" "SÍ" "S") :test #'string-equal)
+       t)
+      ((find answer '("NO" "N") :test #'string-equal)
+       nil)
+      (t (prompt-read prompt)))))
+
+
 
 ;;; ******************** COMMON MYEMACS FUNCTIONS
 
