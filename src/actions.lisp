@@ -268,7 +268,7 @@
       ((null cfg-found-in-saved-cfgs)
        (msg (err-action-use-cfg-not-available  cfg)))
       ;; La configuración ya está activa
-      ((eql cfg active-cfg-keyw)
+      ((eql cfg (cfg-str-to-keyw active-cfg))
        (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
       ;; Si hay una configuración activa, hay que borrar el directorio de emacs
       (active-cfg
@@ -276,11 +276,75 @@
        (progn
 	   (delete-file (rem-last-sep native-emacsdir-str))
 	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-	   (setf changed t))))
-    (when changed
+	   (setf changed-p t))))
+    (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
       (setf changed nil))))
+
+
+;;(defun use-cfg-unix (cfg)
+;;  (let* ((native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+;;	 (native-init-str (gethash 'native-init-str *data*))
+;;	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+;;	 (native-dotemacs (gethash 'native-dotemacs *data*))
+;;	 (native-init (gethash 'native-init *data*))
+;;	 (native-emacsdir (gethash 'native-emacsdir *data*))
+;;	 (myemacs-base-dir-str (gethash 'myemacs-base-dir-str *data*))
+;;	 (myemacs-base-dir (gethash 'myemacs-base-dir *data*))
+;;	 (native-cfg (gethash 'native-cfg *data*))
+;;	 (active-cfg (gethash 'active-cfg *data*))
+;;	 (saved-cfgs (gethash 'saved-cfgs *data*))
+;;	 (saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
+;;	 (cfg-found-in-saved-cfgs (find cfg saved-cfgs-keyw))
+;;	 (cfg-str (string-downcase cfg))
+;;	 (active-cfg-keyw (cfg-str-to-keyw active-cfg))
+;;	 ;;(directory-separator (string (uiop:directory-separator-for-host)))
+;;	 (target-link-name (concatenate 'string *emacsdir-name-str* "-" cfg-str))
+;;	 ;;(target-link-name (string-right-trim directory-separator target-link-name))
+;;	 ;;(myemacs-base-dir-str (string-right-trim directory-separator myemacs-base-dir-str))
+;;	 ;;(native-emacsdir-str (string-right-trim directory-separator native-emacsdir-str))
+;;	 (target-link (get-directory-in-path-str-unix target-link-name
+;;						      :basepath (rem-last-sep myemacs-base-dir-str)
+;;						      :lastsep nil))
+;;	 (changed-p nil))
+;;
+;;;;    (format t "(use-cfg-unix) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+;;;;    (format t "(use-cfg-unix) native-init-str -> ~a~%" native-init-str)
+;;;;    (format t "(use-cfg-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+;;;;    (format t "(use-cfg-unix) native-dotemacs -> ~a~%" native-dotemacs-str)
+;;;;    (format t "(use-cfg-unix) native-init -> ~a~%" native-init-str)
+;;;;    (format t "(use-cfg-unix) native-emacsdir -> ~a~%" native-emacsdir-str)
+;;;;    (format t "(use-cfg-unix) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
+;;;;    (format t "(use-cfg-unix) myemacs-base-dir -> ~a~%" myemacs-base-dir)
+;;;;    (format t "(use-cfg-unix) native-cfg -> ~a~%" native-cfg)
+;;;;    (format t "(use-cfg-unix) active-cfg -> ~a~%" active-cfg)
+;;;;    (format t "(use-cfg-unix) saved-cfgs -> ~a~%" saved-cfgs)
+;;;;    (format t "(use-cfg-unix) target-link-name -> ~a~%" target-link-name)
+;;;;    (format t "(use-cfg-unix) target-link -> ~a~%" target-link)
+;;    ;; Detect errors
+;;    (cond
+;;      ;; Error: A native emacs configuration exists
+;;      (native-cfg
+;;       (msg (err-action-use-native-cfg)))
+;;      ;; Error: cfg does not exist
+;;      ((null cfg-found-in-saved-cfgs)
+;;       (msg (err-action-use-cfg-not-available  cfg)))
+;;      ;; La configuración ya está activa
+;;      ((eql cfg active-cfg-keyw)
+;;       (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
+;;      ;; Si hay una configuración activa, hay que borrar el directorio de emacs
+;;      (active-cfg
+;;       ;;(format t "Tengo que borrar un enlace simbólico y crear otro.")))))
+;;       (progn
+;;	   (delete-file (rem-last-sep native-emacsdir-str))
+;;	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+;;	   (setf changed t))))
+;;    (when changed
+;;      (get-and-register-cfg-unix)
+;;      (show-cfg-unix)
+;;      (setf changed nil))))
+
 
 (defun show-cfg ()
   (cond
