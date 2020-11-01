@@ -15,6 +15,10 @@
 
 (in-package :myemacs)
 
+;;; ******************** QUESTIONS
+(defun ask-delete-directory-tree-es (dir)
+  (format nil "¿Borrar directorio espúreo ~a? " dir))
+
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
   (format stream "~a v~a ~a (~a)" *progname* *version* *production* *version-date*))
