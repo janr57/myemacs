@@ -31,8 +31,15 @@
 (defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
 ;;  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
 ;;  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
+  (format t "(get-saved-cfg-dirs-in-path-unix) -> ~a~%" (get-directory-in-path-str-unix emacsdir-star-str :basepath (namestring path-str)))
   (directory
    (get-directory-in-path-str-unix emacsdir-star-str :basepath (namestring path-str))))
+
+;;(defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
+;;;;  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
+;;;;  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
+;;  (directory
+;;   (get-directory-in-path-str-unix emacsdir-star-str :basepath (namestring path-str))))
 
 ;;; List of possible init files in saved directories as pathnames.
 ;;; Parameters:
@@ -119,15 +126,21 @@
     ;; Return some values
     (values native-cfg native-emacsdir native-dotemacs native-init)))
 
+;;(defun find-or-create-myemacs-base-dir (myemacs-base-dir-str)
+;;  ;;(let ((myemacs-base-dir (probe-file myemacs-base-dir-str)))
+;;  (format t "(find-or-create-myemacs-base-dir) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
+;;  (ensure-directories-exist (pathname myemacs-base-dir-str)))	 
+
 ;;; Finds and registers files and directories relevant to the saved 'myemacs' configuration.
 ;;; Returns three values:
-;;;  1) 'native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
-;;;  2) 'native-dotemacs': If found, path of this native emacs init file,'NIL' otherwise.
-;;;  3) 'native-init': If found, path of this native emacs init file, 'NIL' otherwise.
+;;;  1) 'saved-dirs': If found, path of the native emacs directory, 'NIL' otherwise.
+;;;  2) 'saved-cfgs': If found, path of this native emacs init file,'NIL' otherwise.
+;;;  3) 'active-cfg': If found, path of this native emacs init file, 'NIL' otherwise.
 (defun look-for-and-register-saved-cfgs ()
   ;; Acquire values
   (let* ((myemacs-base-dir-str (get-directory-in-path-str-unix *myemacs-base-dir-name-str*))
-	 (myemacs-base-dir (probe-file myemacs-base-dir-str))
+	 ;;(myemacs-base-dir (probe-file myemacs-base-dir-str))
+	 (myemacs-base-dir (ensure-directories-exist (pathname myemacs-base-dir-str)))
 	 (emacsdir-symlink (gethash 'emacsdir-symlink *data*))
 	 (possible-saved-cfg-dirs (get-saved-cfg-dirs-in-path-unix *emacsdir-star-str*
 								   myemacs-base-dir))
