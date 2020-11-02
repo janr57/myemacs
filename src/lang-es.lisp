@@ -89,10 +89,12 @@
   (format stream "~a~%" (strinfo-version-es nil))
   (format stream "~a~%" (strinfo-copyright-es nil))
   (format stream "~a~%~%" (strinfo-license-es nil))
+  
   (format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-  (format stream "- INFO: Configuraciones almacenadas     -> NO ENCONTRADAS~%")
   (format stream "- INFO: Configuración activa            -> NO ENCONTRADA~%")
+  (format stream "- INFO: Configuraciones almacenadas     -> NO ENCONTRADAS~%")
   (terpri stream)
+  
   (format stream "Posibles acciones:~%")
   (format stream "1) Crear una configuración nativa de'emacs' para almacenarla más tarde.~%~%"))
 
@@ -108,9 +110,10 @@
     (format stream "~a~%~%" (strinfo-license-es nil))
     
     (format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (format stream "- INFO: Configuración activa            -> (~a)~%" active-cfg)
+    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (terpri stream)
+    
     (format stream "Posibles acciones:~%")
     (format stream "1) Ejecutar 'emacs' con la configuración activa -> ~a~%" active-cfg)
     (format stream "2) Activar otra configuración:~%")
@@ -123,7 +126,6 @@
     (format stream "   --> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles: <~a>~%~%" available-cfgs-str)))
 
-
 ;;; Mensaje de respuesta al comando :show cuando hay una configuración activa
 ;;; y no hay ninguna otra alternativa que se pueda activar.
 (defun info-action-show-active-noalt-es (active-cfg available-cfgs &optional (stream t))
@@ -134,9 +136,10 @@
     (format stream "~a~%~%" (strinfo-license-es nil))
     
     (format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (format stream "- INFO: Configuración activa            -> (~a)~%" active-cfg)
+    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (terpri stream)
+    
     (format stream "Posibles acciones:~%")
     (format stream "1) Ejecutar 'emacs' con la configuración activa -> ~a~%" active-cfg)
     (format stream "2) Borrar una configuración almacenada:~%")
@@ -154,10 +157,12 @@
     (format stream "~a~%" (strinfo-version-en nil))
     (format stream "~a~%" (strinfo-copyright-en nil))
     (format stream "~a~%~%" (strinfo-license-en nil))
+    
     (format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (format stream "- INFO: Configuración activa            -> NO ENCONTRADA~%")
+    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
     (terpri stream)
+    
     (format stream "Posibles acciones:~%")
     (format stream "1) Activar una configuración:~%")
     (format stream "   --> myemacs :use <cfg>~%")
@@ -180,9 +185,10 @@
     (format stream "~a~%~%" (strinfo-license-es nil))
     
     (format stream "- INFO: Configuración nativa de 'emacs' -> ENCONTRADA~%")
+    (format stream "- INFO: Configuración activa            -> NO ENCONTRADA~%")
     (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs-str)
-    (format stream "- INFO: Configuración activa            -> MO ENCONTRADA~%")
     (terpri stream)
+    
     (format stream "Posibles acciones:~%")
     (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
     (format stream "2) Borrar la configuración nativa de 'emacs':~%")
@@ -200,20 +206,21 @@
 ;;; Mensaje de respuesta al comando :show cuando sólo hay una configuración nativa de 'emacs'.
 (defun info-action-show-native-noalt-es (&optional (stream t))
     
-    (format stream "~a~%" (strinfo-version-es nil))
-    (format stream "~a~%" (strinfo-copyright-es nil))
-    (format stream "~a~%~%" (strinfo-license-es nil))
-    
-    (format stream "- INFO: Configuración nativa de 'emacs' -> ENCONTRADA~%")
-    (format stream "- INFO: Configuraciones almacenadas     -> NO ENCONTRADAS~%")
-    (format stream "- INFO: Configuración activa            -> MO ENCONTRADA~%")
-    (terpri stream)
-    (format stream "Posibles acciones:~%")
-    (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
-    (format stream "2) Borrar la configuración nativa de 'emacs':~%")
-    (format stream "   --> myemacs :del *~%")
-    (format stream "2) Copiar la configuración nativa como <dst>:~%")
-    (format stream "   --> myemacs :copy * <dst>~%~%"))
+  (format stream "~a~%" (strinfo-version-es nil))
+  (format stream "~a~%" (strinfo-copyright-es nil))
+  (format stream "~a~%~%" (strinfo-license-es nil))
+  
+  (format stream "- INFO: Configuración nativa de 'emacs' -> ENCONTRADA~%")
+  (format stream "- INFO: Configuración activa            -> NO ENCONTRADA~%")
+  (format stream "- INFO: Configuraciones almacenadas     -> NO ENCONTRADAS~%")  
+  (terpri stream)
+  
+  (format stream "Posibles acciones:~%")
+  (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
+  (format stream "2) Borrar la configuración nativa de 'emacs':~%")
+  (format stream "   --> myemacs :del *~%")
+  (format stream "2) Copiar la configuración nativa como <dst>:~%")
+  (format stream "   --> myemacs :copy * <dst>~%~%"))
 
 ;;; Mensaje de respuesta al comando :version
 (defun info-action-version-es (&optional (stream t))

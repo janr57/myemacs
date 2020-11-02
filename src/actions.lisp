@@ -308,8 +308,8 @@
       (show-cfg-unix)
       (setf changed-p nil))))
 
-(defun save-cfg-unix (cfg)
-  (format t "(save-cfg-unix) cfg -> ~a~%" cfg))
+
+
 
 
 (defun show-cfg ()
@@ -323,12 +323,6 @@
     ((uiop:os-unix-p)
      (get-and-register-cfg-unix)
      (use-cfg-unix cfg))))
-
-(defun save-cfg (cfg)
-  (cond
-    ((uiop:os-unix-p)
-     (get-and-register-cfg-unix)
-     (save-cfg-unix cfg))))
 
 ;;;
 (defun action-help ()
@@ -346,11 +340,9 @@
 (defun action-del (cfg)
   (format t "(action-del) cfg -> ~a~%" cfg))
 
-(defun action-save (cfg)
-  (save-cfg cfg))
-
-;;(defun action-save (cfg)
-;;  (format t "(action-save) cfg -> ~a~%" cfg))
+(defun action-copy (src dst)
+  (format t "(action-copy) src -> ~a~%" src)
+  (format t "(action-copy) dst -> ~a~%" dst))
 
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
@@ -358,12 +350,15 @@
 
 (defun action-delivery-center (lcmd)
   (let ((action (car lcmd))
-	(cfg (second lcmd)))
+	(cfg (cdr lcmd)))
   (cond
     ((null lcmd) (action-help))
     ((eql action :help) (action-help))
-    ((eql action :show) (action-show))
     ((eql action :version) (action-version))
-    ((eql action :use) (action-use cfg))
-    ((eql action :del)  (action-del cfg))
-    ((eql action :save) (action-save cfg)))))
+    ((eql action :show) (action-show))
+    ((eql action :use) (action-use (car cfg)))
+    ((eql action :del)  (action-del (car cfg)))
+    ((eql action :copy) (action-copy (car cfg) (second cfg)))
+    ((eql action :del-native) (action-del-native))
+    ((eql action :native-as) (action-native-as (car cfg)))
+    ((eql action :to-native) (action-to-native (car cfg))))))

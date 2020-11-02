@@ -57,8 +57,9 @@
 (defparameter *supported-languages* `(,*default-language* :es))
 (defparameter *valid-commands*
   `((:help = 0 nil) (:version = 0 nil) (:show = 0 nil)
-    (:use = 1 nil) (:save = 1 nil) (:del = 1 nil)
-    (:verbose = 0 nil) (:debug = 0 nil) (:lang = 1 ,*supported-languages*)))
+    (:use = 1 nil) (:del = 1 nil) (:copy = 2 nil)
+    (:del-native = 0 nil) (:native-as = 1) (:to-native = 1)
+    (:lang = 1 ,*supported-languages*) (:debug = 0 nil) (:verbose = 0 nil)))
 
 ;;;
 ;;; HASH-TABLE *data*
