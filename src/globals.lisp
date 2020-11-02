@@ -39,7 +39,7 @@
 ;;; Regular expression to find saved configurations
 (defparameter *emacsdir-star-str* (concatenate 'string *emacsdir-name-str* "-*"))
 
-;;(defparameter *myemacs-base-dir-str* nil)
+(defparameter *myemacs-base-dir-str* nil)
 
 ;;; Language global variables
 (defparameter *default-language* :en)

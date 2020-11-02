@@ -26,7 +26,6 @@
 (defun repeat-string (string ntimes)
   (format nil "~v@{~A~:*~}" ntimes string))
 
-
 ;;; Converts a list of strings into a string with the elements separated by spaces.
 ;;; Parameters:
 ;;; 'lstr': List of strings.

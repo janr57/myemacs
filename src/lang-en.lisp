@@ -127,7 +127,7 @@
 
 ;;; Message in response to the ':show' command when there is an active configuration
 ;;; and no other alternative saved configurations.
-(defun info-action-show-active-noalt-en (available-cfgs &optional (stream t))
+(defun info-action-show-active-noalt-en (active-cfg available-cfgs &optional (stream t))
   (let ((available-cfgs-str (join-strings-from-list available-cfgs)))
   
     (format stream "~a~%" (strinfo-version-en nil))

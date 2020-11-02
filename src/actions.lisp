@@ -29,9 +29,8 @@
 ;;; 'emacsdir-star-str': The starred emacsdir saved directory prefix, e.g.: '.emacs.d-*'
 ;;; Returns a list of saved emacs's configuration directories found, as pathnames.
 (defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
-(format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
-(format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
-(format t "(get-saved-cfg-dirs-in-path-unix) -> ~a~%" (get-directory-in-path-str-unix emacsdir-star-str :basepath path-str))
+  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
+  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
   (directory
    (get-directory-in-path-str-unix emacsdir-star-str :basepath path-str)))
 
@@ -101,7 +100,8 @@
 	 (native-init (uiop:pathname-equal (probe-file native-init-str)
 						    (uiop:ensure-pathname native-init-str)))
 	 (emacsdir-symlink nil)
-	 (native-cfg nil))
+	 (native-cfg nil)
+	 (myemacs-base-dir-str (get-directory-in-path-str-unix *myemacs-base-dir-name-str*)))
     ;; Consider changing value for 'emacsdir-symlink' and 'native-emacsdir':
     (when (not native-emacsdir-p)
       (setf emacsdir-symlink native-emacsdir)
@@ -123,6 +123,8 @@
     (setf (gethash 'native-init *data*) native-init)
     (setf (gethash 'emacsdir-symlink *data*) emacsdir-symlink)
     (setf (gethash 'native-cfg *data*) native-cfg)
+    (setf (gethash 'myemacs-base-dir-str *data*) myemacs-base-dir-str)
+    (setf *myemacs-base-dir-str* myemacs-base-dir-str)
     ;; Return some values
     (values native-cfg native-emacsdir native-dotemacs native-init)))
 
@@ -199,13 +201,13 @@
 	   (setf (gethash 'native-dotemacs *data*) native-dotemacs))))))))
 
 (defun show-cfg-unix ()
-  (let ((homedir-str (gethash 'homedir-str *data*))
-	(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
-	(native-init-str (gethash 'native-init-str *data*))
-	(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	(native-dotemacs (gethash 'native-dotemacs *data*))
-	(native-init (gethash 'native-init *data*))
-	(native-emacsdir (gethash 'native-emacsdir *data*))
+  (let (;;(homedir-str (gethash 'homedir-str *data*))
+	;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	;;(native-init-str (gethash 'native-init-str *data*))
+	;;(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	;;(native-dotemacs (gethash 'native-dotemacs *data*))
+	;;(native-init (gethash 'native-init *data*))
+	;;(native-emacsdir (gethash 'native-emacsdir *data*))
 	(native-cfg (gethash 'native-cfg *data*))
 	(active-cfg (gethash 'active-cfg *data*))
 	(saved-cfgs (gethash 'saved-cfgs *data*)))
@@ -240,21 +242,21 @@
        (format t "(show-cfg-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%")))))
 
 (defun use-cfg-unix (cfg)
-  (let* ((native-dotemacs-str (gethash 'native-dotemacs-str *data*))
-	 (native-init-str (gethash 'native-init-str *data*))
+  (let* (;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 ;;(native-init-str (gethash 'native-init-str *data*))
 	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 (native-dotemacs (gethash 'native-dotemacs *data*))
-	 (native-init (gethash 'native-init *data*))
-	 (native-emacsdir (gethash 'native-emacsdir *data*))
+	 ;;(native-dotemacs (gethash 'native-dotemacs *data*))
+	 ;;(native-init (gethash 'native-init *data*))
+	 ;;(native-emacsdir (gethash 'native-emacsdir *data*))
 	 (myemacs-base-dir-str (gethash 'myemacs-base-dir-str *data*))
-	 (myemacs-base-dir (gethash 'myemacs-base-dir *data*))
+	 ;;(myemacs-base-dir (gethash 'myemacs-base-dir *data*))
 	 (native-cfg (gethash 'native-cfg *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
-	 (saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
-	 (cfg-found-in-saved-cfgs (find cfg saved-cfgs-keyw))
+	 ;;(saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
+	 (cfg-found-in-saved-cfgs (find cfg (mapcar #'cfg-str-to-keyw saved-cfgs)))
 	 (cfg-str (string-downcase cfg))
-	 (active-cfg-keyw (cfg-str-to-keyw active-cfg))
+	 ;;(active-cfg-keyw (cfg-str-to-keyw active-cfg))
 	 ;;(directory-separator (string (uiop:directory-separator-for-host)))
 	 (target-link-name (concatenate 'string *emacsdir-name-str* "-" cfg-str))
 	 ;;(target-link-name (string-right-trim directory-separator target-link-name))
@@ -262,7 +264,7 @@
 	 ;;(native-emacsdir-str (string-right-trim directory-separator native-emacsdir-str))
 	 (target-link (get-directory-in-path-str-unix target-link-name
 						      :basepath (rem-last-sep myemacs-base-dir-str)
-						      :lastsep nil))
+	       					      :lastsep nil))
 	 (changed-p nil))
 
 ;;    (format t "(use-cfg-unix) native-dotemacs-str -> ~a~%" native-dotemacs-str)
@@ -304,7 +306,7 @@
     (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
-      (setf changed nil))))
+      (setf changed-p nil))))
 
 
 (defun show-cfg ()
