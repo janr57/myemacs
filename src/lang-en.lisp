@@ -191,6 +191,24 @@
     (format stream "   --> myemacs :copy <orig> <dest>~%")
     (format stream "   Available: ~a~%~%" available-cfgs-str)))
 
+;;; Message in response to the ':show' command when there is only a native configuration.
+(defun info-action-show-native-noalt-en (&optional (stream t))
+    
+    (format stream "~a~%" (strinfo-version-en nil))
+    (format stream "~a~%" (strinfo-copyright-en nil))
+    (format stream "~a~%~%" (strinfo-license-en nil))
+    
+    (format stream "- INFO: 'emacs' native configuration -> FOUND~%")
+    (format stream "- INFO: Saved configurations         -> NOT FOUND~%")
+    (format stream "- INFO: Active configuration         -> NOT FOUND~%")
+    (terpri stream)
+    (format stream "Possible actions:~%")
+    (format stream "1) Use 'emacs' with the native configuration.~%")
+    (format stream "2) Delete the native configuration:~%")
+    (format stream "   --> myemacs :del *~%")
+    (format stream "3) Copy native configuration as <dest>:~%")
+    (format stream "   --> myemacs :copy * <dest>~%~%"))
+
 ;;; Message in response to :version command
 (defun info-action-version-en (&optional (stream t))
   (format stream "~a~%" (strinfo-version-en nil))

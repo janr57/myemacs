@@ -29,11 +29,11 @@
 ;;; 'emacsdir-star-str': The starred emacsdir saved directory prefix, e.g.: '.emacs.d-*'
 ;;; Returns a list of saved emacs's configuration directories found, as pathnames.
 (defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
-;;  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
-;;  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
-  (format t "(get-saved-cfg-dirs-in-path-unix) -> ~a~%" (get-directory-in-path-str-unix emacsdir-star-str :basepath (namestring path-str)))
+(format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
+(format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
+(format t "(get-saved-cfg-dirs-in-path-unix) -> ~a~%" (get-directory-in-path-str-unix emacsdir-star-str :basepath path-str))
   (directory
-   (get-directory-in-path-str-unix emacsdir-star-str :basepath (namestring path-str))))
+   (get-directory-in-path-str-unix emacsdir-star-str :basepath path-str)))
 
 ;;(defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
 ;;;;  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
@@ -143,15 +143,20 @@
 	 (myemacs-base-dir (ensure-directories-exist (pathname myemacs-base-dir-str)))
 	 (emacsdir-symlink (gethash 'emacsdir-symlink *data*))
 	 (possible-saved-cfg-dirs (get-saved-cfg-dirs-in-path-unix *emacsdir-star-str*
-								   myemacs-base-dir))
+								   (namestring myemacs-base-dir)))
 	 (possible-init-files (get-possible-init.el-file-list-unix possible-saved-cfg-dirs))
 	 (init-files (remove-if-not #'probe-file possible-init-files))
 	 (saved-dirs (mapcar #'directory-namestring init-files))
 	 (saved-cfgs (mapcar #'get-emacs-cfg-name-unix saved-dirs))
 	 (active-cfg (get-emacs-cfg-name-unix emacsdir-symlink)))
 
-    ;;(format t "(look-for-and-register-saved-cfgs) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
-    ;;(format t "(look-for-and-register-saved-cfgs) myemacs-base-dir -> ~a~%" myemacs-base-dir)
+    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
+    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir -> ~a~%" myemacs-base-dir)
+    (format t "(look-for-and-register-saved-cfgs) emacsdir-symlink -> ~a~%" emacsdir-symlink)
+    (format t "(look-for-and-register-saved-cfgs) possible-saved-cfg-dirs -> ~a~%" possible-saved-cfg-dirs)
+    (format t "(look-for-and-register-saved-cfgs) saved-dirs -> ~a~%" saved-dirs)
+    (format t "(look-for-and-register-saved-cfgs) saved-cfgs -> ~a~%" saved-cfgs)
+    (format t "(look-for-and-register-saved-cfgs) active-cfg -> ~a~%" active-cfg)
     
     ;; Register values
     (setf (gethash 'myemacs-base-dir-str *data*) myemacs-base-dir-str)
@@ -230,8 +235,9 @@
       ;; A native configuration and no saved ones
       ((and native-cfg
 	    (not saved-cfgs))
+       (msg (info-action-show-native-noalt)))
       (t
-       (format t "(show-cfg-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%"))))))
+       (format t "(show-cfg-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%")))))
 
 (defun use-cfg-unix (cfg)
   (let* ((native-dotemacs-str (gethash 'native-dotemacs-str *data*))
