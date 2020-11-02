@@ -308,6 +308,9 @@
       (show-cfg-unix)
       (setf changed-p nil))))
 
+(defun save-cfg-unix (cfg)
+  (format t "(save-cfg-unix) cfg -> ~a~%" cfg))
+
 
 (defun show-cfg ()
   (cond
@@ -320,6 +323,12 @@
     ((uiop:os-unix-p)
      (get-and-register-cfg-unix)
      (use-cfg-unix cfg))))
+
+(defun save-cfg (cfg)
+  (cond
+    ((uiop:os-unix-p)
+     (get-and-register-cfg-unix)
+     (save-cfg-unix cfg))))
 
 ;;;
 (defun action-help ()
@@ -337,8 +346,11 @@
 (defun action-del (cfg)
   (format t "(action-del) cfg -> ~a~%" cfg))
 
-(defun action-add (cfg)
-  (format t "(action-add) cfg -> ~a~%" cfg))
+(defun action-save (cfg)
+  (save-cfg cfg))
+
+;;(defun action-save (cfg)
+;;  (format t "(action-save) cfg -> ~a~%" cfg))
 
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
@@ -354,4 +366,4 @@
     ((eql action :version) (action-version))
     ((eql action :use) (action-use cfg))
     ((eql action :del)  (action-del cfg))
-    ((eql action :add) (action-add cfg)))))
+    ((eql action :save) (action-save cfg)))))
