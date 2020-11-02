@@ -120,7 +120,7 @@
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Disponibles: <~a>~%" available-cfgs-str)
     (format stream "4) Copiar una configuración almacenada:~%")
-    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "   --> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles: <~a>~%~%" available-cfgs-str)))
 
 
@@ -143,9 +143,8 @@
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Disponibles: <~a>~%" available-cfgs-str)
     (format stream "2) Copiar una configuración almacenada:~%")
-    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "   --> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles: <~a>~%~%" available-cfgs-str)))
-
 
 ;;; Mensaje de respuesta al comando ':show' cuando no hay ni configuración nativa, ni activa.
 ;;; Sólo hay configuraciones almacenadas.
@@ -167,7 +166,7 @@
     (format stream "    --> 'myemacs :del <cfg>~%")
     (format stream "   Configuraciones disponibles: ~a~%" available-cfgs-str)
     (format stream "3) Copiar una configuración almacenada:~%")
-    (format stream "    --> 'myemacs :copy <orig> <dest>~%")
+    (format stream "    --> 'myemacs :copy <org> <dst>~%")
     (format stream "   Configuraciones disponibles: ~a~%" available-cfgs-str)
     (format stream "4) Usar 'emacs' para crear una configuración nativa.~%~%")))
 
@@ -213,8 +212,8 @@
     (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
     (format stream "2) Borrar la configuración nativa de 'emacs':~%")
     (format stream "   --> myemacs :del *~%")
-    (format stream "2) Copiar la configuración nativa como <dest>:~%")
-    (format stream "   --> myemacs :copy * <dest>~%~%"))
+    (format stream "2) Copiar la configuración nativa como <dst>:~%")
+    (format stream "   --> myemacs :copy * <dst>~%~%"))
 
 ;;; Mensaje de respuesta al comando :version
 (defun info-action-version-es (&optional (stream t))
@@ -228,19 +227,46 @@
   (format stream "~a~%" (strinfo-copyright-es nil))
   (format stream "~a~%~%" (strinfo-license-es nil))
     
-  (format stream "USO: [ :help      || :version    || :show      ||~%")
-  (format stream "       :use <cfg> || :save <cfg> || :del <cfg> || :copy <orig> <dest> ]~%")
-  (format stream "     [ :debug || :verbose || :lang <en || es> ]~%")
+  (format stream "USO: [ :help       || :version         || :show             ||~%")
+  (format stream "       :use <cfg>  || :del <cfg>       || :copy <org> <dst> ||~%")
+  (format stream "       :del-native || :native-as <cfg> || :as-native <cfg>     ]~%")
+  (format stream "     [ :lang <en || es> || :debug || :verbose ]~%")
   (format stream "~%")
   (format stream "(blanco)    -> Este mensaje.~%")
   (format stream ":help       -> Este mensaje.~%")
   (format stream ":version    -> Versión del programa.~%")
   (format stream ":show       -> Muestra configuraciones y posibles acciones a tomar.~%")
   (format stream ":use <cfg>  -> Activa la configuración <cfg>.~%")
-  (format stream ":save <cfg> -> Guarda la configuración nativa de 'emacs' como <cfg>.~%")
   (format stream ":del <cfg>  -> Borra la configuración <cfg>.~%")
+  (format stream ":copy <org> <dst> -> Copia la configuración almacenada de <org> a <dst>.~%")
+  (format stream ":del-native  -> Borra la configuración nativa.~%")
+  (format stream ":native-as <cfg> -> Guarda la configuración nativa de 'emacs' como <cfg>.~%")
+  (format stream ":as-native <cfg> -> Recupera la configuración <cfg> como nativa de 'emacs'.~%")
+  (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%")
   (format stream ":debug      -> Muestra información de depuración.~%")
-  (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%")
-  (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%~%"))
+  (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%~%"))
+
+
+
+;;;;; Mensaje de respuesta al comando :help
+;;(defun info-action-help-es (&optional (stream t))
+;;  (format stream "~a~%" (strinfo-version-es nil))
+;;  (format stream "~a~%" (strinfo-copyright-es nil))
+;;  (format stream "~a~%~%" (strinfo-license-es nil))
+;;    
+;;  (format stream "USO: [ :help      || :version    || :show      ||~%")
+;;  (format stream "       :use <cfg> || :save-native-as <cfg> || :del <cfg> || :copy <org> <dst> ]~%")
+;;  (format stream "     [ :debug || :verbose || :lang <en || es> ]~%")
+;;  (format stream "~%")
+;;  (format stream "(blanco)    -> Este mensaje.~%")
+;;  (format stream ":help       -> Este mensaje.~%")
+;;  (format stream ":version    -> Versión del programa.~%")
+;;  (format stream ":show       -> Muestra configuraciones y posibles acciones a tomar.~%")
+;;  (format stream ":use <cfg>  -> Activa la configuración <cfg>.~%")
+;;  (format stream ":save-native-as <cfg> -> Guarda la configuración nativa de 'emacs' como <cfg>.~%")
+;;  (format stream ":del <cfg>  -> Borra la configuración <cfg>.~%")
+;;  (format stream ":debug      -> Muestra información de depuración.~%")
+;;  (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%")
+;;  (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%~%"))
 
 

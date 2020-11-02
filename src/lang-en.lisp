@@ -15,7 +15,6 @@
 
 (in-package :myemacs)
 
-
 ;;; ******************** QUESTIONS
 (defun ask-delete-directory-tree-en (dir)
   (format nil "Delete directory-tree ~a? " dir))
@@ -121,9 +120,8 @@
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Available: <~a>~%" available-cfgs-str)
     (format stream "4) Copy a saved configuration:~%")
-    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "   --> myemacs :copy <src> <dst>~%")
     (format stream "   Available: <~a>~%~%" available-cfgs-str)))
-
 
 ;;; Message in response to the ':show' command when there is an active configuration
 ;;; and no other alternative saved configurations.
@@ -143,7 +141,7 @@
     (format stream "    --> 'myemacs :del <cfg>~%")
     (format stream "   Available: <~a>~%" available-cfgs-str)
     (format stream "3) Copy a saved configuration:")
-    (format stream "    --> 'myemacs :copy <orig> <dest>~%")
+    (format stream "    --> 'myemacs :copy <src> <dst>~%")
     (format stream "   Available: <~a>~%~%" available-cfgs-str)))
 
 
@@ -167,7 +165,7 @@
     (format stream "    --> 'myemacs :del <cfg>~%")
     (format stream "   Available: <~a>~%" available-cfgs-str)
     (format stream "3) Copy a saved configuration~%")
-    (format stream "    --> 'myemacs :copy <orig> <dest>~%")
+    (format stream "    --> 'myemacs :copy <src> <dst>~%")
     (format stream "   Available: <~a>~%" available-cfgs-str)
     (format stream "4) Use 'emacs' and create a native configuration.~%~%")))
 
@@ -189,13 +187,13 @@
     (format stream "2) Delete the native configuration:~%")
     (format stream "   --> myemacs :del *~%")
     (format stream "3) Copy native configuration as <dest>:~%")
-    (format stream "   --> myemacs :copy * <dest>~%")
+    (format stream "   --> myemacs :copy * <dst>~%")
     (format stream "   Names to avoid: ~a~%" available-cfgs-str)
     (format stream "4) Delete any saved configuration:~%")
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Available: ~a~%" available-cfgs-str)
     (format stream "5) Copy a saved configuration:~%")
-    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "   --> myemacs :copy <src> <dst>~%")
     (format stream "   Available: ~a~%~%" available-cfgs-str)))
 
 ;;; Message in response to the ':show' command when there is only a native configuration.
@@ -213,8 +211,8 @@
     (format stream "1) Use 'emacs' with the native configuration.~%")
     (format stream "2) Delete the native configuration:~%")
     (format stream "   --> myemacs :del *~%")
-    (format stream "3) Copy native configuration as <dest>:~%")
-    (format stream "   --> myemacs :copy * <dest>~%~%"))
+    (format stream "3) Copy native configuration as <dst>:~%")
+    (format stream "   --> myemacs :copy * <dst>~%~%"))
 
 ;;; Message in response to :version command
 (defun info-action-version-en (&optional (stream t))
@@ -227,18 +225,42 @@
   (format stream "~a~%" (strinfo-version-en nil))
   (format stream "~a~%" (strinfo-copyright-en nil))
   (format stream "~a~%~%" (strinfo-license-en nil))
-  (format stream "USAGE: [ :help      || :version    || :show      ||~%")
-  (format stream "         :use <cfg> || :save <cfg> || :del <cfg> || :copy <orig> <dest> ]~%")
-  (format stream "       [ :debug || :verbose || :lang <en || es> ]~%")
+  (format stream "USAGE: [ :help       || :version         || :show ||~%")
+  (format stream "         :use <cfg>  || :del <cfg>       || :copy <src> <dst> || ~%")
+  (format stream "         :del-native || :native-as <cfg> || :as-native <cfg>     ]~%")
+  (format stream "       [ :lang <en || es> || :debug || :verbose ]~%")
   (format stream "~%")
   (format stream "(blank)     -> This message.~%")
   (format stream ":help       -> This message.~%")
   (format stream ":version    -> Program version.~%")
   (format stream ":show       -> Show  configurations and possible actions to take.~%")
   (format stream ":use <cfg>  -> Change active configuration to <cfg>.~%")
-  (format stream ":save <cfg> -> Save native emacs config as <cfg>.~%")
   (format stream ":del <cfg>  -> Delete <cfg> configuration.~%")
+  (format stream ":copy <src> <dst> -> Copy saved configuration from <src> to <dst>~%")
+  (format stream ":del-native -> Delete native configuration.")
+  (format stream ":native-as <cfg> -> Save native emacs config as <cfg>.~%")
+  (format stream ":as-native <cfg> -> Retrieve native emacs from config <cfg>.~%")
+  (format stream ":lang < en || es > -> Show messages in the chosen language.~%")
   (format stream ":debug      -> Show debug info.~%")
-  (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
-  (format stream ":lang < en || es > -> Show messages in the chosen language.~%~%"))
+  (format stream ":verbose    -> Show more information when running a command (if aplicable).~%~%"))
+
+;;;;; Message in response to :help command
+;;(defun info-action-help-en (&optional (stream t))
+;;  (format stream "~a~%" (strinfo-version-en nil))
+;;  (format stream "~a~%" (strinfo-copyright-en nil))
+;;  (format stream "~a~%~%" (strinfo-license-en nil))
+;;  (format stream "USAGE: [ :help      || :version    || :show      ||~%")
+;;  (format stream "         :use <cfg> || :save-native-as <cfg> || :del <cfg> || :copy <src> <dst> ]~%")
+;;  (format stream "       [ :debug || :verbose || :lang <en || es> ]~%")
+;;  (format stream "~%")
+;;  (format stream "(blank)     -> This message.~%")
+;;  (format stream ":help       -> This message.~%")
+;;  (format stream ":version    -> Program version.~%")
+;;  (format stream ":show       -> Show  configurations and possible actions to take.~%")
+;;  (format stream ":use <cfg>  -> Change active configuration to <cfg>.~%")
+;;  (format stream ":save <cfg> -> Save native emacs config as <cfg>.~%")
+;;  (format stream ":del <cfg>  -> Delete <cfg> configuration.~%")
+;;  (format stream ":debug      -> Show debug info.~%")
+;;  (format stream ":verbose    -> Show more information when running a command (if aplicable).~%") 
+;;  (format stream ":lang < en || es > -> Show messages in the chosen language.~%~%"))
 
