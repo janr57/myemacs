@@ -65,23 +65,26 @@
   (format stream "Error, el primer argumento '~a' no es un comando." first-arg))
 
 (defun err-invalid-command-es (cmd &optional (stream t))
-  (format stream "Error, comando no válido ':~a'." cmd))
+  (format stream "Error, comando no válido ':~a'" cmd))
 
 (defun err-num-options-es (cmd &optional (stream t))
-  (format stream "Error, número de opciones incorrecto para el comando ':~a.'" cmd))
+  (format stream "Error, número de opciones incorrecto para el comando ':~a'" cmd))
 
 (defun err-incorrect-option-es (cmd &optional (stream t))
   (format stream "Error, el comando ':~a' tiene una opción incorrecta." cmd))
 
 (defun err-repeated-command-es (cmd &optional (stream t))
-  (format stream "Error, se ha repetido el comando ':~a'." cmd))
+  (format stream "Error, se ha repetido el comando ':~a'" cmd))
 
 (defun err-too-many-commands-es (&optional (stream t))
   (format stream "Error ¡se han tecleado demasiados comandos!"))
 
 ;;; ******************** MENSAJES DE ADVERTENCIA
 (defun warn-action-use-cfg-already-active-es (cfg &optional (stream t))
-  (format stream "Aviso: La configuración ya está activada -> ~a.~%~%" cfg))
+  (format stream "Aviso: La configuración ya está activada -> ~a~%~%" cfg))
+
+(defun warn-action-del-cfg-not-found-es (cfg &optional (stream t))
+  (format stream "Aviso: no existe la configuración -> ~a~%~%" cfg))
 
 ;;; ******************** MENSAJES DE INFORMACIÓN
 ;;; Message in response to the ':show' command when there is no configuration at all.

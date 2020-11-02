@@ -29,8 +29,8 @@
 ;;; 'emacsdir-star-str': The starred emacsdir saved directory prefix, e.g.: '.emacs.d-*'
 ;;; Returns a list of saved emacs's configuration directories found, as pathnames.
 (defun get-saved-cfg-dirs-in-path-unix (emacsdir-star-str &optional (path-str *myemacs-base-dir-str*))
-  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
-  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
+;;  (format t "(get-saved-cfg-dirs-in-path-unix) emacsdir-star-str -> ~a~%" emacsdir-star-str)
+;;  (format t "(get-saved-cfg-dirs-in-path-unix) path-str -> ~a~%" path-str)
   (directory
    (get-directory-in-path-str-unix emacsdir-star-str :basepath path-str)))
 
@@ -152,13 +152,13 @@
 	 (saved-cfgs (mapcar #'get-emacs-cfg-name-unix saved-dirs))
 	 (active-cfg (get-emacs-cfg-name-unix emacsdir-symlink)))
 
-    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
-    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir -> ~a~%" myemacs-base-dir)
-    (format t "(look-for-and-register-saved-cfgs) emacsdir-symlink -> ~a~%" emacsdir-symlink)
-    (format t "(look-for-and-register-saved-cfgs) possible-saved-cfg-dirs -> ~a~%" possible-saved-cfg-dirs)
-    (format t "(look-for-and-register-saved-cfgs) saved-dirs -> ~a~%" saved-dirs)
-    (format t "(look-for-and-register-saved-cfgs) saved-cfgs -> ~a~%" saved-cfgs)
-    (format t "(look-for-and-register-saved-cfgs) active-cfg -> ~a~%" active-cfg)
+;;    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
+;;    (format t "(look-for-and-register-saved-cfgs) myemacs-base-dir -> ~a~%" myemacs-base-dir)
+;;    (format t "(look-for-and-register-saved-cfgs) emacsdir-symlink -> ~a~%" emacsdir-symlink)
+;;    (format t "(look-for-and-register-saved-cfgs) possible-saved-cfg-dirs -> ~a~%" possible-saved-cfg-dirs)
+;;    (format t "(look-for-and-register-saved-cfgs) saved-dirs -> ~a~%" saved-dirs)
+;;    (format t "(look-for-and-register-saved-cfgs) saved-cfgs -> ~a~%" saved-cfgs)
+;;    (format t "(look-for-and-register-saved-cfgs) active-cfg -> ~a~%" active-cfg)
     
     ;; Register values
     (setf (gethash 'myemacs-base-dir-str *data*) myemacs-base-dir-str)
@@ -287,7 +287,7 @@
        (msg (err-action-use-native-cfg)))
       ;; Error: cfg does not exist
       ((null cfg-found-in-saved-cfgs)
-       (msg (err-action-use-cfg-not-available  cfg)))
+       (msg (err-action-use-cfg-not-available cfg)))
       ;; La configuración ya está activa
       ((eql cfg (cfg-str-to-keyw active-cfg))
        (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
@@ -303,6 +303,81 @@
       (progn
 	(osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
 	(setf changed-p t))))
+    (when changed-p
+      (get-and-register-cfg-unix)
+      (show-cfg-unix)
+      (setf changed-p nil))))
+
+(defun del-cfg-unix (cfg)
+  (let* (;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 ;;(native-init-str (gethash 'native-init-str *data*))
+	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	 ;;(native-dotemacs (gethash 'native-dotemacs *data*))
+	 ;;(native-init (gethash 'native-init *data*))
+	 ;;(native-emacsdir (gethash 'native-emacsdir *data*))
+	 (myemacs-base-dir-str (gethash 'myemacs-base-dir-str *data*))
+	 ;;(myemacs-base-dir (gethash 'myemacs-base-dir *data*))
+	 (native-cfg (gethash 'native-cfg *data*))
+	 (active-cfg (gethash 'active-cfg *data*))
+	 (saved-cfgs (gethash 'saved-cfgs *data*))
+	 ;;(saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
+	 (cfg-found-in-saved-cfgs (find cfg (mapcar #'cfg-str-to-keyw saved-cfgs)))
+	 (cfg-str (string-downcase cfg))
+	 ;;(active-cfg-keyw (cfg-str-to-keyw active-cfg))
+	 ;;(directory-separator (string (uiop:directory-separator-for-host)))
+	 (target-link-name (concatenate 'string *emacsdir-name-str* "-" cfg-str))
+	 ;;(target-link-name (string-right-trim directory-separator target-link-name))
+	 ;;(myemacs-base-dir-str (string-right-trim directory-separator myemacs-base-dir-str))
+	 ;;(native-emacsdir-str (string-right-trim directory-separator native-emacsdir-str))
+	 (target-link (get-directory-in-path-str-unix target-link-name
+						      :basepath (rem-last-sep myemacs-base-dir-str)
+	       					      :lastsep nil))
+	 (changed-p nil))
+
+;;    (format t "(del-cfg-unix) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+;;    (format t "(del-cfg-unix) native-init-str -> ~a~%" native-init-str)
+;;    (format t "(del-cfg-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+;;    (format t "(del-cfg-unix) native-dotemacs -> ~a~%" native-dotemacs-str)
+;;    (format t "(del-cfg-unix) native-init -> ~a~%" native-init-str)
+;;    (format t "(del-cfg-unix) native-emacsdir -> ~a~%" native-emacsdir-str)
+;;    (format t "(del-cfg-unix) myemacs-base-dir-str -> ~a~%" myemacs-base-dir-str)
+;;    (format t "(del-cfg-unix) myemacs-base-dir -> ~a~%" myemacs-base-dir)
+;;    (format t "(del-cfg-unix) native-cfg -> ~a~%" native-cfg)
+;;    (format t "(del-cfg-unix) active-cfg -> ~a~%" active-cfg)
+;;    (format t "(del-cfg-unix) saved-cfgs -> ~a~%" saved-cfgs)
+;;    (format t "(del-cfg-unix) target-link-name -> ~a~%" target-link-name)
+;;    (format t "(del-cfg-unix) target-link -> ~a~%" target-link)
+    ;; Detect errors
+    (cond
+      ;; Error: There are no saved configs or cfg is not found in them.
+      ((or (null saved-cfgs)
+	   (not (find cfg-str saved-cfgs :test #'string-equal)))
+       (msg (warn-action-del-cfg-not-found cfg-str)))
+      ;; cfg is one of the saved configurations
+      (t
+       (when (string-equal cfg-str active-cfg)
+	 (format t "(del-cfg-unix) ~a is an active configuration.~%" cfg-str)
+	 (format t "(del-cfg-unix) going to delete symlink.~%"))
+       (format t "(del-cfg-unix) going to delete the real ~a~%" cfg-str)))
+       
+;;      ;; Error: cfg does not exist
+;;      ((null cfg-found-in-saved-cfgs)
+;;       (msg (err-action-use-cfg-not-available  cfg)))
+;;      ;; La configuración ya está activa
+;;      ((eql cfg (cfg-str-to-keyw active-cfg))
+;;       (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
+;;      ;; Si hay una configuración activa, hay que borrar el directorio de emacs
+;;      (active-cfg
+;;       ;;(format t "Tengo que borrar un enlace simbólico y crear otro.")))))
+;;       (progn
+;;	   (delete-file (rem-last-sep native-emacsdir-str))
+;;	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+;;	   (setf changed-p t)))
+;;      ((not active-cfg)
+;;       (not native-cfg)
+;;      (progn
+;;	(osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+;;	(setf changed-p t))))
     (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
@@ -324,6 +399,12 @@
      (get-and-register-cfg-unix)
      (use-cfg-unix cfg))))
 
+(defun del-cfg (cfg)
+  (cond
+    ((uiop:os-unix-p)
+     (get-and-register-cfg-unix)
+     (del-cfg-unix cfg))))
+
 ;;;
 (defun action-help ()
   (msg (info-action-help)))
@@ -338,7 +419,10 @@
   (use-cfg cfg))
 
 (defun action-del (cfg)
-  (format t "(action-del) cfg -> ~a~%" cfg))
+  (del-cfg cfg))
+
+;;(defun action-del (cfg)
+;;  (format t "(action-del) cfg -> ~a~%" cfg))
 
 (defun action-copy (src dst)
   (format t "(action-copy) src -> ~a~%" src)
