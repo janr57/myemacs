@@ -295,18 +295,27 @@
       (active-cfg
        ;;(format t "Tengo que borrar un enlace simbólico y crear otro.")))))
        (progn
-	   (delete-file (rem-last-sep native-emacsdir-str))
-	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-	   (setf changed-p t)))
+	 ;; Delete the .emacs.d symlink
+	 (delete-file (rem-last-sep native-emacsdir-str))
+	 ;; Create a new symlink
+	 (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+	 (setf changed-p t)))
       ((not active-cfg)
        (not native-cfg)
-      (progn
-	(osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-	(setf changed-p t))))
+       (progn
+	 ;; Create a new symlink
+	 (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
+	 (setf changed-p t))))
     (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
       (setf changed-p nil))))
+
+(defun get-cfgdir-from-saved-cfgs (cfg-str)
+  (let ((index (position cfg-str (gethash 'saved-cfgs *data*) :test #'string-equal)))
+    (if index
+	(nth index (gethash 'saved-dirs *data*))
+	nil)))	   
 
 (defun del-cfg-unix (cfg)
   (let* (;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
@@ -320,6 +329,7 @@
 	 (native-cfg (gethash 'native-cfg *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
+	 (saved-dirs (gethash 'saved-dirs *data*))
 	 ;;(saved-cfgs-keyw (mapcar #'cfg-str-to-keyw saved-cfgs))
 	 (cfg-found-in-saved-cfgs (find cfg (mapcar #'cfg-str-to-keyw saved-cfgs)))
 	 (cfg-str (string-downcase cfg))
@@ -332,6 +342,7 @@
 	 (target-link (get-directory-in-path-str-unix target-link-name
 						      :basepath (rem-last-sep myemacs-base-dir-str)
 	       					      :lastsep nil))
+	 (delete-dir-p nil)
 	 (changed-p nil))
 
 ;;    (format t "(del-cfg-unix) native-dotemacs-str -> ~a~%" native-dotemacs-str)
@@ -353,39 +364,38 @@
       ((or (null saved-cfgs)
 	   (not (find cfg-str saved-cfgs :test #'string-equal)))
        (msg (warn-action-del-cfg-not-found cfg-str)))
-      ;; cfg is one of the saved configurations
+      ;; cfg is the active configuration
+      ((string-equal cfg-str active-cfg)
+       (progn
+	 (setf delete-dir-p (prompt-read-yes-no (msg
+						    (ask-delete-directory-tree
+						     (get-cfgdir-from-saved-cfgs cfg-str)))))
+	 (when delete-dir-p
+	   ;;(format t "(del-cfg-unix) ~a is the active configuration.~%" cfg-str)
+	   ;;(format t "(del-cfg-unix) going to delete symlink.~%")
+	   ;; Delete the .emacs.d symlink
+	   (delete-file (rem-last-sep native-emacsdir-str))
+	   ;; Delete the real symlink directory
+	   (uiop:delete-directory-tree (pathname (get-cfgdir-from-saved-cfgs active-cfg)) :validate t))
+	 (unless delete-dir-p
+	   (format t "Anulado comando :del~%"))))
+      ;; cfg is not the active configuration
       (t
-       (when (string-equal cfg-str active-cfg)
-	 (format t "(del-cfg-unix) ~a is an active configuration.~%" cfg-str)
-	 (format t "(del-cfg-unix) going to delete symlink.~%"))
-       (format t "(del-cfg-unix) going to delete the real ~a~%" cfg-str)))
-       
-;;      ;; Error: cfg does not exist
-;;      ((null cfg-found-in-saved-cfgs)
-;;       (msg (err-action-use-cfg-not-available  cfg)))
-;;      ;; La configuración ya está activa
-;;      ((eql cfg (cfg-str-to-keyw active-cfg))
-;;       (msg (warn-action-use-cfg-already-active (cfg-keyw-to-str cfg))))
-;;      ;; Si hay una configuración activa, hay que borrar el directorio de emacs
-;;      (active-cfg
-;;       ;;(format t "Tengo que borrar un enlace simbólico y crear otro.")))))
-;;       (progn
-;;	   (delete-file (rem-last-sep native-emacsdir-str))
-;;	   (osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-;;	   (setf changed-p t)))
-;;      ((not active-cfg)
-;;       (not native-cfg)
-;;      (progn
-;;	(osicat:make-link (rem-last-sep native-emacsdir-str) :target target-link)
-;;	(setf changed-p t))))
+       (progn
+	 (setf delete-dir-p (prompt-read-yes-no (msg
+						    (ask-delete-directory-tree
+						     (get-cfgdir-from-saved-cfgs cfg-str)))))
+	 (when delete-dir-p
+	   ;;(format t "(del-cfg-unix) ~a is not the active configuration.~%" (get-cfgdir-from-saved-cfgs cfg-str))
+	   ;;(format t "(del-cfg-unix) going to delete de ~a directory.~%" (get-cfgdir-from-saved-cfgs cfg-str)))
+	   (uiop:delete-directory-tree (pathname (get-cfgdir-from-saved-cfgs cfg-str)) :validate t))
+	 (unless delete-dir-p
+	   (format t "Anulado comando :del~%")))))
+    
     (when changed-p
       (get-and-register-cfg-unix)
       (show-cfg-unix)
       (setf changed-p nil))))
-
-
-
-
 
 (defun show-cfg ()
   (cond

@@ -74,7 +74,7 @@
     (concatenate 'string (string-right-trim dirsep path-str) dirsep file-name-str)))
 
 (defun prompt-read-yes-no (prompt)
-  (format *query-io* "~a: " prompt)
+  (format *query-io* "~a" prompt)
   (force-output *query-io*)
   (let ((answer (string-upcase (read-line *query-io*))))
     (cond
