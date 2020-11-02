@@ -15,9 +15,16 @@
 
 (in-package :myemacs)
 
+
 ;;; ******************** QUESTIONS
 (defun ask-delete-directory-tree-en (dir)
   (format nil "Delete directory-tree ~a? " dir))
+
+(defun list-yes-en ()
+  (list "YES" "Y"))
+
+(defun list-no-en ()
+  (list "NO" "N"))
 
 ;;; ******************** TEXT STRINGS
 (defun strinfo-version-en (&optional (stream t))

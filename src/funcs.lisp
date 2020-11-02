@@ -74,16 +74,27 @@
   (let ((dirsep (string (uiop:directory-separator-for-host))))
     (concatenate 'string (string-right-trim dirsep path-str) dirsep file-name-str)))
 
-(defun prompt-read-yes-no (prompt yes no)
+(defun prompt-read-yes-no (prompt)
   (format *query-io* "~a: " prompt)
   (force-output *query-io*)
   (let ((answer (string-upcase (read-line *query-io*))))
     (cond
-      ((find answer '("YES" "Y" "SI" "SÍ" "S") :test #'string-equal)
+      ((find answer (msg (list-yes)) :test #'string-equal)
        t)
-      ((find answer '("NO" "N") :test #'string-equal)
+      ((find answer (msg (list-no)) :test #'string-equal)
        nil)
-      (t (prompt-read prompt)))))
+      (t (prompt-read-yes-no prompt)))))
+
+;;(defun prompt-read-yes-no (prompt yes no)
+;;  (format *query-io* "~a: " prompt)
+;;  (force-output *query-io*)
+;;  (let ((answer (string-upcase (read-line *query-io*))))
+;;    (cond
+;;      ((find answer '("YES" "Y" "SI" "SÍ" "S") :test #'string-equal)
+;;       t)
+;;      ((find answer '("NO" "N") :test #'string-equal)
+;;       nil)
+;;      (t (prompt-read prompt)))))
 
 
 

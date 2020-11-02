@@ -19,6 +19,12 @@
 (defun ask-delete-directory-tree-es (dir)
   (format nil "¿Borrar directorio espúreo ~a? " dir))
 
+(defun list-yes-es ()
+  (list "SÍ" "SI" "S"))
+
+(defun list-no-es ()
+  (list "NO" "N"))
+
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
   (format stream "~a v~a ~a (~a)" *progname* *version* *production* *version-date*))
