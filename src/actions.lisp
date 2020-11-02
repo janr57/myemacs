@@ -344,6 +344,17 @@
   (format t "(action-copy) src -> ~a~%" src)
   (format t "(action-copy) dst -> ~a~%" dst))
 
+(defun action-del-native (cfg)
+  (format t "(action-del-native) cfg -> ~a~%" cfg))
+
+(defun action-save-native-as (cfg)
+  (format t "(action-save-native-as) cfg -> ~a~%" cfg))
+
+(defun action-retrieve-native (cfg)
+  (format t "(action-retrieve-native) cfg -> ~a~%" cfg))
+
+
+
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; ************************************************************************************************
@@ -360,5 +371,5 @@
     ((eql action :del)  (action-del (car cfg)))
     ((eql action :copy) (action-copy (car cfg) (second cfg)))
     ((eql action :del-native) (action-del-native))
-    ((eql action :native-as) (action-native-as (car cfg)))
-    ((eql action :to-native) (action-to-native (car cfg))))))
+    ((eql action :save-native-as) (action-save-native-as (car cfg)))
+    ((eql action :retrieve-native) (action-retrieve-native (car cfg))))))

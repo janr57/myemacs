@@ -234,9 +234,9 @@
   (format stream "~a~%" (strinfo-copyright-es nil))
   (format stream "~a~%~%" (strinfo-license-es nil))
     
-  (format stream "USO: [ :help       || :version         || :show             ||~%")
-  (format stream "       :use <cfg>  || :del <cfg>       || :copy <org> <dst> ||~%")
-  (format stream "       :del-native || :native-as <cfg> || :as-native <cfg>     ]~%")
+  (format stream "USO: [ :help       || :version              || :show                  ||~%")
+  (format stream "       :use <cfg>  || :del <cfg>            || :copy <org> <dst>      ||~%")
+  (format stream "       :del-native || :save-native-as <cfg> || :retrieve-native <cfg>    ]~%")
   (format stream "     [ :lang <en || es> || :debug || :verbose ]~%")
   (format stream "~%")
   (format stream "(blanco)    -> Este mensaje.~%")
@@ -252,8 +252,6 @@
   (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%")
   (format stream ":debug      -> Muestra información de depuración.~%")
   (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%~%"))
-
-
 
 ;;;;; Mensaje de respuesta al comando :help
 ;;(defun info-action-help-es (&optional (stream t))
