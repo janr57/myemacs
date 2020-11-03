@@ -86,6 +86,9 @@
 (defun warn-action-del-cfg-not-found-es (cfg &optional (stream t))
   (format stream "Aviso: no existe la configuración -> <~a>~%~%" cfg))
 
+(defun warn-command-cancelled-es (cmd &optional (stream t))
+  (format stream "Aviso: cancelado el comando -> :~a~%" cmd))
+
 ;;; ******************** MENSAJES DE INFORMACIÓN
 ;;; Message in response to the ':show' command when there is no configuration at all.
 (defun info-action-show-no-cfg-es (&optional (stream t))

@@ -85,4 +85,49 @@
 
 
 ;;; ******************** COMMON MYEMACS FUNCTIONS
+(defun keyw-to-cfg (cfg-symb)
+  (string-downcase cfg-symb))
+
+(defun cfg-to-keyw (cfg-str)
+  (intern (string-upcase cfg-str) "KEYWORD"))
+
+(defun cfgdir-str-from (txt &key (lastsep t))
+  (directory-str-unix (concatenate 'string *emacsdir-name* "-" txt)
+		      (gethash 'myemacsdir-str *data*) :lastsep lastsep))
+
+(defun cfgdir-from (txt)
+  (pathname (cfgdir-str-from txt)))
+
+;;(defun cfgdir-from-saved-cfgs (cfg)
+;;  (let ((index (position cfg (gethash 'saved-cfgs *data*) :test #'string-equal)))
+;;    (if index
+;;	(nth index (gethash 'saved-dirs *data*))
+;;	nil)))
+
+;;; Gets the name of the saved configuration given a saved configuration directory.
+;;; Parameters:
+;;; 'any-emacsdir': A saved configuration directory as string.
+;;; Returns:
+;;; The name of the saved configuration corresponding to the directory.
+(defun get-emacs-cfg-name-unix (any-emacsdir)
+  (when any-emacsdir
+    (let* ((any-emacsdir-str (namestring any-emacsdir))
+           (pos (position #\- any-emacsdir-str)))
+      (when pos
+        (string-right-trim
+         (string (uiop:directory-separator-for-host))
+         (subseq any-emacsdir-str (+ pos 1)))))))
+
+(defun get-possible-saved-dirs (myemacsdir-str)
+  (directory
+   (directory-str-unix *emacsdir-regexp* myemacsdir-str)))
+
+(defun get-possible-saved-init (possible-saved-dirs)
+  (mapcar #'(lambda (x) (file-str-unix *init-filename* (namestring x))) possible-saved-dirs))
+
+(defun get-saved-cfgs (myemacsdir-str)
+  (mapcar #'get-emacs-cfg-name-unix
+	  (mapcar #'directory-namestring 
+		  (remove-if-not #'probe-file (get-possible-saved-init
+					       (get-possible-saved-dirs myemacsdir-str))))))
 
