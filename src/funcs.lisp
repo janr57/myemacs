@@ -57,11 +57,16 @@
 ;;; 'emacsdir-name-str': The name of the standard emacs directory as a string
 ;;; Returns:
 ;;; The complete emacs directory path as a string
-(defun get-directory-in-path-str-unix (dir-name-str &key (basepath (uiop:getenv "HOME"))
-						      (lastsep t))
+(defun directory-str-unix (dir-name base-path-str &key (lastsep-p t))
   (let* ((dirsep (string (uiop:directory-separator-for-host)))
-	 (end-dirsep (if lastsep dirsep "")))
-    (concatenate 'string basepath dirsep dir-name-str end-dirsep)))
+	 (end-dirsep (if lastsep-p dirsep "")))
+    (concatenate 'string (string-right-trim dirsep base-path-str) dirsep dir-name end-dirsep)))
+
+;;(defun get-directory-in-path-str-unix (dir-name-str &key (basepath (uiop:getenv "HOME"))
+;;						      (lastsep t))
+;;  (let* ((dirsep (string (uiop:directory-separator-for-host)))
+;;	 (end-dirsep (if lastsep dirsep "")))
+;;    (concatenate 'string basepath dirsep dir-name-str end-dirsep)))
 
 ;;; Complete standard .emacs init emacs file path as a string
 ;;; Parameters:
@@ -69,9 +74,14 @@
 ;;; 'dotemacs-name-str': The name of the .emacs init file.
 ;;; Returns:
 ;;; The complete standard .emacs init file path as a string.
-(defun get-file-in-path-str-unix (file-name-str &optional (path-str (uiop:getenv "HOME")))
+(defun file-str-unix (file-name base-path-str)
   (let ((dirsep (string (uiop:directory-separator-for-host))))
-    (concatenate 'string (string-right-trim dirsep path-str) dirsep file-name-str)))
+    (concatenate 'string (string-right-trim dirsep base-path-str) dirsep file-name)))
+
+;;(defun get-file-in-path-str-unix (file-name-str &optional (path-str (uiop:getenv "HOME")))
+;;  (let ((dirsep (string (uiop:directory-separator-for-host))))
+;;    (concatenate 'string (string-right-trim dirsep path-str) dirsep file-name-str)))
+
 
 (defun prompt-read-yes-no (prompt)
   (format *query-io* "~a" prompt)

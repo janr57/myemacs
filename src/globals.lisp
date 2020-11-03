@@ -19,7 +19,7 @@
 (defparameter *progname* "myemacs")
 (defparameter *version* "0.1.0")
 (defparameter *production* "alpha-1")
-(defparameter *version-date* "01-11-2020")
+(defparameter *version-date* "03-11-2020")
 
 ;;;
 (defparameter *author* "José A. Navarro Ramón")
@@ -28,18 +28,18 @@
 (defparameter *license* "BSD Clause-3")
 
 ;;;
-;;; Default init emacs file
-(defparameter *dotemacs-name-str* ".emacs")
-;;; Init emacs file inside directory
-(defparameter *init.el-name-str* "init.el")
 ;;; Emacs directory
-(defparameter *emacsdir-name-str* ".emacs.d")
+(defparameter *emacsdir-name* ".emacs.d")
+;;; Default init emacs file
+(defparameter *dotemacs-filename* ".emacs")
+;;; Init emacs file inside directory
+(defparameter *init-filename* "init.el")
 ;;; Myemacs basic directory
-(defparameter *myemacs-base-dir-name-str* ".myemacs.d")
+(defparameter *myemacsdir-name* ".myemacs.d")
 ;;; Regular expression to find saved configurations
-(defparameter *emacsdir-star-str* (concatenate 'string *emacsdir-name-str* "-*"))
+(defparameter *emacsdir-regexp* (concatenate 'string *emacsdir-name* "-*"))
 
-(defparameter *myemacs-base-dir-str* nil)
+;;(defparameter *myemacs-base-dir-str* nil)
 
 ;;; Language global variables
 (defparameter *default-language* :en)
@@ -87,12 +87,8 @@
 ;;; 'emacsdir-symlink
 ;;; 'native-cfg
 ;;; ******* SAVED CFGS
-;;; 'myemacs-base-dir-str
-;;; 'myemacs-base-dir
-;;; 'possible-saved-cfg-dirs
-;;; 'possible-init-files
-;;; 'init-files
-;;; 'saved-dirs
+;;; 'myemacsdir-str
+;;; 'myemacsdir
 ;;; 'saved-cfgs
 ;;; 'active-cfg
 (defparameter *data* (make-hash-table))
