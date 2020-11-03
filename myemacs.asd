@@ -34,9 +34,9 @@
 			 (:file "lex-args"
 			  :depends-on ("lang" "funcs"))
 			 (:file "syn-args"
-			  :depends-on ("lang"))
+			  :depends-on ("lang" "funcs"))
 			 (:file "actions"
-			  :depends-on ("lang"))
+			  :depends-on ("lang" "funcs"))
 			 (:file "main"
 			  :depends-on ("exec-mode" "os" "cl" "lex-args" "syn-args" "actions")))))
   :description ""

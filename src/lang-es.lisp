@@ -20,10 +20,10 @@
   (format nil "¿Borrar directorio ~a? " dir))
 
 (defun list-yes-es ()
-  (list "SÍ" "SI" "S"))
+  '("SÍ" "SI" "S"))
 
 (defun list-no-es ()
-  (list "NO" "N"))
+  '("NO" "N"))
 
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
