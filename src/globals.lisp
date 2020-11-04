@@ -37,7 +37,7 @@
 ;;; Myemacs basic directory
 (defparameter *myemacsdir-name* ".myemacs.d")
 ;;; Regular expression to find saved configurations
-(defparameter *emacsdir-regexp* (concatenate 'string *emacsdir-name* "-*"))
+(defparameter *emacsdir-regexp* (concatenate 'string (string-left-trim "." *emacsdir-name*) "-*"))
 
 ;;(defparameter *myemacs-base-dir-str* nil)
 

@@ -94,6 +94,9 @@
 	 (saved-cfgs (get-saved-cfgs myemacsdir-str))
 	 (active-cfg (get-emacs-cfg-name-unix emacsdir-symlink)))
 
+    (when (not (find active-cfg saved-cfgs :test #'string-equal))
+      (setf active-cfg nil))
+	
 ;;    (format t "(saved-cfgs-unix) myemacsdir-str -> ~a~%" myemacsdir-str)
 ;;    (format t "(saved-cfgs-unix) myemacsdir -> ~a~%" myemacsdir)
 ;;    (format t "(saved-cfgs-unix) emacsdir-symlink -> ~a~%" emacsdir-symlink)
