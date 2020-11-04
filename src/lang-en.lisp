@@ -37,56 +37,59 @@
 
 ;;; ******************** ERROR MESSAGES
 (defun err-action-use-native-cfg-en (&optional (stream t))
-  (format stream "Error, cannot activate a saved configuration when a native one is present.~%~%"))
+  (format stream "Error, cannot use a saved configuration when a native one is present.~%~%"))
 
 (defun err-cfg-not-available-en (cfg &optional (stream t))
   (format stream "Error, not an available configuration: <~a>~%~%" cfg))
 
 (defun err-do-not-use-main-en (&optional (stream t))
-  (format stream "Execution mode error: type (myemacs ...) to run the program, please."))
+  (format stream "Execution mode error: type (myemacs ...) to run the program, please.~%~%"))
 
 (defun err-unsupported-exec-mode-en (exec-mode &optional (stream t))
-  (format stream "Error, unsupported exec-mode :~a" exec-mode))
+  (format stream "Error, unsupported exec-mode :~a~%~%" exec-mode))
 
 (defun err-unrecognized-os-type-en (&optional (stream t))
-  (format stream "Error, unrecognized OS"))
+  (format stream "Error, unrecognized OS~%~%"))
 
 (defun err-unsupported-os-type-en (os-type-name &optional (stream t))
-  (format stream "Error, unsupported ~a OS" (string-upcase os-type-name)))
+  (format stream "Error, unsupported ~a OS~%~%" (string-upcase os-type-name)))
 
 (defun err-unsupported-lisp-en (lisp-name &optional (stream t))
-  (format stream "Error, unsupported ~a common-lisp" (string-upcase lisp-name)))
+  (format stream "Error, unsupported ~a common-lisp~%~%" (string-upcase lisp-name)))
 
 (defun err-unsupported-lisp-version-en (lisp-name lisp-version &optional (stream t))
-  (format stream "Error, unsupported common-lisp version ~a (~a)"
+  (format stream "Error, unsupported common-lisp version ~a (~a)~%~%"
 	  (string-upcase lisp-name) lisp-version))
 
 (defun err-first-arg-not-a-command-en (first-arg &optional (stream t))
-  (format stream "Error, the first argument '~a' is not a command." first-arg))
+  (format stream "Error, the first argument '~a' is not a command.~%~%" first-arg))
 
 (defun err-invalid-command-en (cmd &optional (stream t))
-  (format stream "Error, invalid command :~a." cmd))
+  (format stream "Error, invalid command :~a.~%~%" cmd))
 
 (defun err-num-options-en (cmd &optional (stream t))
-  (format stream "Error, incorrect options number for command ':~a'" cmd))
+  (format stream "Error, incorrect options number for command ':~a'~%~%" cmd))
 
 (defun err-incorrect-option-en (cmd &optional (stream t))
-  (format stream "Error, incorrect option found for command ':~a'" cmd))
+  (format stream "Error, incorrect option found for command ':~a'~%~%" cmd))
 
 (defun err-repeated-command-en (cmd &optional (stream t))
-  (format stream "Error, command ':~a' has been repeated." cmd))
+  (format stream "Error, command ':~a' has been repeated.~%~%" cmd))
 
 (defun err-too-many-commands-en (&optional (stream t))
   (format stream "Error, too many commands have been typed!"))
 
 (defun err-source-dir-does-not-exist-en (srcdir &optional (stream t))
-  (format stream "Error, source directory doesn't exist:~% --> ~a~%" srcdir))
+  (format stream "Error, source directory doesn't exist:~% --> ~a~%~%" srcdir))
 
 (defun err-target-dir-exists-en (dstdir &optional (stream t))
-  (format stream "Error, target directory exists:~% --> ~a~%" dstdir))
+  (format stream "Error, target directory exists:~% --> ~a~%~%" dstdir))
 
 (defun err-no-native-cfg-en (&optional (stream t))
-  (format stream "Error, there is no native configurarion.~%"))
+  (format stream "Error, there is no native configurarion.~%~%"))
+
+(defun err-native-cfg-en (&optional (stream t))
+  (format stream "Error, there is already a native configurarion.~%~%"))
 
 ;;; ******************** WARNING MESSAGES
 (defun warn-action-use-cfg-already-active-en (cfg &optional (stream t))
@@ -96,7 +99,7 @@
   (format stream "Warning, configuration not found -> ~a~%~%" cfg))
 
 (defun warn-command-cancelled-en (cmd &optional (stream t))
-  (format stream "Warning, command cancelled -> :~a~%" cmd))
+  (format stream "Warning, command cancelled -> :~a~%~%" cmd))
 
 ;;; ******************** INFO MESSAGES
 ;;; Message in response to the ':show' command when there is no configuration at all.
@@ -161,7 +164,6 @@
     (format stream "    --> 'myemacs :copy <src> <dst>~%")
     (format stream "   Available: ~a~%~%" available-cfgs))
 
-
 ;;; Message in response to the ':show' command when there is no configuration,
 ;;; only alternative saved configurations.
 (defun info-action-show-only-saved-cfgs-en (available-cfgs &optional (stream t))
@@ -203,9 +205,9 @@
     (format stream "Possible actions:~%")
     (format stream "1) Use 'emacs' with the native configuration.~%")
     (format stream "2) Delete the native configuration:~%")
-    (format stream "   --> myemacs :del *~%")
-    (format stream "3) Copy native configuration as <dest>:~%")
-    (format stream "   --> myemacs :copy * <dst>~%")
+    (format stream "   --> myemacs :del-native~%")
+    (format stream "3) Copy native configuration as <cfg>:~%")
+    (format stream "   --> myemacs :save-native-as <dst>~%")
     (format stream "   Names to avoid: ~a~%" available-cfgs)
     (format stream "4) Delete any saved configuration:~%")
     (format stream "   --> myemacs :del <cfg>~%")

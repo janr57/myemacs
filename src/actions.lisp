@@ -184,7 +184,6 @@
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
-
 	 (cfgdir-str (cfgdir-str-from cfg))
 	 (cfgdir (cfgdir-from cfg))
 	 (changed-p nil))
@@ -218,14 +217,12 @@
 	 ;; Delete the .emacs.d symlink
 	 (delete-file (rem-last-dirsep native-emacsdir-str))
 	 ;; Create a new symlink
-	 (format t "(action-use-unix) GOING TO MAKE LINK I ~a -> ~a~%" (rem-last-dirsep native-emacsdir-str) cfgdir)
 	 (osicat:make-link (rem-last-dirsep native-emacsdir-str) :target cfgdir)
 	 (setf changed-p t)))
       ((and (not active-cfg)
 	   (not native-cfg))
        (progn
 	 ;; Create a new symlink
-	 (format t "(action-use-unix) GOING TO MAKE LINK II ~a -> ~a~%" (rem-last-dirsep native-emacsdir-str) cfgdir)
 	 (osicat:make-link (rem-last-dirsep native-emacsdir-str) :target cfgdir)
 	 (setf changed-p t))))
     
@@ -242,10 +239,6 @@
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (saved-dirs (gethash 'saved-dirs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
-	 ;;(cfgdir-name (concatenate 'string *cfgdir-name* "-" cfg))
-	 ;;(cfgdir-str (directory-str-unix cfgdir-name myemacsdir-str :lastsep nil))
-	 ;;(cfgdir (directory cfgdir-str))
-	 ;;(cfgdir-str (cfgdir-str-from cfg))
 	 (cfgdir (cfgdir-from cfg))
 	 (delete-dir-p nil)
 	 (changed-p nil))
@@ -273,8 +266,6 @@
 	 (setf delete-dir-p (prompt-read-yes-no
 			     (msg (ask-delete-directory-tree cfgdir))))
 	 (when delete-dir-p
-	   ;;(format t "(del-cfg-unix) ~a is the active configuration.~%" cfg)
-	   ;;(format t "(del-cfg-unix) going to delete symlink.~%")
 	   ;; Delete the .emacs.d symlink
 	   (delete-file (rem-last-dirsep native-emacsdir-str))
 	   ;; Delete the real symlink directory
@@ -282,21 +273,18 @@
 	 (unless delete-dir-p
 	   (format t "Anulado comando :del~%"))))
       ;; cfg is not the active configuration
-      (t
-       (progn
-	 (setf delete-dir-p (prompt-read-yes-no
-			     (msg (ask-delete-directory-tree cfgdir))))
-	 (when delete-dir-p
-	   ;;(format t "(del-cfg-unix) ~a is not the active configuration.~%" (cfgdir-from-saved-cfgs cfg))
-	   ;;(format t "(del-cfg-unix) going to delete de ~a directory.~%" (cfgdir-from-saved-cfgs cfg)))
-	   (uiop:delete-directory-tree cfgdir :validate t))
-	 (unless delete-dir-p
-	   (format t "Anulado comando :del~%"))))
+      (t (progn
+	   (setf delete-dir-p (prompt-read-yes-no
+			       (msg (ask-delete-directory-tree cfgdir))))
+	   (when delete-dir-p
+	     (uiop:delete-directory-tree cfgdir :validate t))
+	   (unless delete-dir-p
+	     (format t "Anulado comando :del~%")))))
     
     (when changed-p
       (register-cfg-unix)
       (action-show-unix)
-      (setf changed-p nil)))))
+      (setf changed-p nil))))
 
 (defun action-copy-unix (src dst)
   (let ((srcdir (cfgdir-from src))
@@ -406,7 +394,6 @@
       (action-show-unix)
       (setf changed-p nil))))
 
-
 ;;; restore-native
 (defun action-restore-native-unix (cfg)
   (let* ((native-cfg (gethash 'native-cfg *data*))
@@ -433,9 +420,25 @@
     (format t "(action-del-native) cfgdir-str -> ~a~%" cfgdir-str)
     (format t "(action-del-native) init-file-str -> ~a~%" init-file-str)
     (terpri t)
-))
 
+    (cond
+      (native-cfg
+       (msg (err-native-cfg)))
+      (t (progn
+	   (when active-cfg
+	     ;; Delete the .emacs.d symlink
+	     (delete-file (rem-last-dirsep native-emacsdir-str))
+	     (setf changed-p t))
+	   ;; Copy cfg directory to .emacs.d
+	   (copy-directory:copy (cfgdir-from cfg) native-emacsdir-str))))
 
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+  
+;;; janr
 ;;; help
 (defun action-help ()
   (msg (info-action-help)))

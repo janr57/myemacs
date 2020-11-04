@@ -88,6 +88,9 @@
 (defun err-no-native-cfg-es (&optional (stream t))
   (format stream "Error, no hay ninguna configuración nativa de 'emacs'.~%"))
 
+(defun err-native-cfg-es (&optional (stream t))
+  (format stream "Error, ya hay una configuración nativa.~%~%"))
+
 ;;; ******************** MENSAJES DE ADVERTENCIA
 (defun warn-action-use-cfg-already-active-es (cfg &optional (stream t))
   (format stream "Aviso: La configuración ya está activada -> <~a>~%~%" cfg))
@@ -158,7 +161,7 @@
     (format stream "2) Borrar una configuración almacenada:~%")
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Disponibles: ~a~%" available-cfgs)
-    (format stream "2) Copiar una configuración almacenada:~%")
+    (format stream "3) Copiar una configuración almacenada:~%")
     (format stream "   --> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles: ~a~%~%" available-cfgs))
 
@@ -203,15 +206,15 @@
     (format stream "Posibles acciones:~%")
     (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
     (format stream "2) Borrar la configuración nativa de 'emacs':~%")
-    (format stream "   --> myemacs :del *~%")
-    (format stream "2) Copiar la configuración nativa como <dest>:~%")
-    (format stream "   --> myemacs :copy * <dest>~%")
+    (format stream "   --> myemacs :del-native~%")
+    (format stream "3) Copiar la configuración nativa como <cfg>:~%")
+    (format stream "   --> myemacs :save-native-as <cfg>~%")
     (format stream "   Nombres a evitar: ~a~%" available-cfgs)
-    (format stream "3) Borrar una configuración almacenada:~%")
+    (format stream "4) Borrar una configuración almacenada:~%")
     (format stream "   --> myemacs :del <cfg>~%")
     (format stream "   Disponibles: ~a~%" available-cfgs)
-    (format stream "3) Copiar una configuración almacenada:~%")
-    (format stream "   --> myemacs :copy <orig> <dest>~%")
+    (format stream "5) Copiar una configuración almacenada:~%")
+    (format stream "   --> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles: ~a~%~%" available-cfgs))
 
 ;;; Mensaje de respuesta al comando :show cuando sólo hay una configuración nativa de 'emacs'.
@@ -230,7 +233,7 @@
   (format stream "1) Ejecutar 'emacs' usando la configuración nativa.~%")
   (format stream "2) Borrar la configuración nativa de 'emacs':~%")
   (format stream "   --> myemacs :del *~%")
-  (format stream "2) Copiar la configuración nativa como <dst>:~%")
+  (format stream "3) Copiar la configuración nativa como <dst>:~%")
   (format stream "   --> myemacs :copy * <dst>~%~%"))
 
 ;;; Mensaje de respuesta al comando :version
@@ -263,26 +266,5 @@
   (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%")
   (format stream ":debug      -> Muestra información de depuración.~%")
   (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%~%"))
-
-;;;;; Mensaje de respuesta al comando :help
-;;(defun info-action-help-es (&optional (stream t))
-;;  (format stream "~a~%" (strinfo-version-es nil))
-;;  (format stream "~a~%" (strinfo-copyright-es nil))
-;;  (format stream "~a~%~%" (strinfo-license-es nil))
-;;    
-;;  (format stream "USO: [ :help      || :version    || :show      ||~%")
-;;  (format stream "       :use <cfg> || :save-native-as <cfg> || :del <cfg> || :copy <org> <dst> ]~%")
-;;  (format stream "     [ :debug || :verbose || :lang <en || es> ]~%")
-;;  (format stream "~%")
-;;  (format stream "(blanco)    -> Este mensaje.~%")
-;;  (format stream ":help       -> Este mensaje.~%")
-;;  (format stream ":version    -> Versión del programa.~%")
-;;  (format stream ":show       -> Muestra configuraciones y posibles acciones a tomar.~%")
-;;  (format stream ":use <cfg>  -> Activa la configuración <cfg>.~%")
-;;  (format stream ":save-native-as <cfg> -> Guarda la configuración nativa de 'emacs' como <cfg>.~%")
-;;  (format stream ":del <cfg>  -> Borra la configuración <cfg>.~%")
-;;  (format stream ":debug      -> Muestra información de depuración.~%")
-;;  (format stream ":verbose    -> Muestra más información al ejecutar algún comando (si procede).~%")
-;;  (format stream ":lang < en || es > -> Muestra los mensajes en el idioma elegido.~%~%"))
 
 
