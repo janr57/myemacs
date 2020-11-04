@@ -39,7 +39,7 @@
 (defun err-action-use-native-cfg-es (&optional (stream t))
   (format stream "Error, hay una configuración nativa de emacs. No se puede activar otra.~%~%"))
 
-(defun err-action-use-cfg-not-available-es (cfg &optional (stream t))
+(defun err-cfg-not-available-es (cfg &optional (stream t))
   (format stream "Error, configuración no disponible: <~a>~%~%" cfg))
 
 (defun err-do-not-use-main-es (&optional (stream t))

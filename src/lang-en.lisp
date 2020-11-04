@@ -39,7 +39,7 @@
 (defun err-action-use-native-cfg-en (&optional (stream t))
   (format stream "Error, cannot activate a saved configuration when a native one is present.~%~%"))
 
-(defun err-action-use-cfg-not-available-en (cfg &optional (stream t))
+(defun err-cfg-not-available-en (cfg &optional (stream t))
   (format stream "Error, not an available configuration: <~a>~%~%" cfg))
 
 (defun err-do-not-use-main-en (&optional (stream t))
