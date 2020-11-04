@@ -144,7 +144,7 @@
 
 (defun get-possible-saved-dirs (myemacsdir-str)
   (directory
-   (directory-str-unix *emacsdir-regexp* myemacsdir-str)))
+   (directory-str-unix *myemacsdir-regexp* myemacsdir-str)))
 
 (defun get-possible-saved-init (possible-saved-dirs)
   (mapcar #'(lambda (x) (file-str-unix *init-filename* (namestring x))) possible-saved-dirs))
