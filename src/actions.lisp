@@ -288,17 +288,17 @@
 (defun action-copy-unix (src dst)
   (let ((srcdir (cfgdir-from src))
 	(dstdir (cfgdir-from dst)))
-;;    (format t "(action-copy-unix) src -> ~a~%" src)
-;;    (format t "(action-copy-unix) dst -> ~a~%" dst)
-;;    (format t "(action-copy-unix) srcdir -> ~a~%" srcdir)
-;;    (format t "(action-copy-unix) dstdir -> ~a~%" dstdir)
+    (format t "(action-copy-unix) src -> ~a~%" src)
+    (format t "(action-copy-unix) dst -> ~a~%" dst)
+    (format t "(action-copy-unix) srcdir -> ~a~%" srcdir)
+    (format t "(action-copy-unix) dstdir -> ~a~%" dstdir)
     (cond
       ((not (uiop:directory-exists-p srcdir))
        (msg (err-source-dir-does-not-exist srcdir)))
       ((uiop:directory-exists-p dstdir)
        (msg (err-target-dir-exists dstdir)))
-      ;;(t (copy-directory:copy srcdir dstdir)))))
-      (t (format t "Copiando ~a en ~a~%" srcdir dstdir)))))
+      (t (copy-directory:copy srcdir dstdir)))))
+
 
 
 ;;; help

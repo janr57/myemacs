@@ -116,7 +116,7 @@
   (intern (string-upcase cfg-str) "KEYWORD"))
 
 (defun cfgdir-str-from (txt &key (lastsep t))
-  (directory-str-unix (concatenate 'string *emacsdir-name* "-" txt)
+  (directory-str-unix (concatenate 'string *cfgdir-name* "-" txt)
 		      (gethash 'myemacsdir-str *data*) :lastsep lastsep))
 
 (defun cfgdir-from (txt)
