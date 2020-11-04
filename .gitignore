@@ -7,5 +7,6 @@
 *.x86f
 *~
 .#*
+#*
 myemacs_sbcl
 myemacs_ccl
