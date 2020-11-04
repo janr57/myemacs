@@ -300,6 +300,20 @@
       (t (copy-directory:copy srcdir dstdir)))))
 
 
+;;; del-native
+(defun action-del-native-unix ()
+  (let ((native-cfg (gethash 'native-cfg *data*))
+	 (emacsdir-src (gethash 'emacsdir-src *data*))
+	 (dotemacs-src (gethash 'dotemacs-src *data*)))
+     (cond
+       ((not native-cfg)
+	(msg (err-no-native-cfg)))
+       (t (progn
+	    (uiop:delete-file-if-exists dotemacs-src)
+	    (uiop:delete-file-if-exists emacsdir-src)
+	    (when (uiop:directory-exists-p emacsdir-src)
+	      (uiop:delete-directory-tree emacsdir-src :validate t)))))))
+
 
 ;;; help
 (defun action-help ()
@@ -352,13 +366,27 @@
      (register-cfg-unix)
      (action-copy-unix src dst))))
 
+;; del-native
+(defun action-del-native ()
+  (cond
+    ((uiop:os-unix-p)
+     (register-cfg-unix)
+     (action-del-native-unix))))
+
 ;;(defun action-copy (src dst)
 ;;  (format t "(action-copy) src -> ~a~%" src)
 ;;  (format t "(action-copy) dst -> ~a~%" dst))
 
 ;; del-native
 (defun action-del-native ()
-  (format t "(action-del-native)~%"))
+  (cond
+    ((uiop:os-unix-p)
+     (register-cfg-unix)
+     (action-del-native-unix))))
+
+;;;; del-native
+;;(defun action-del-native ()
+;;  (format t "(action-del-native)~%"))
 
 ;; save-native-as
 (defun action-save-native-as (cfg)

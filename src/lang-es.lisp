@@ -85,6 +85,9 @@
 (defun err-target-dir-exists-es (dstdir &optional (stream t))
   (format stream "Error, el directorio de destino existe:~%  --> ~a~%" dstdir))
 
+(defun err-no-native-cfg-es (&optional (stream t))
+  (format stream "Error, no hay ninguna configuración nativa de 'emacs'.~%"))
+
 ;;; ******************** MENSAJES DE ADVERTENCIA
 (defun warn-action-use-cfg-already-active-es (cfg &optional (stream t))
   (format stream "Aviso: La configuración ya está activada -> <~a>~%~%" cfg))

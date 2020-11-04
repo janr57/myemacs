@@ -85,6 +85,9 @@
 (defun err-target-dir-exists-en (dstdir &optional (stream t))
   (format stream "Error, target directory exists:~% --> ~a~%" dstdir))
 
+(defun err-no-native-cfg-en (&optional (stream t))
+  (format stream "Error, there is no native configurarion.~%"))
+
 ;;; ******************** WARNING MESSAGES
 (defun warn-action-use-cfg-already-active-en (cfg &optional (stream t))
   (format stream "Warning, configuration already active -> ~a~%~%" cfg))
