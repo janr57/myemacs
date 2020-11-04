@@ -42,11 +42,11 @@
 		  separation-str
 		  (join-strings-from-list (cdr lstr) separation-str)))))
 
-(defun rem-last-sep (dirstr)
+(defun rem-last-dirsep (dirstr)
   (let ((dirsep (string (uiop:directory-separator-for-host))))
     (string-right-trim dirsep dirstr)))
 
-(defun add-last-sep (dirstr)
+(defun add-last-dirsep (dirstr)
   (let ((dirsep (string (uiop:directory-separator-for-host))))
     (concatenate 'string dirstr dirsep)))
 

@@ -11,7 +11,7 @@
   :version "0.1.0"
   :author "José A. Navarro Ramón"
   :license "BSD 3-Clause"
-  :depends-on ("alexandria" "osicat")
+  :depends-on ("alexandria" "osicat" "copy-directory")
   :components ((:module "src"
 		:components
 			((:file "packages")
@@ -56,7 +56,7 @@
   :build-operation program-op
   :build-pathname "myemacs"
   :entry-point "myemacs:myemacs-standalone"
-  :depends-on ("alexandria" "osicat")
+  :depends-on ("alexandria" "osicat" "copy-directory")
   :components ((:module "src"
 		:components
 			((:file "packages")

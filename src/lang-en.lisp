@@ -79,6 +79,12 @@
 (defun err-too-many-commands-en (&optional (stream t))
   (format stream "Error, too many commands have been typed!"))
 
+(defun err-source-dir-does-not-exist-en (srcdir &optional (stream t))
+  (format stream "Error, source directory doesn't exist:~% --> ~a~%" srcdir))
+
+(defun err-target-dir-exists-en (dstdir &optional (stream t))
+  (format stream "Error, target directory exists:~% --> ~a~%" dstdir))
+
 ;;; ******************** WARNING MESSAGES
 (defun warn-action-use-cfg-already-active-en (cfg &optional (stream t))
   (format stream "Warning, configuration already active -> ~a~%~%" cfg))
