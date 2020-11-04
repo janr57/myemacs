@@ -311,7 +311,6 @@
       (action-show-unix)
       (setf changed-p nil))))
 
-
 ;;; del-native
 (defun action-del-native-unix ()
   (let ((native-cfg (gethash 'native-cfg *data*))
@@ -340,6 +339,36 @@
 	      (format t "(action-del-native-unix) BORRANDO -> ~a~%" native-emacsdir-str)
 	      (uiop:delete-directory-tree native-emacsdir :validate t)
 	      (setf changed-p t)))))
+
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+
+;;; save-native-as
+(defun action-save-native-as-unix (cfg)
+  (let ((native-cfg (gethash 'native-cfg *data*))
+	(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	(native-emacsdir (gethash 'native-emacsdir *data*))
+	(native-dotemacs (gethash 'native-dotemacs *data*))
+	(active-cfg (gethash 'active-cfg *data*))
+	(saved-cfgs (gethash 'saved-cfgs *data*))
+	(changed-p nil))
+
+    (format t "(action-del-native) cfg -> ~a~%" cfg)
+    (format t "(action-del-native) native-cfg -> ~a~%" native-cfg)
+    (format t "(action-del-native) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+    (format t "(action-del-native) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+    (format t "(action-del-native) native-emacsdir -> ~a~%" native-emacsdir)
+    (format t "(action-del-native) native-dotemacs -> ~a~%" native-dotemacs)
+    (format t "(action-del-native) active-cfg -> ~a~%" active-cfg)
+    (format t "(action-del-native) saved-cfgs -> ~a~%" saved-cfgs)
+
+    (cond
+      ((not native-cfg)
+       (msg (err-no-native-cfg))))
 
     (when changed-p
       (register-cfg-unix)
@@ -415,18 +444,21 @@
      (register-cfg-unix)
      (action-del-native-unix))))
 
-;;;; del-native
-;;(defun action-del-native ()
-;;  (format t "(action-del-native)~%"))
-
 ;; save-native-as
 (defun action-save-native-as (cfg)
-  (format t "(action-save-native-as) cfg -> ~a~%" cfg))
+  (cond
+    ((uiop:os-unix-p)
+     (register-cfg-unix)
+     (action-save-native-as-unix cfg))))
+  
+
+;;;; save-native-as
+;;(defun action-save-native-as (cfg)
+;;  (format t "(action-save-native-as) cfg -> ~a~%" cfg))
 
 ;;; retrieve-native
 (defun action-restore-native (cfg)
   (format t "(action-restore-native) cfg -> ~a~%" cfg))
-
 
 
 ;;; ************************************************************************************************

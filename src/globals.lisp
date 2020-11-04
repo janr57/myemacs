@@ -59,7 +59,7 @@
 (defparameter *valid-commands*
   `((:help = 0 nil) (:version = 0 nil) (:show = 0 nil)
     (:use = 1 nil) (:del = 1 nil) (:copy = 2 nil)
-    (:del-native = 0 nil) (:save-native = 1) (:retreive-native = 1)
+    (:del-native = 0 nil) (:save-native-as = 1) (:restore-native = 1)
     (:lang = 1 ,*supported-languages*) (:debug = 0 nil) (:verbose = 0 nil)))
 
 ;;;
