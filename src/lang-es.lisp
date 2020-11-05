@@ -180,8 +180,8 @@
   (format stream "~a~%~%" (strinfo-license-en nil))
   
   ;;(format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-  (format stream "- INFO: Configuración activa            -> ------~%")
-  (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs)
+  (format stream "- INFO: Configuración activa        -> ------~%")
+  (format stream "- INFO: Configuraciones almacenadas -> ~a~%" available-cfgs)
   (terpri stream)
   
   (format stream "Posibles acciones:~%")
