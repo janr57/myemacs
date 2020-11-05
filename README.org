@@ -6,11 +6,9 @@
    You can get the source code from 'github' (it is important to place it in the
    '~/quicklisp/local-projects' directory:
    
-   =$ cd ~/quicklisp/local-projects/=
-   
-   =$ git clone https://github.com/janr57/myemacs=
-   
-   =$ cd myemacs=
+   =$ cd ~/quicklisp/local-projects/
+   $ git clone https://github.com/janr57/myemacs
+   $ cd myemacs=
    
    There are three different forms of using this program:
    * Using the REPL.

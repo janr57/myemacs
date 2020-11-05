@@ -173,7 +173,7 @@
   (let ((language (find-and-register-language standard-args))
 	(debug-flag (if (find-command :debug standard-args) t nil))
 	(verbose-flag (if (find-command :verbose standard-args) t nil)))
-    (values language debug-flag verbose-flag)))
+    (values debug-flag verbose-flag language)))
 
 ;;; Removes the global-commands (:lang :debug :verbose) from the standard argument list.
 ;;; Parameters:

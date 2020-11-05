@@ -37,8 +37,6 @@
 ;;; Returns:
 ;;; 'T' or 'NIL' if run without o with errors.
 (defun main (&optional (args nil) (exec-mode nil))
-  ;;(format t "(main) args -> ~a~%" args)
-  ;;(format t "(main) exec-mode -> ~a~%" exec-mode)
   (multiple-value-bind (supported-exec-mode exec-mode-error-closure)
       (register-and-approve-exec-mode exec-mode)
     (multiple-value-bind (supported-os-type os-type-error-closure)
@@ -51,11 +49,13 @@
 	      (approve-standard-args standard-args)
 	    (multiple-value-bind (no-repeated-command repeated-command-closure)
 		(find-repeated-command standard-args)
-	      (multiple-value-bind (language debug-flag verbose-flag)
+	      (multiple-value-bind (debug-flag verbose-flag)
 		  (find-global-commands standard-args)
 		(let ((cleaned-standard-args (remove-global-commands standard-args)))
 		  (multiple-value-bind (commands-number-ok too-many-commands-closure)
 		      (approve-num-commands cleaned-standard-args)
+		    (setf *debug-flag* debug-flag)
+		    (setf *verbose-flag*  verbose-flag)
 		    ;; Print the appropriate message
 		    (cond
 		      ((null supported-exec-mode)
@@ -83,8 +83,6 @@
 			    (null no-repeated-command)
 			    (not commands-number-ok))
 			nil t)))))))))))
-  
-;;; ********
   
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; Macro which is the main entry point from the REPL

@@ -50,6 +50,9 @@
 (defparameter *supported-args-language* nil)
 (defparameter *language* *default-language*)
 
+(defparameter *debug-flag* nil)
+(defparameter *verbose-flag* nil)
+
 ;;; Supported characteristics
 (defparameter *supported-exec-modes* '(:repl :standalone :script))
 (defparameter *supported-os-types* '(:unix))
@@ -61,6 +64,7 @@
     (:use = 1 nil) (:del = 1 nil) (:copy = 2 nil)
     (:del-native = 0 nil) (:save-native-as = 1) (:restore-native = 1)
     (:lang = 1 ,*supported-languages*) (:debug = 0 nil) (:verbose = 0 nil)))
+
 
 ;;;
 ;;; HASH-TABLE *data*
