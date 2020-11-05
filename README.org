@@ -7,7 +7,9 @@
    '~/quicklisp/local-projects' directory:
    
    =$ cd ~/quicklisp/local-projects/=
+   
    =$ git clone https://github.com/janr57/myemacs=
+   
    =$ cd myemacs=
    
    There are three different forms of using this program:
@@ -30,7 +32,9 @@
        =$ rlwrap ccl=
        
      Once in the REPL we must load the package 'myemacs' first:
+     
      =(ql:quickload :myemacs)=
+     
      =(in-package :myemacs)=
      
      To test if it's working try:
