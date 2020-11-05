@@ -179,12 +179,12 @@
 
 (defun action-use-unix (cfg)
   (let* ((native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 (myemacsdir-str (gethash 'myemacsdir-str *data*))
+	 ;;(myemacsdir-str (gethash 'myemacsdir-str *data*))
 	 (native-cfg (gethash 'native-cfg *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
-	 (cfgdir-str (cfgdir-str-from cfg))
+	 ;;(cfgdir-str (cfgdir-str-from cfg))
 	 (cfgdir (cfgdir-from cfg))
 	 (changed-p nil))
 
@@ -205,7 +205,7 @@
       (native-cfg
        (msg (err-action-use-native-cfg)))
       ;; Error: cfg does not exist
-      ((null cfg-in-saved-cfgs)
+      ((not cfg-in-saved-cfgs)
        (msg (err-cfg-not-available cfg)))
       ;; La configuración ya está activa
       ((string-equal cfg active-cfg)
@@ -233,12 +233,12 @@
 
 (defun action-del-unix (cfg)
   (let* ((native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 (myemacsdir-str (gethash 'myemacsdir-str *data*))
-	 (native-cfg (gethash 'native-cfg *data*))
+	 ;;(myemacsdir-str (gethash 'myemacsdir-str *data*))
+	 ;;(native-cfg (gethash 'native-cfg *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
-	 (saved-dirs (gethash 'saved-dirs *data*))
-	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
+	 ;;(saved-dirs (gethash 'saved-dirs *data*))
+	 ;;(cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir (cfgdir-from cfg))
 	 (delete-dir-p nil)
 	 (changed-p nil))
@@ -349,11 +349,11 @@
 ;;; save-native-as
 (defun action-save-native-as-unix (cfg)
   (let* ((native-cfg (gethash 'native-cfg *data*))
-	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 (native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 ;;(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	 ;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
 	 (native-emacsdir (gethash 'native-emacsdir *data*))
 	 (native-dotemacs (gethash 'native-dotemacs *data*))
-	 (active-cfg (gethash 'active-cfg *data*))
+	 ;;(active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir-str (cfgdir-str-from cfg))
@@ -501,12 +501,12 @@
 ;;  (format t "(action-copy) src -> ~a~%" src)
 ;;  (format t "(action-copy) dst -> ~a~%" dst))
 
-;; del-native
-(defun action-del-native ()
-  (cond
-    ((uiop:os-unix-p)
-     (register-cfg-unix)
-     (action-del-native-unix))))
+;;;; del-native
+;;(defun action-del-native ()
+;;  (cond
+;;    ((uiop:os-unix-p)
+;;     (register-cfg-unix)
+;;     (action-del-native-unix))))
 
 ;; save-native-as
 (defun action-save-native-as (cfg)
