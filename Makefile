@@ -34,12 +34,18 @@ all: $(target1) $(target2)
 
 $(target1): $(FILES)
 	$(RM) $(sysname)
-	sbcl --eval "(asdf:make :$(sysname)/executable)"
+	sbcl --eval '(ql:quickload :alexandria)' \
+		--eval '(ql:quickload :osicat)' \
+		--eval '(ql:quickload :copy-directory)' \
+		--eval "(asdf:make :$(sysname)/executable)"
 	mv $(sysname) $(target1)
 
 $(target2): $(FILES)
 	$(RM) $(sysname)
-	ccl --eval "(asdf:make :$(sysname)/executable)"
+	ccl --eval '(ql:quickload :alexandria)' \
+		--eval '(ql:quickload :osicat)' \
+		--eval '(ql:quickload :copy-directory)' \
+		--eval "(asdf:make :$(sysname)/executable)"
 	mv $(sysname) $(target2)
 
 .PHONY: clean
