@@ -51,7 +51,7 @@
 	       (or native-dotemacs
 		   native-init))
       (setf native-cfg t))
-    
+
 ;;    (format t "(native-cfg-unix) homedir-str -> ~a~%" homedir-str)
 ;;    (format t "(native-cfg-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
 ;;    (format t "(native-cfg-unix) native-dotemacs-str -> ~a~%" native-dotemacs-str)
@@ -233,23 +233,15 @@
 
 (defun action-del-unix (cfg)
   (let* ((native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 ;;(myemacsdir-str (gethash 'myemacsdir-str *data*))
-	 ;;(native-cfg (gethash 'native-cfg *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
-	 ;;(saved-dirs (gethash 'saved-dirs *data*))
-	 ;;(cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir (cfgdir-from cfg))
 	 (delete-dir-p nil)
 	 (changed-p nil))
 
 ;;    (format t "(del-cfg-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
-;;    (format t "(del-cfg-unix) myemacsdir-str -> ~a~%" myemacsdir-str)
-;;    (format t "(del-cfg-unix) native-cfg -> ~a~%" native-cfg)
 ;;    (format t "(del-cfg-unix) active-cfg -> ~a~%" active-cfg)
-;;    (format t "(del-cfg-unix) cfg-in-saved-cfgs -> ~a~%" cfg-in-saved-cfgs)
 ;;    (format t "(del-cfg-unix) saved-cfgs -> ~a~%" saved-cfgs)
-;;    ;;(format t "(del-cfg-unix) cfgdir-name -> ~a~%" cfgdir-name)
 ;;    ;;(format t "(del-cfg-unix) cfgdir-str -> ~a~%" cfgdir-str)
 ;;    (format t "(del-cfg-unix) cfgdir -> ~a~%" cfgdir)
 ;;    (terpri t)
@@ -349,15 +341,54 @@
 ;;; save-native-as
 (defun action-save-native-as-unix (cfg)
   (let* ((native-cfg (gethash 'native-cfg *data*))
-	 ;;(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 ;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
 	 (native-emacsdir (gethash 'native-emacsdir *data*))
 	 (native-dotemacs (gethash 'native-dotemacs *data*))
-	 ;;(active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir-str (cfgdir-str-from cfg))
 	 (init-file-str (file-str-unix *init-filename* cfgdir-str))
+	 (changed-p nil))
+    
+;;    (format t "(action-del-native) cfg -> ~a~%" cfg)
+;;    (format t "(action-del-native) native-cfg -> ~a~%" native-cfg)
+;;    (format t "(action-del-native) native-emacsdir -> ~a~%" native-emacsdir)
+;;    (format t "(action-del-native) native-dotemacs -> ~a~%" native-dotemacs)
+;;    (format t "(action-del-native) saved-cfgs -> ~a~%" saved-cfgs)
+;;    (format t "(action-del-native) cfg-in-saved-cfgs -> ~a~%" cfg-in-saved-cfgs)
+;;    (format t "(action-del-native) cfgdir-str -> ~a~%" cfgdir-str)
+;;    (format t "(action-del-native) init-file-str -> ~a~%" init-file-str)
+;;    (terpri t)
+
+    (cond
+      ((not native-cfg)
+       (msg (err-no-native-cfg)))
+      (cfg-in-saved-cfgs
+       (msg (err-cfg-not-available cfg)))
+      (t (progn
+	   ;; Copiar directorio nativo ".emacs.d" a "~/.myemacs/emacs.d-<cfg>"
+	   (copy-directory:copy native-emacsdir (cfgdir-from cfg))
+	   ;; Copiar fichero ".emacs" a "~/.myemacs/emacs.d-<cfg>/init.el"
+	   (when native-dotemacs
+	     (uiop:copy-file native-dotemacs init-file-str))
+	   (setf changed-p t))))
+
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+;;; restore-native
+(defun action-restore-native-unix (cfg)
+  (let* ((native-cfg (gethash 'native-cfg *data*))
+	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	 ;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 ;;(native-emacsdir (gethash 'native-emacsdir *data*))
+	 ;;(native-dotemacs (gethash 'native-dotemacs *data*))
+	 (active-cfg (gethash 'active-cfg *data*))
+	 ;;(saved-cfgs (gethash 'saved-cfgs *data*))
+	 ;;(cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
+	 ;;(cfgdir-str (cfgdir-str-from cfg))
+	 ;;(init-file-str (file-str-unix *init-filename* cfgdir-str))
 	 (changed-p nil))
     
 ;;    (format t "(action-del-native) cfg -> ~a~%" cfg)
@@ -372,54 +403,6 @@
 ;;    (format t "(action-del-native) cfgdir-str -> ~a~%" cfgdir-str)
 ;;    (format t "(action-del-native) init-file-str -> ~a~%" init-file-str)
 ;;    (terpri t)
-
-    (cond
-      ((not native-cfg)
-       (msg (err-no-native-cfg)))
-      (cfg-in-saved-cfgs
-       (msg (err-cfg-not-available cfg)))
-      (t (progn
-	   ;; Copiar directorio nativo ".emacs.d" a "~/.myemacs/emacs.d-<cfg>"
-	   ;;(format t "(action-save-native-as-unix) COPY DIRECTORY '.emacs.d' -> ~a~%" cfgdir-str)
-	   (copy-directory:copy native-emacsdir (cfgdir-from cfg))
-	   ;; Copiar fichero ".emacs" a "~/.myemacs/emacs.d-<cfg>/init.el"
-	   (when native-dotemacs
-	     ;;(format t "(action-save-native-as-unix) COPY INIT FILE '.emacs' -> ~a~%" init-file-str)
-	     (uiop:copy-file native-dotemacs init-file-str)
-	     )
-	   (setf changed-p t))))
-
-    (when changed-p
-      (register-cfg-unix)
-      (action-show-unix)
-      (setf changed-p nil))))
-
-;;; restore-native
-(defun action-restore-native-unix (cfg)
-  (let* ((native-cfg (gethash 'native-cfg *data*))
-	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
-	 (native-dotemacs-str (gethash 'native-dotemacs-str *data*))
-	 (native-emacsdir (gethash 'native-emacsdir *data*))
-	 (native-dotemacs (gethash 'native-dotemacs *data*))
-	 (active-cfg (gethash 'active-cfg *data*))
-	 (saved-cfgs (gethash 'saved-cfgs *data*))
-	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
-	 (cfgdir-str (cfgdir-str-from cfg))
-	 (init-file-str (file-str-unix *init-filename* cfgdir-str))
-	 (changed-p nil))
-    
-    (format t "(action-del-native) cfg -> ~a~%" cfg)
-    (format t "(action-del-native) native-cfg -> ~a~%" native-cfg)
-    (format t "(action-del-native) native-emacsdir-str -> ~a~%" native-emacsdir-str)
-    (format t "(action-del-native) native-dotemacs-str -> ~a~%" native-dotemacs-str)
-    (format t "(action-del-native) native-emacsdir -> ~a~%" native-emacsdir)
-    (format t "(action-del-native) native-dotemacs -> ~a~%" native-dotemacs)
-    (format t "(action-del-native) active-cfg -> ~a~%" active-cfg)
-    (format t "(action-del-native) saved-cfgs -> ~a~%" saved-cfgs)
-    (format t "(action-del-native) cfg-in-saved-cfgs -> ~a~%" cfg-in-saved-cfgs)
-    (format t "(action-del-native) cfgdir-str -> ~a~%" cfgdir-str)
-    (format t "(action-del-native) init-file-str -> ~a~%" init-file-str)
-    (terpri t)
 
     (cond
       (native-cfg
@@ -437,8 +420,6 @@
       (action-show-unix)
       (setf changed-p nil))))
 
-  
-;;; janr
 ;;; help
 (defun action-help ()
   (msg (info-action-help)))
@@ -454,12 +435,6 @@
      (register-cfg-unix)
      (action-show-unix))))
 
-;;(defun action-show ()
-;;  (format t "(action-show)~%"))
-
-;;(defun action-show ()
-;;  (show-cfg))
-
 ;;; use
 (defun action-use (cfg)
   (cond
@@ -467,21 +442,12 @@
      (register-cfg-unix)
      (action-use-unix cfg))))
 
-;;(defun action-use (cfg)
-;;  (use-cfg cfg))
-
 ;; del
 (defun action-del (cfg)
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
      (action-del-unix cfg))))  
-
-;;(defun action-del (cfg)
-;;  (format t "(action-del) cfg -> ~a~%" cfg))
-
-;;(defun action-del (cfg)
-;;  (del-cfg cfg))
 
 ;; copy
 (defun action-copy (src dst)
@@ -497,17 +463,6 @@
      (register-cfg-unix)
      (action-del-native-unix))))
 
-;;(defun action-copy (src dst)
-;;  (format t "(action-copy) src -> ~a~%" src)
-;;  (format t "(action-copy) dst -> ~a~%" dst))
-
-;;;; del-native
-;;(defun action-del-native ()
-;;  (cond
-;;    ((uiop:os-unix-p)
-;;     (register-cfg-unix)
-;;     (action-del-native-unix))))
-
 ;; save-native-as
 (defun action-save-native-as (cfg)
   (cond
@@ -515,22 +470,12 @@
      (register-cfg-unix)
      (action-save-native-as-unix cfg))))
   
-
-;;;; save-native-as
-;;(defun action-save-native-as (cfg)
-;;  (format t "(action-save-native-as) cfg -> ~a~%" cfg))
-
 ;;; retrieve-native
 (defun action-restore-native (cfg)
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
      (action-restore-native-unix cfg))))  
-
-;;;;; retrieve-native
-;;(defun action-restore-native (cfg)
-;;  (format t "(action-restore-native) cfg -> ~a~%" cfg))
-
 
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS
