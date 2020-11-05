@@ -127,26 +127,27 @@
     (format stream "~a~%~%" (strinfo-license-es nil))
     
     ;;(format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-    (format stream "- INFO: Configuración activa            -> <~a>~%" active-cfg)
-    (format stream "- INFO: Configuraciones almacenadas     -> ~a~%" available-cfgs)
+    (format stream "- INFO: Configuración activa        -> <~a>~%" active-cfg)
+    (format stream "- INFO: Configuraciones almacenadas -> ~a~%" available-cfgs)
     (terpri stream)
     
     (format stream "Posibles acciones:~%")
     (format stream "1) Ejecutar 'emacs' con la configuración activa -> <~a>~%" active-cfg)
-    (format stream "2) Activar otra configuración:~%")
-    (format stream "   --> myemacs :use <cfg>~%")
+    (format stream "2) Activar otra configuración ")
+    (format stream "--> myemacs :use <cfg>~%")
     (format stream "   Disponibles: ~a~%" other-cfgs)
-    (format stream "3) Borrar una configuración almacenada:~%")
-    (format stream "   --> myemacs :del <cfg>~%")
+    (format stream "3) Borrar una configuración almacenada ")
+    (format stream "--> myemacs :del <cfg>~%")
     (format stream "   Disponibles: ~a~%" available-cfgs)
-    (format stream "4) Copiar una configuración almacenada:~%")
-    (format stream "   --> myemacs :copy <org> <dst>~%")
+    (format stream "4) Copiar una configuración almacenada ")
+    (format stream "--> myemacs :copy <org> <dst>~%")
     (format stream "   Disponibles para <org>: ~a~%" available-cfgs)
     (format stream "   A evitar para <dst>: ~a~%" available-cfgs)
-    (format stream "5) Restaurar la configuración nativa:~%")
-    (format stream "   --> myemacs :restore-native <cfg>~%")
-    (format stream "   Disponibles: ~a~%~%" available-cfgs)
-    ))
+    (format stream "5) Restaurar la configuración nativa ")
+    (format stream "--> myemacs :restore-native <cfg>~%")
+    (format stream "   Disponibles: ~a~%~%" available-cfgs)))
+
+
 
 ;;; Mensaje de respuesta al comando :show cuando hay una configuración activa
 ;;; y no hay ninguna otra alternativa que se pueda activar.
@@ -156,8 +157,8 @@
   (format stream "~a~%~%" (strinfo-license-es nil))
   
   ;;(format stream "- INFO: Configuración nativa de 'emacs' -> NO ENCONTRADA~%")
-  (format stream "- INFO: Configuración activa            -> <~a>~%" active-cfg)
-  (format stream "- INFO: Configuraciones almacenadas     -> ~a%" available-cfgs)
+  (format stream "- INFO: Configuración activa        -> <~a>~%" active-cfg)
+  (format stream "- INFO: Configuraciones almacenadas -> ~a%" available-cfgs)
   (terpri stream)
   
   (format stream "Posibles acciones:~%")
