@@ -55,7 +55,7 @@
 
 ;;; Supported characteristics
 (defparameter *supported-exec-modes* '(:repl :standalone :script))
-(defparameter *supported-os-types* '(:unix))
+(defparameter *supported-os-types* '(:unix :windows))
 ;list of pairs (lisp-name minimum-version)
 (defparameter *supported-lisps* '((:sbcl nil) (:ccl nil)))
 (defparameter *supported-languages* `(,*default-language* :es))

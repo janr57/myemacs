@@ -16,6 +16,105 @@
 
 (in-package :myemacs)
 
+;;; Registers relevant values concerning the native 'emacs' and the 'myemacs' configurations.
+(defun register-cfg-win ()
+  (multiple-value-bind (native-cfg native-emacsdir native-dotemacs
+			native-emacsdir-str native-dotemacs-str)
+      (native-cfg-win)
+;;    (multiple-value-bind (active-cfg) (saved-cfgs-unix)
+;;      ;; Cleaning spurious native files/directory
+;;      (cond
+;;	;; A native .emacs.d dir is found but no native init files.
+;;	;; Delete it if empty and recheck.
+;;	((and (not native-cfg)
+;;              native-emacsdir)
+;;	 (progn
+;;	   (uiop:delete-directory-tree native-emacsdir :validate t)
+;;	   (setf native-emacsdir (probe-file native-emacsdir-str))
+;;	   (setf (gethash 'native-emacsdir *data*) native-emacsdir)))
+;;	;; An active cfg found (symbolic link .emacs.d dir) together with
+;;	;; a native init file .emacs. Delete it and recheck.
+;;	((and active-cfg
+;;	     native-dotemacs)
+;;	 (progn
+;;	   (uiop:delete-file-if-exists native-dotemacs)
+;;	   (setf native-dotemacs (probe-file native-dotemacs-str))
+;;	   (setf (gethash 'native-dotemacs *data*) native-dotemacs)))))))
+    (format t "(register-cfg-win) native-cfg -> ~a~%" native-cfg)
+    (format t "(register-cfg-win) native-emacsdir -> ~a~%" native-emacsdir)
+    (format t "(register-cfg-win) native-dotemacs -> ~a~%" native-dotemacs)
+    (format t "(register-cfg-win) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+    (format t "(register-cfg-win) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+    ))    
+
+;;; Finds and registers files and directories relevant to the native 'emacs' configuration.
+;;; Returns four values:
+;;;  1) 'native-cfg': 'T' if a native configuration is found, otherwise 'NIL'.
+;;;  2) 'native-emacsdir': If found, path of the native emacs directory, 'NIL' otherwise.
+;;;  3) 'native-dotemacs': If found, path of this native emacs init file, 'NIL' otherwise.
+;;;  4) 'native-init.el': If found, path of this native emacs init file, 'NIL' otherwise.
+;;; Note:
+;;; 'probe-file' produces a pathname if the file exists, 'NIL' otherwise.
+;;; 'uiop:ensure-pathname' produces a pathname even if the file doesn't exist.
+(defun native-cfg-win ()
+  ;; Aqcuire values
+  (let* ((homedir-str (add-last-dirsep (uiop:getenv "HOME")))
+	 (native-emacsdir-str (directory-str-unix *emacsdir-name* homedir-str))
+	 (native-dotemacs-str (file-str-unix *dotemacs-filename* homedir-str))
+	 (native-init-str (file-str-unix *init-filename* native-emacsdir-str))
+	 (native-emacsdir (probe-file native-emacsdir-str))
+;;	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
+;;						 (uiop:ensure-pathname native-emacsdir-str)))
+	 (native-emacsdir-p (string-equal (namestring native-emacsdir)
+						 native-emacsdir-str))
+	 (native-dotemacs (probe-file native-dotemacs-str))
+	 (native-init (uiop:pathname-equal (probe-file native-init-str)
+					   (uiop:ensure-pathname native-init-str)))
+	 (emacsdir-symlink nil)
+	 (native-cfg nil))
+
+    (format t "native-emacsdir -> ~a~%" native-emacsdir)
+    (format t "native-emacsdir-p -> ~a~% " native-emacsdir-p)
+    
+    ;; Detect whether '.emacs.d' is a symlink or not and register vars accordingly:
+    (when (not native-emacsdir-p)
+      (setf emacsdir-symlink native-emacsdir)
+      (setf native-emacsdir nil))
+    
+    ;; Detect if there is definitely a native emacs configuration:
+    (when (and native-emacsdir-p
+	       (or native-dotemacs
+		   native-init))
+      (setf native-cfg t))
+
+    (format t "(native-cfg-win) homedir-str -> ~a~%" homedir-str)
+    (format t "(native-cfg-win) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+    (format t "(native-cfg-win) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+    (format t "(native-cfg-win) native-init-str -> ~a~%" native-init-str)
+    (format t "(native-cfg-win) native-emacsdir -> ~a~%" native-emacsdir)
+    (format t "(native-cfg-win) native-emacsdir-p -> ~a~%" native-emacsdir-p)
+    (format t "(native-cfg-win) native-emacsdir-symlink -> ~a~%" emacsdir-symlink)
+    (format t "(native-cfg-win) native-emacsdir -> ~a~%" native-emacsdir)
+    (format t "(native-cfg-win) native-dotemacs -> ~a~%" native-dotemacs)
+    (format t "(native-cfg-win) native-init -> ~a~%" native-init)
+
+    ;; Register values
+    (setf (gethash 'homedir-str *data*) (uiop:getenv "HOME"))
+    (setf (gethash 'native-emacsdir-str *data*) native-emacsdir-str)
+    (setf (gethash 'native-dotemacs-str *data*) native-dotemacs-str)
+    (setf (gethash 'native-init-str *data*) native-init-str)
+    (setf (gethash 'native-emacsdir *data*) native-emacsdir)
+    (setf (gethash 'native-emacsdir-p *data*) native-emacsdir-p)
+    (setf (gethash 'native-dotemacs *data*) native-dotemacs)
+    (setf (gethash 'native-init *data*) native-init)
+    (setf (gethash 'emacsdir-symlink *data*) emacsdir-symlink)
+    (setf (gethash 'native-cfg *data*) native-cfg)
+
+    ;; Return some values
+    (values native-cfg native-emacsdir native-dotemacs
+	    native-emacsdir-str native-dotemacs-str)))
+
+
 ;;; ********************* AUXILIARY FUNCTIONS **************************
 ;;; Finds and registers files and directories relevant to the native 'emacs' configuration.
 ;;; Returns four values:
@@ -433,7 +532,9 @@
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
-     (action-show-unix))))
+     (action-show-unix))
+    ((uiop:os-windows-p)
+     (register-cfg-win))))
 
 ;;; use
 (defun action-use (cfg)
