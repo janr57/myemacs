@@ -132,8 +132,10 @@
 	 (native-dotemacs-str (file-str-unix *dotemacs-filename* homedir-str))
 	 (native-init-str (file-str-unix *init-filename* native-emacsdir-str))
 	 (native-emacsdir (probe-file native-emacsdir-str))
-	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
-						 (uiop:ensure-pathname native-emacsdir-str)))
+;;	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
+;;						 (uiop:ensure-pathname native-emacsdir-str)))
+	 (native-emacsdir-p (string-equal (namestring native-emacsdir)
+						 native-emacsdir-str))
 	 (native-dotemacs (probe-file native-dotemacs-str))
 	 (native-init (uiop:pathname-equal (probe-file native-init-str)
 					   (uiop:ensure-pathname native-init-str)))
