@@ -8,7 +8,7 @@
 ;;;; License: BSD 3-Clause
 
 (defsystem :myemacs
-  :version "0.1.0"
+  :version "0.1.1"
   :author "José A. Navarro Ramón"
   :license "BSD 3-Clause"
   :depends-on ("alexandria" "osicat" "copy-directory")

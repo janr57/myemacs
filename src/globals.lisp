@@ -17,9 +17,9 @@
 
 ;;; 
 (defparameter *progname* "myemacs")
-(defparameter *version* "0.1.0")
+(defparameter *version* "0.1.1")
 (defparameter *production* "alpha-1")
-(defparameter *version-date* "05-11-2020")
+(defparameter *version-date* "06-11-2020")
 
 ;;;
 (defparameter *author* "José A. Navarro Ramón")

@@ -1,14 +1,27 @@
 * Program 'myemacs'
 ** What is 'myemacs'
   This program makes it possible to have multiple emacs configurations, and switch between them at will.
+** Motivation
+   No special order
+   - I am interested in learning common lisp. Hence there is no other way but to program in common lisp.
+     and learn from errors.
+   - I find this program useful because I am always testing different emacs configurations in order
+     to find the ones that suit me best, and doing it by making, moving and renaming directories,
+     creating and deleting symlinks, ... is a very error prone task.
+   - I find stimulating and enjoy programming in lisp more than in other languages. That said, I don't
+     refuse to use other languages, in fact, learning common lisp might help me to get the most out of
+     other programming languages, as well.
+
 ** Installation/Run the program
    It is important to have a working 'quicklisp' installed.
    You can get the source code from 'github' (it is important to place it in the
    '~/quicklisp/local-projects' directory:
    
-   =$ cd ~/quicklisp/local-projects/
-   $ git clone https://github.com/janr57/myemacs
-   $ cd myemacs=
+   =$ cd ~/quicklisp/local-projects/=
+   
+   =$ git clone https://github.com/janr57/myemacs=
+   
+   =$ cd myemacs=
    
    There are three different forms of using this program:
    * Using the REPL.
@@ -90,6 +103,8 @@
 
 ** Author
 + José A. Navarro (janr-devel@gmail.com)
+*** Disclaimer
+    English is not my native language, so expect to bump into wrong expressions from time to time.
   
 ** Copyright
 Copyright (c) 2020 José A. Navarro (janr-devel@gmail.com)
