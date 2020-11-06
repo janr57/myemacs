@@ -102,9 +102,9 @@
     ;;(format t "(find-language) *args-language* -> ~a~%" *args-language*)
     ;;(format t "(find-language) *supported-args-language* -> ~a~%" *supported-args-language*)
     (cond
-      ((not (null args-language-ok))
+      ((not (not args-language-ok))
        (setf language args-language))
-      ((not (null user-language-ok))
+      ((not (not user-language-ok))
        (setf language user-language))
       (t
        (setf language *default-language*)))

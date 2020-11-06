@@ -131,9 +131,9 @@
 	 (setf (gethash 'supported-lisp-p *data*) supported-lisp-p)
 	 ;;
 	 (cond
-	   ((null supported-lisp-p)
+	   ((not supported-lisp-p)
 	    (values nil (unsupported-lisp-closure lisp-name)))
-	   ((null lisp-version-ok)
+	   ((not lisp-version-ok)
 	    (values nil (unsupported-lisp-version-closure lisp-name lisp-version)))
 	   (t (values t nil)))))))
 

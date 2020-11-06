@@ -52,7 +52,7 @@
       (cond
 	((null os-type)
 	 (values nil (unrecognized-os-type-closure)))
-	((null supported-os-type)
+	((not supported-os-type)
 	 (values nil (unsupported-os-type-closure os-type-name)))
 	(t (values t nil))))))
 
