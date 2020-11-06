@@ -37,47 +37,47 @@
 
 ;;; ******************** MENSAJES DE ERROR
 (defun err-action-use-native-cfg-es (&optional (stream t))
-  (format stream "Error, hay una configuración nativa de emacs. No se puede activar otra.~%~%"))
+  (format stream "Error, hay una configuración nativa de emacs. No se puede activar otra.~%"))
 
 (defun err-cfg-not-available-es (cfg &optional (stream t))
-  (format stream "Error, configuración no disponible: <~a>~%~%" cfg))
+  (format stream "Error, configuración no disponible: <~a>~%" cfg))
 
 (defun err-do-not-use-main-es (&optional (stream t))
-  (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)"))
+  (format stream "Error, modo de ejecución incorrecto, debe teclear: (myemacs ...)~%"))
 
 (defun err-unsupported-exec-mode-es (exec-mode &optional (stream t))
-  (format stream "Error, modo de ejecución no reconocido :~a" exec-mode))
+  (format stream "Error, modo de ejecución no reconocido :~a~%" exec-mode))
 
 (defun err-unrecognized-os-type-es (&optional (stream t))
-  (format stream "Error, sistema operativo desconocido"))
+  (format stream "Error, sistema operativo desconocido~%"))
 
 (defun err-unsupported-os-type-es (os-type-name &optional (stream t))
-  (format stream "Error, sistema operativo ~a no soportado." os-type-name))
+  (format stream "Error, sistema operativo ~a no soportado~%." os-type-name))
 
 (defun err-unsupported-lisp-es (lisp-name &optional (stream t))
-  (format stream "Error, common lisp no soportado ~a" (string-upcase lisp-name)))
+  (format stream "Error, common lisp no soportado ~a~%" (string-upcase lisp-name)))
 
 (defun err-unsupported-lisp-version-es (lisp-name lisp-version &optional (stream t))
-  (format stream "Error, versión de common lisp no soportada ~a (~a)"
+  (format stream "Error, versión de common lisp no soportada ~a (~a)~%"
 	  (string-upcase lisp-name) lisp-version))
 
 (defun err-first-arg-not-a-command-es (first-arg &optional (stream t))
-  (format stream "Error, el primer argumento '~a' no es un comando." first-arg))
+  (format stream "Error, el primer argumento '~a' no es un comando.~%" first-arg))
 
 (defun err-invalid-command-es (cmd &optional (stream t))
-  (format stream "Error, comando no válido ':~a'" cmd))
+  (format stream "Error, comando no válido ':~a'~%" cmd))
 
 (defun err-num-options-es (cmd &optional (stream t))
-  (format stream "Error, número de opciones incorrecto para el comando ':~a'" cmd))
+  (format stream "Error, número de opciones incorrecto para el comando ':~a'~%" cmd))
 
 (defun err-incorrect-option-es (cmd &optional (stream t))
-  (format stream "Error, el comando ':~a' tiene una opción incorrecta." cmd))
+  (format stream "Error, el comando ':~a' tiene una opción incorrecta.~%" cmd))
 
 (defun err-repeated-command-es (cmd &optional (stream t))
-  (format stream "Error, se ha repetido el comando ':~a'" cmd))
+  (format stream "Error, se ha repetido el comando ':~a'~%" cmd))
 
 (defun err-too-many-commands-es (&optional (stream t))
-  (format stream "Error ¡se han tecleado demasiados comandos!"))
+  (format stream "Error ¡se han tecleado demasiados comandos!~%"))
 
 (defun err-source-dir-does-not-exist-es (srcdir &optional (stream t))
   (format stream "Error, el directorio fuente no existe:~%  --> ~a~%" srcdir))

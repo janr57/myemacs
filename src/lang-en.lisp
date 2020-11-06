@@ -49,10 +49,10 @@
   (format stream "Error, unsupported exec-mode :~a~%~%" exec-mode))
 
 (defun err-unrecognized-os-type-en (&optional (stream t))
-  (format stream "Error, unrecognized OS~%~%"))
+  (format stream "Error, unrecognized OS~%"))
 
 (defun err-unsupported-os-type-en (os-type-name &optional (stream t))
-  (format stream "Error, unsupported ~a OS~%~%" (string-upcase os-type-name)))
+  (format stream "Error, unsupported ~a OS~%" (string-upcase os-type-name)))
 
 (defun err-unsupported-lisp-en (lisp-name &optional (stream t))
   (format stream "Error, unsupported ~a common-lisp~%~%" (string-upcase lisp-name)))
