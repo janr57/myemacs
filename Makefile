@@ -51,7 +51,7 @@ $(target2): $(FILES)
 .PHONY: clean
 
 clean:
-	$(RM) $(target1) $(target2) $(sysname) *~ src/*.fasl src/*~ *slime-repl*
+	$(RM) $(target1) $(target2) $(sysname) *~ src/*.fasl src/*~ *slime-repl* *.exe
 
 
 

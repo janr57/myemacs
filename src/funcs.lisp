@@ -23,6 +23,12 @@
       (cons (remove char (car lstr))
 	    (remove-char-from-strlst char (cdr lstr)))))
 
+(defun subst-char-in-string (str old new)
+  (do ((i 0 (1+ i)))
+      ((= i (length str)) str)
+    (when (eql (elt str i) old)
+      (setf (elt str i) new))))
+
 (defun repeat-string (string ntimes)
   (format nil "~v@{~A~:*~}" ntimes string))
 
@@ -155,3 +161,8 @@
 		  (remove-if-not #'probe-file (get-possible-saved-init
 					       (get-possible-saved-dirs myemacsdir-str))))))
 
+(defun get-native-init (native-init-str)
+  (let ((native-init (probe-file native-init-str)))
+    (when (not (string-equal (namestring native-init) native-init-str))
+      (setf native-init nil))
+    native-init))
