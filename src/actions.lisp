@@ -67,8 +67,9 @@
 	 (native-emacsdir (probe-file native-emacsdir-str))
 ;;	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
 ;;						 (uiop:ensure-pathname native-emacsdir-str)))
-	 (native-emacsdir-p (string-equal (namestring native-emacsdir)
-						 native-emacsdir-str))
+;;	 (native-emacsdir-p (string-equal (namestring native-emacsdir)
+;;						 native-emacsdir-str))
+	 (native-emacsdir-p (get-native-emacsdir-p native-emacsdir native-emacsdir-str))
 	 (native-dotemacs (probe-file native-dotemacs-str))
 ;;	 (native-init (uiop:pathname-equal (probe-file native-init-str)
 ;;					   (uiop:ensure-pathname native-init-str)))
@@ -135,12 +136,12 @@
     (when (not (find active-cfg saved-cfgs :test #'string-equal))
       (setf active-cfg nil))
 	
-;;    (format t "(saved-cfgs-unix) myemacsdir-str -> ~a~%" myemacsdir-str)
-;;    (format t "(saved-cfgs-unix) myemacsdir -> ~a~%" myemacsdir)
-;;    (format t "(saved-cfgs-unix) emacsdir-symlink -> ~a~%" emacsdir-symlink)
-;;    (format t "(saved-cfgs-unix) saved-cfgs -> ~a~%" saved-cfgs)
-;;    (format t "(saved-cfgs-unix) active-cfg -> <~a>~%" active-cfg)
-;;    (terpri t)
+    (format t "(saved-cfgs-win) myemacsdir-str -> ~a~%" myemacsdir-str)
+    (format t "(saved-cfgs-win) myemacsdir -> ~a~%" myemacsdir)
+    (format t "(saved-cfgs-win) emacsdir-symlink -> ~a~%" emacsdir-symlink)
+    (format t "(saved-cfgs-win) saved-cfgs -> ~a~%" saved-cfgs)
+    (format t "(saved-cfgs-win) active-cfg -> <~a>~%" active-cfg)
+    (terpri t)
     
     ;; Register values
     (setf (gethash 'myemacsdir-str *data*) myemacsdir-str)
@@ -190,7 +191,128 @@
       (t
        (format t "(action-show-unix) *** ERROR THE PROGRAM SHOULDN'T HAVE REACHED HERE!~%")))))
 
-  
+;;; save-native-as
+(defun action-save-native-as-win (cfg)
+  (let* ((native-cfg (gethash 'native-cfg *data*))
+	 (native-emacsdir (gethash 'native-emacsdir *data*))
+	 (native-dotemacs (gethash 'native-dotemacs *data*))
+	 (saved-cfgs (gethash 'saved-cfgs *data*))
+	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
+	 (cfgdir-str (cfgdir-str-from cfg))
+	 (init-file-str (file-str-unix *init-filename* cfgdir-str))
+	 (changed-p nil))
+    
+;;    (format t "(action-save-native-as-win) cfg -> ~a~%" cfg)
+;;    (format t "(action-save-native-as-win) native-cfg -> ~a~%" native-cfg)
+;;    (format t "(action-save-native-as-win) native-emacsdir -> ~a~%" native-emacsdir)
+;;    (format t "(action-save-native-as-win) native-dotemacs -> ~a~%" native-dotemacs)
+;;    (format t "(action-save-native-as-win) saved-cfgs -> ~a~%" saved-cfgs)
+;;    (format t "(action-save-native-as-win) cfg-in-saved-cfgs -> ~a~%" cfg-in-saved-cfgs)
+;;    (format t "(action-save-native-as-win) cfgdir-str -> ~a~%" cfgdir-str)
+;;    (format t "(action-save-native-as-win) init-file-str -> ~a~%" init-file-str)
+;;    (terpri t)
+
+    (cond
+      ((not native-cfg)
+       (msg (err-no-native-cfg)))
+      (cfg-in-saved-cfgs
+       (msg (err-cfg-not-available cfg)))
+      (t (progn
+	   ;; Copiar directorio nativo ".emacs.d" a "~/.myemacs/emacs.d-<cfg>"
+	   (copy-directory:copy native-emacsdir (cfgdir-from cfg))
+	   ;; Copiar fichero ".emacs" a "~/.myemacs/emacs.d-<cfg>/init.el"
+	   (when native-dotemacs
+	     (uiop:copy-file native-dotemacs init-file-str))
+	   (setf changed-p t))))
+
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+;;; del-native
+(defun action-del-native-win ()
+  (let ((native-cfg (gethash 'native-cfg *data*))
+	(native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	(native-emacsdir (gethash 'native-emacsdir *data*))
+	(native-dotemacs (gethash 'native-dotemacs *data*))
+	(changed-p nil))
+    
+;;    (format t "(action-del-native-win) native-cfg -> ~a~%" native-cfg)
+;;    (format t "(action-del-native-win) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+;;    (format t "(action-del-native-win) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+;;    (format t "(action-del-native-win) native-emacsdir -> ~a~%" native-emacsdir)
+;;    (format t "(action-del-native-win) native-dotemacs -> ~a~%" native-dotemacs)
+;;    (terpri t)
+
+    (cond
+       ((not native-cfg)
+	(msg (err-no-native-cfg)))
+       (t (progn
+	    (when native-dotemacs
+	      ;;(format t "(action-del-native-unix) DELETE -> ~a~%" native-dotemacs-str)
+	      (uiop:delete-file-if-exists native-dotemacs-str)
+	      (setf changed-p t))
+	    ;;(uiop:delete-file-if-exists native-emacsdir-str)
+	    (when (uiop:directory-exists-p native-emacsdir-str)
+	      ;;(format t "(action-del-native-unix) DELETE -> ~a~%" native-emacsdir-str)
+	      (uiop:delete-directory-tree native-emacsdir :validate t)
+	      (setf changed-p t)))))
+
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+
+;;; restore-native
+(defun action-restore-native-win (cfg)
+  (let* ((native-cfg (gethash 'native-cfg *data*))
+	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
+	 ;;(native-dotemacs-str (gethash 'native-dotemacs-str *data*))
+	 ;;(native-emacsdir (gethash 'native-emacsdir *data*))
+	 ;;(native-dotemacs (gethash 'native-dotemacs *data*))
+	 (active-cfg (gethash 'active-cfg *data*))
+	 ;;(saved-cfgs (gethash 'saved-cfgs *data*))
+	 ;;(cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
+	 ;;(cfgdir-str (cfgdir-str-from cfg))
+	 ;;(init-file-str (file-str-unix *init-filename* cfgdir-str))
+	 (changed-p nil))
+    
+;;    (format t "(action-restore-native-win) cfg -> ~a~%" cfg)
+;;    (format t "(action-restore-native-win) native-cfg -> ~a~%" native-cfg)
+;;    (format t "(action-restore-native-win) native-emacsdir-str -> ~a~%" native-emacsdir-str)
+;;    (format t "(action-restore-native-win) native-dotemacs-str -> ~a~%" native-dotemacs-str)
+;;    (format t "(action-restore-native-win) native-emacsdir -> ~a~%" native-emacsdir)
+;;    (format t "(action-restore-native-win) native-dotemacs -> ~a~%" native-dotemacs)
+;;    (format t "(action-restore-native-win) active-cfg -> ~a~%" active-cfg)
+;;    (format t "(action-restore-native-win) saved-cfgs -> ~a~%" saved-cfgs)
+;;    (format t "(action-restore-native-win) cfg-in-saved-cfgs -> ~a~%" cfg-in-saved-cfgs)
+;;    (format t "(action-restore-native-win) cfgdir-str -> ~a~%" cfgdir-str)
+;;    (format t "(action-restore-native-win) init-file-str -> ~a~%" init-file-str)
+;;    (terpri t)
+
+    (cond
+      (native-cfg
+       (msg (err-native-cfg)))
+      (t (progn
+	   (when active-cfg
+	     ;; Delete the .emacs.d symlink
+	     (delete-file (rem-last-dirsep native-emacsdir-str))
+	     (setf changed-p t))
+	   ;; Copy cfg directory to .emacs.d
+	   (copy-directory:copy (cfgdir-from cfg) native-emacsdir-str)
+	   (setf changed-p t))))
+
+    (when changed-p
+      (register-cfg-unix)
+      (action-show-unix)
+      (setf changed-p nil))))
+
+
+
+
 ;;; ********************* AUXILIARY FUNCTIONS **************************
 ;;; Finds and registers files and directories relevant to the native 'emacs' configuration.
 ;;; Returns four values:
@@ -642,6 +764,9 @@
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
+     (action-del-native-unix))
+    ((uiop:os-windows-p)
+     (register-cfg-unix)
      (action-del-native-unix))))
 
 ;; save-native-as
@@ -649,14 +774,20 @@
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
-     (action-save-native-as-unix cfg))))
+     (action-save-native-as-unix cfg))
+    ((uiop:os-windows-p)
+     (register-cfg-win)
+     (action-save-native-as-win cfg))))
   
 ;;; retrieve-native
 (defun action-restore-native (cfg)
   (cond
     ((uiop:os-unix-p)
      (register-cfg-unix)
-     (action-restore-native-unix cfg))))  
+     (action-restore-native-unix cfg))
+    ((uiop:os-windows-p)
+     (register-cfg-win)
+     (action-restore-native-win cfg))))  
 
 ;;; ************************************************************************************************
 ;;; ********************* SERVICEABLE FUNCTIONS

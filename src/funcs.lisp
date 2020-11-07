@@ -163,6 +163,15 @@
 
 (defun get-native-init (native-init-str)
   (let ((native-init (probe-file native-init-str)))
-    (when (not (string-equal (namestring native-init) native-init-str))
-      (setf native-init nil))
+    (cond
+      ((null native-init) nil)
+      ((not (string-equal (namestring native-init) native-init-str))
+       (setf native-init nil)))
     native-init))
+
+(defun get-native-emacsdir-p (native-emacsdir native-emacsdir-str)
+  (if (or (null native-emacsdir)
+	  (not (string-equal (namestring native-emacsdir) native-emacsdir-str)))
+      nil t))
+    
+     
