@@ -35,7 +35,7 @@
 (defparameter *no-complex-es* '(("NUNCA" . nil) ("PARA" . nil) ("NO QUIERO" . nil)
 				 ("NO LO HAGAS" . nil) ("NONES" . nil)))
 
-(defparameter *yes-no-es* (append *yes-simple-es* *no-simple-es*
+(defparameter *yes-no-assoc-es* (append *yes-simple-es* *no-simple-es*
 				  *yes-complex-es* *no-complex-es*))
 
 ;;(defparameter *yes-no-es* '(("S" . t) ("SÍ" . t) ("SI" . t) ("VALE" . t) ("OK" . t)

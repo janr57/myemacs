@@ -78,7 +78,7 @@
   (let ((dirsep (string (uiop:directory-separator-for-host))))
     (concatenate 'string (string-right-trim dirsep base-path-str) dirsep file-name)))
 
-(defun yes-or-no (assoc-list)
+(defun assoc-list-finder (assoc-list)
   (lambda (key)
     (assoc key assoc-list :test #'string-equal)))
 	      
@@ -86,7 +86,7 @@
   (format *query-io* "~a" prompt)
   (force-output *query-io*)
   (let* ((answer (string-upcase (read-line *query-io*)))
-	 (yes-or-no-fn (yes-or-no (lang-aware-global-value 'yes-no)))
+	 (yes-or-no-fn (assoc-list-finder (lang-aware-global-value 'yes-no-assoc)))
 	 (found-answer (funcall yes-or-no-fn answer))
 	 (result (cdr found-answer)))
     (cond
