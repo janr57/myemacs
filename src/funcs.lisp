@@ -93,37 +93,6 @@
       (found-answer result)
       (t (prompt-read-yes-no prompt)))))
 
-;;(defun prompt-read-yes-no (prompt)
-;;  (format *query-io* "~a" prompt)
-;;  (force-output *query-io*)
-;;  (let* ((answer (string-upcase (read-line *query-io*)))
-;;	(found-answer (assoc answer (lang-aware-global-value 'yes-no) :test #'string-equal)))
-;;    (cond
-;;      (found-answer (cdr found-answer))
-;;      (t (prompt-read-yes-no prompt)))))
-
-;;(defun prompt-read-yes-no (prompt)
-;;  (format *query-io* "~a" prompt)
-;;  (force-output *query-io*)
-;;  (let ((answer (string-upcase (read-lqine *query-io*))))
-;;    (cond
-;;      ((find answer (funcall (lang-aware-function 'list-yes)) :test #'string-equal)
-;;       t)
-;;      ((find answer (funcall (lang-aware-function 'list-no)) :test #'string-equal)
-;;       nil)
-;;      (t (prompt-read-yes-no prompt)))))
-
-;;(defun prompt-read-yes-no (prompt)
-;;  (format *query-io* "~a" prompt)
-;;  (force-output *query-io*)
-;;  (let ((answer (string-upcase (read-line *query-io*))))
-;;    (cond
-;;      ((find answer (list-yes) :test #'string-equal)
-;;       t)
-;;      ((find answer (list-no) :test #'string-equal)
-;;       nil)
-;;      (t (prompt-read-yes-no prompt)))))
-
 ;;; ******************** COMMON MYEMACS FUNCTIONS
 (defun keyw-to-cfg (cfg-symb)
   (string-downcase cfg-symb))
