@@ -25,8 +25,22 @@
 ;;(defun list-no-en ()
 ;;  (list "NO" "N"))
 
-(defparameter *yes-no-assoc-en* '(("Y" . t) ("YES" . t) ("YEAH" . t) ("OK" . t) ("YAY" . t) ("AYE" . t)
-				  ("N" . nil) ("NO" . nil)))
+(defparameter *yes-simple-en* '(("Y" . t) ("YES" . t)))
+
+(defparameter *no-simple-en* '(("N" . nil) ("NO" . nil)))
+
+(defparameter *yes-complex-en* '(("YEAH" . t) ("YAY" . t) ("CORRECT" . t)
+				 ("AYE" . t) ("DO IT" . t)))
+
+(defparameter *no-complex-en* '(("NEVER" . nil) ("STOP" . nil) ("QUIT" . nil)
+				 ("EXIT" . nil) ("NOPE" . nil)))
+
+(defparameter *yes-no-es* (append *yes-simple-en* *no-simple-en*
+				  *yes-complex-en* *no-complex-en*))
+
+
+;;(defparameter *yes-no-assoc-en* '(("Y" . t) ("YES" . t) ("YEAH" . t) ("OK" . t) ("YAY" . t) ("AYE" . t)
+;;				  ("N" . nil) ("NO" . nil)))
 
 
 ;;; ******************** TEXT STRINGS

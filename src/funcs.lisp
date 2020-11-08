@@ -82,7 +82,7 @@
   (format *query-io* "~a" prompt)
   (force-output *query-io*)
   (let* ((answer (string-upcase (read-line *query-io*)))
-	(found-answer (assoc answer (lang-aware-global-value 'yes-no-assoc) :test #'string-equal)))
+	(found-answer (assoc answer (lang-aware-global-value 'yes-no) :test #'string-equal)))
     (cond
       (found-answer (cdr found-answer))
       (t (prompt-read-yes-no prompt)))))

@@ -25,8 +25,21 @@
 ;;(defun list-no-es ()
 ;;  '("NO" "N"))
 
-(defparameter *yes-no-assoc-es* '(("S" . t) ("SÍ" . t) ("SI" . t) ("VALE" . t) ("OK" . t)
-				  ("N" . nil) ("NO" . nil)))
+(defparameter *yes-simple-es* '(("S" . t) ("SI" . t) ("SÍ" . t)))
+
+(defparameter *no-simple-es* '(("N" . nil) ("NO" . nil)))
+
+(defparameter *yes-complex-es* '(("VALE" . t) ("OK" . t) ("CORRECTO" . t)
+				 ("VENGA" . t) ("DE ACUERDO" . t)))
+
+(defparameter *no-complex-es* '(("NUNCA" . nil) ("PARA" . nil) ("NO QUIERO" . nil)
+				 ("NO LO HAGAS" . nil) ("NONES" . nil)))
+
+(defparameter *yes-no-es* (append *yes-simple-es* *no-simple-es*
+				  *yes-complex-es* *no-complex-es*))
+
+;;(defparameter *yes-no-es* '(("S" . t) ("SÍ" . t) ("SI" . t) ("VALE" . t) ("OK" . t)
+;;				  ("N" . nil) ("NO" . nil)))
 
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
