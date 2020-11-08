@@ -162,6 +162,7 @@
 					       (get-possible-saved-dirs myemacsdir-str))))))
 
 (defun get-native-init (native-init-str)
+  (format t "(get-native-init) native-init-str -> ~a~%" native-init-str)
   (let ((native-init (probe-file native-init-str)))
     (cond
       ((null native-init) nil)
@@ -170,6 +171,8 @@
     native-init))
 
 (defun get-native-emacsdir-p (native-emacsdir native-emacsdir-str)
+  (format t "(get-native-emacsdir-p) native-emacsdir -> ~a~%" native-emacsdir)
+  (format t "(get-native-emacsdir-p) native-emacsdir-str -> ~a~%" native-emacsdir-str)
   (if (or (null native-emacsdir)
 	  (not (string-equal (namestring native-emacsdir) native-emacsdir-str)))
       nil t))

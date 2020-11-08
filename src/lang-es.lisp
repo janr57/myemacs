@@ -188,14 +188,17 @@
   (format stream "1) Activar una configuración: ")
   (format stream "--> myemacs :use <cfg>~%")
   (format stream "   Configuraciones disponibles: ~a~%" available-cfgs)
-  (format stream "2) Borrar una configuración almacenada: ")
+  (format stream "2) Restaurar la configuración nativa: ")
+  (format stream "--> myemacs :restore-native <cfg>~%")
+  (format stream "   Disponibles: ~a~%" available-cfgs)
+  (format stream "3) Borrar una configuración almacenada: ")
   (format stream "--> 'myemacs :del <cfg>~%")
   (format stream "   Configuraciones disponibles: ~a~%" available-cfgs)
-  (format stream "3) Copiar una configuración almacenada: ")
+  (format stream "4) Copiar una configuración almacenada: ")
   (format stream "--> 'myemacs :copy <org> <dst>~%")
   (format stream "   Disponibles para <org>: ~a~%" available-cfgs)
   (format stream "   A evitar para <dst>: ~a~%" available-cfgs)
-  (format stream "4) Usar 'emacs' para crear una configuración nativa.~%~%"))
+  (format stream "5) Usar 'emacs' para crear una configuración nativa.~%~%"))
 
 ;;; Mensaje de respuesta al comando :show cuando hay una configuración nativa de 'emacs'
 ;;; y alguna configuración almacenada.

@@ -174,28 +174,30 @@
 ;;; Message in response to the ':show' command when there is no configuration,
 ;;; only alternative saved configurations.
 (defun info-action-show-only-saved-cfgs-en (available-cfgs &optional (stream t))
+  (format stream "~a~%" (strinfo-version-en nil))
+  (format stream "~a~%" (strinfo-copyright-en nil))
+  (format stream "~a~%~%" (strinfo-license-en nil))
   
-    (format stream "~a~%" (strinfo-version-en nil))
-    (format stream "~a~%" (strinfo-copyright-en nil))
-    (format stream "~a~%~%" (strinfo-license-en nil))
-    
-    ;;(format stream "- INFO: 'emacs' native configuration -> NOT FOUND~%")
-    (format stream "- INFO: Active configuration -> ------~%")
-    (format stream "- INFO: Saved configurations -> ~a~%" available-cfgs)
-    (terpri stream)
-    
-    (format stream "Posible actions:~%")
-    (format stream "1) Activate a configuration: ")
-    (format stream "--> myemacs :use <cfg>~%")
-    (format stream "   Available configurations: ~a~%" available-cfgs)
-    (format stream "2) Delete any saved configuration: ")
-    (format stream "--> 'myemacs :del <cfg>~%")
-    (format stream "   Available: ~a~%" available-cfgs)
-    (format stream "3) Copy a saved configuration: ")
-    (format stream "--> myemacs :copy <src> <dst>~%")
-    (format stream "   Available for <src>: ~a~%" available-cfgs)
-    (format stream "   Avoid for <dst>: ~a~%" available-cfgs)
-    (format stream "4) Use 'emacs' and create a native configuration.~%~%"))
+  ;;(format stream "- INFO: 'emacs' native configuration -> NOT FOUND~%")
+  (format stream "- INFO: Active configuration -> ------~%")
+  (format stream "- INFO: Saved configurations -> ~a~%" available-cfgs)
+  (terpri stream)
+  
+  (format stream "Posible actions:~%")
+  (format stream "1) Activate a configuration: ")
+  (format stream "--> myemacs :use <cfg>~%")
+  (format stream "   Available configurations: ~a~%" available-cfgs)
+  (format stream "2) Restore native configuration: ")
+  (format stream "--> myemacs :restore-native <cfg>~%")
+  (format stream "   Available: ~a~%" available-cfgs)
+  (format stream "3) Delete any saved configuration: ")
+  (format stream "--> 'myemacs :del <cfg>~%")
+  (format stream "   Available: ~a~%" available-cfgs)
+  (format stream "4) Copy a saved configuration: ")
+  (format stream "--> myemacs :copy <src> <dst>~%")
+  (format stream "   Available for <src>: ~a~%" available-cfgs)
+  (format stream "   Avoid for <dst>: ~a~%" available-cfgs)
+  (format stream "5) Use 'emacs' and create a native configuration.~%~%"))
 
 ;;; Message in response to the ':show' command when there is a native configuration
 ;;; and other alternative saved configurations.
