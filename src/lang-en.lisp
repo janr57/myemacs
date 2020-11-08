@@ -35,7 +35,7 @@
 (defparameter *no-complex-en* '(("NEVER" . nil) ("STOP" . nil) ("QUIT" . nil)
 				 ("EXIT" . nil) ("NOPE" . nil)))
 
-(defparameter *yes-no-es* (append *yes-simple-en* *no-simple-en*
+(defparameter *yes-no-en* (append *yes-simple-en* *no-simple-en*
 				  *yes-complex-en* *no-complex-en*))
 
 
