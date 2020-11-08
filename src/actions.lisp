@@ -266,7 +266,8 @@
 	   ;; Delete the .emacs.d symlink
 	   (delete-file (rem-last-dirsep native-emacsdir-str))
 	   ;; Delete the real symlink directory
-	   (uiop:delete-directory-tree cfgdir :validate t))
+	   (uiop:delete-directory-tree cfgdir :validate t)
+	   (setf changed-p t))
 	 (unless delete-dir-p
 	   (format t "Anulado comando :del~%"))))
       ;; cfg is not the active configuration
@@ -274,7 +275,8 @@
 	   (setf delete-dir-p (prompt-read-yes-no
 			       (msg (ask-delete-directory-tree cfgdir))))
 	   (when delete-dir-p
-	     (uiop:delete-directory-tree cfgdir :validate t))
+	     (uiop:delete-directory-tree cfgdir :validate t)
+	     (setf changed-p t))
 	   (unless delete-dir-p
 	     (format t "Anulado comando :del~%")))))
     

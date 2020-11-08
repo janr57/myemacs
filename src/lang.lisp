@@ -60,6 +60,13 @@
     (alexandria:symbolicate func-prefix "-" *language*)
     :myemacs)))
 
+(defun lang-aware-global-value (value-prefix)
+  (symbol-value
+   (alexandria:ensure-symbol
+    (alexandria:symbolicate "*" value-prefix "-" *language* "*")
+    :myemacs)))
+
+
 ;;; ********
 
 ;;; ********************* SERVICEABLE FUNCTIONS

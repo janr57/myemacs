@@ -19,11 +19,14 @@
 (defun ask-delete-directory-tree-es (dir)
   (format nil "¿Borrar directorio ~a? " dir))
 
-(defun list-yes-es ()
-  '("SÍ" "SI" "S"))
+;;(defun list-yes-es ()
+;;  '("SÍ" "SI" "S"))
+;;
+;;(defun list-no-es ()
+;;  '("NO" "N"))
 
-(defun list-no-es ()
-  '("NO" "N"))
+(defparameter *yes-no-assoc-es* '(("S" . t) ("SÍ" . t) ("SI" . t) ("VALE" . t) ("OK" . t)
+				  ("N" . nil) ("NO" . nil)))
 
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
