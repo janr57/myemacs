@@ -79,17 +79,33 @@
    You can test if 'myemacs' detects it by typying:
    =$ myemacs :show=
    
-   Once you have one that you want to manage with 'myemacs' then you cave to SAVE it.
+   Once you have a native configuration that you want to manage with 'myemacs' then you
+   cave to SAVE it.
    This is done by:
+   
    =$ myemacs :save-native-as <cfg>=
+
    where <cfg> is a lower case string identifier for the saved configuration.
    
-   Type again the ':show' command. Then you will se the NATIVE configuration and a
-   saved 'cfg' one. In order to use 'cfg' you must delete the native configuration:
+   Type again the ':show' command. Then you will see the NATIVE configuration and a
+   saved 'cfg' one. In order to use the saved 'cfg' one you must delete the native configuration:
+   
    =$ myemacs :del-native=
+
    and activate the saved 'cfg':
+
    =$ myemacs :use <cfg>=
+
    Now, typying 'emacs' you will use the saved configuration.
+
+   There are more things you can do, like copying a saved configuration to any other name,
+   restoring the native configuration from one of the saved ones...
+
+   One last thing: The command
+
+   =$ myemacs :show=
+
+   will give you hints of what to do with the found configuration.
    
 ** Inner workings
   The configurations are directories which contain an init file.  These configuration directories must be
@@ -99,12 +115,13 @@
   Examples: 'emacs.d-doom', 'emacs.d-personal', 'emacs.d-testing', etc.
   
   When a configuration is made 'active' the program creates a soft link from './emacs.d' to one of
-  the available configuration directories. The user is responsible for the 
+  the available configuration directories. The user is responsible for the proper working of the
+  configuration in emacs.
 
 ** Author
 + José A. Navarro (janr-devel@gmail.com)
 *** Disclaimer
-    English is not my native language, so expect to bump into wrong expressions from time to time.
+    English is not my native language, so expect to bump into wrong expressions more often than not :)
   
 ** Copyright
 Copyright (c) 2020 José A. Navarro (janr-devel@gmail.com)
