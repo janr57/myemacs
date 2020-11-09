@@ -19,12 +19,6 @@
 (defun ask-delete-directory-tree-en (dir)
   (format nil "Delete directory-tree ~a? " dir))
 
-;;(defun list-yes-en ()
-;;  (list "YES" "Y"))
-;;
-;;(defun list-no-en ()
-;;  (list "NO" "N"))
-
 (defparameter *yes-simple-en* '(("Y" . t) ("YES" . t)))
 
 (defparameter *no-simple-en* '(("N" . nil) ("NO" . nil)))
@@ -37,11 +31,6 @@
 
 (defparameter *yes-no-assoc-en* (append *yes-simple-en* *no-simple-en*
 				  *yes-complex-en* *no-complex-en*))
-
-
-;;(defparameter *yes-no-assoc-en* '(("Y" . t) ("YES" . t) ("YEAH" . t) ("OK" . t) ("YAY" . t) ("AYE" . t)
-;;				  ("N" . nil) ("NO" . nil)))
-
 
 ;;; ******************** TEXT STRINGS
 (defun strinfo-version-en (&optional (stream t))

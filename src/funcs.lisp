@@ -80,18 +80,21 @@
 
 (defun assoc-list-finder (assoc-list)
   (lambda (key)
-    (assoc key assoc-list :test #'string-equal)))
-	      
+    (let ((res (assoc key assoc-list :test #'string-equal)))
+      (cond
+	((not res)
+	 (values nil nil))
+	(t (values (car res) (cdr res)))))))
+
 (defun prompt-read-yes-no (prompt)
   (format *query-io* "~a" prompt)
   (force-output *query-io*)
-  (let* ((answer (string-upcase (read-line *query-io*)))
-	 (yes-or-no-fn (assoc-list-finder (lang-aware-global-value 'yes-no-assoc)))
-	 (found-answer (funcall yes-or-no-fn answer))
-	 (result (cdr found-answer)))
-    (cond
-      (found-answer result)
-      (t (prompt-read-yes-no prompt)))))
+  (let ((answer (string-upcase (read-line *query-io*)))
+	(yes-or-no-fn (assoc-list-finder (lang-aware-global-value 'yes-no-assoc))))
+    (multiple-value-bind (found-answer yes-or-no-result) (funcall yes-or-no-fn answer)
+      (cond
+	(found-answer yes-or-no-result)
+	(t (prompt-read-yes-no prompt))))))
 
 ;;; ******************** COMMON MYEMACS FUNCTIONS
 (defun keyw-to-cfg (cfg-symb)
