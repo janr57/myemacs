@@ -20,7 +20,7 @@
 ;;; Returns: 'T' if the argument is a string of digits; 'NIL' if it is not.
 ;;; Parameters:
 ;;; 'possible-digit-string' is a string we wish to check whether it is only made of digits or not.
-(defun string-is-integer-p (str)
+(defun string-represents-an-integer-p (str)
   (loop for char across str always (digit-char-p char)))
 
 ;;; Produce a list of strings from a version string which may contain non digit characters
@@ -42,15 +42,8 @@
 (defun string-digits-list-p (lstr)
   (cond
     ((null lstr) t)
-    ((not (string-is-integer-p (car lstr))) nil)
+    ((not (string-represents-an-integer-p (car lstr))) nil)
     (t (string-digits-list-p (cdr lstr)))))
-
-
-;;(defun string-is-version-p (str)
-;;  (if (string-digit-list-p
-;;       (strlist-from-possible-dirty-version-string str))
-;;      str
-;;      nil))
 
 ;;; Produce a clean version list from a possible dirty version string list
 ;;; by deleting terms from the first one with a non-digit character,
