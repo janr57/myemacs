@@ -56,7 +56,7 @@
 		      (approve-num-commands cleaned-standard-args)
 		    (setf *debug-flag* debug-flag)
 		    (setf *verbose-flag*  verbose-flag)
-		    ;; Print the appropriate message
+		    ;; Print the appropriate message if any error was detected until now
 		    (cond
 		      ((not supported-exec-mode)
 		       (format t "~a~%" (funcall exec-mode-error-closure)))
@@ -72,9 +72,9 @@
 		       (format t "~a~%" (funcall repeated-command-closure)))
 		      ((not commands-number-ok)
 		       (format t "~a~%" (funcall too-many-commands-closure)))
-		      ;;(t (format t "OK!~%")))
+		      ;; Ready for delivery commands to the appropriate functions
 		      (t (action-delivery-center (car cleaned-standard-args))))
-		    ;;
+		    ;; Exit if errors
 		    (if (or (not supported-exec-mode)
 			    (not supported-os-type)
 			    (not supported-lisp)
