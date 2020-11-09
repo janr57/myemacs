@@ -96,16 +96,6 @@
 	(found-answer yes-or-no-result)
 	(t (prompt-read-yes-no prompt))))))
 
-;;(defun prompt-read-yes-no (prompt)
-;;  (format *query-io* "~a" prompt)
-;;  (force-output *query-io*)
-;;  (let ((answer (string-upcase (read-line *query-io*)))
-;;	(yes-or-no-fn (assoc-list-finder (lang-aware-global-value 'yes-no-assoc))))
-;;    (multiple-value-bind (found-answer yes-or-no-result) (funcall yes-or-no-fn answer)
-;;      (cond
-;;	(found-answer yes-or-no-result)
-;;	(t (prompt-read-yes-no prompt))))))
-
 ;;; ******************** COMMON MYEMACS FUNCTIONS
 (defun keyw-to-cfg (cfg-symb)
   (string-downcase cfg-symb))
@@ -119,12 +109,6 @@
 
 (defun cfgdir-from (txt)
   (pathname (cfgdir-str-from txt)))
-
-;;(defun cfgdir-from-saved-cfgs (cfg)
-;;  (let ((index (position cfg (gethash 'saved-cfgs *data*) :test #'string-equal)))
-;;    (if index
-;;	(nth index (gethash 'saved-dirs *data*))
-;;	nil)))
 
 ;;; Gets the name of the saved configuration given a saved configuration directory.
 ;;; Parameters:
