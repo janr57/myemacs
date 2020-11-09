@@ -189,12 +189,6 @@
     (t (cons (intern (string-upcase (car strargs)))
              (args-in-terminal-form-to-repl (cdr strargs))))))
   
-;;(defun args-in-terminal-form-to-standard (strargs)
-;;  (let ((args (strargs-to-replargs strargs)))
-;;    ;;(format t "(args-in-terminal-form) strargs -> ~a~%" strargs)
-;;    ;;(format t "(args-in-terminal-form) args -> ~a~%" args)
-;;    (args-in-repl-form args)))
-
 ;;; ********************* SERVICEABLE FUNCTIONS **************************
 ;;; Search for the command in the argument list in its standard form (list of lists of keywords.)
 ;;; Returns:
