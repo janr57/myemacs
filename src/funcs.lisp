@@ -38,15 +38,10 @@
 ;;; Returns:
 ;;; A string of the list elements separated by spaces.
 (defun join-strings-from-list (lstr &optional (separation-str " "))
-  (cond
-    ((null lstr)
-     (format nil ""))
-    ((null (cdr lstr))
-     (concatenate 'string (car lstr) ""))
-    (t (concatenate 'string
-		  (car lstr)
-		  separation-str
-		  (join-strings-from-list (cdr lstr) separation-str)))))
+  (string-right-trim separation-str
+		     (with-output-to-string (s)
+		       (dolist (str lstr)
+			 (format s "~a~a" str separation-str)))))
 
 (defun rem-last-dirsep (dirstr)
   (let ((dirsep (string (uiop:directory-separator-for-host))))
