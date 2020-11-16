@@ -147,5 +147,4 @@
   (if (or (null native-emacsdir)
 	  (not (string-equal (namestring native-emacsdir) native-emacsdir-str)))
       nil t))
-    
-     
+

@@ -25,6 +25,7 @@
 
 (in-package :myemacs)
 
+
 ;; ********************* AUXILIARY FUNCTIONS
 ;;; All different forms of running the program (:repl, :standalone or :script) converge here.
 ;;; Arguments:
@@ -56,7 +57,7 @@
 		      (approve-num-commands cleaned-standard-args)
 		    (setf *debug-flag* debug-flag)
 		    (setf *verbose-flag*  verbose-flag)
-		    ;; Print the appropriate message if any error was detected until now
+		    ;; Print the appropriate message if any error was detected
 		    (cond
 		      ((not supported-exec-mode)
 		       (format t "~a~%" (funcall exec-mode-error-closure)))
@@ -84,6 +85,7 @@
 			    (not commands-number-ok))
 			nil t)))))))))))
   
+
 ;;; ********************* SERVICEABLE FUNCTIONS
 ;;; Macro which is the main entry point from the REPL
 ;;; It's purpose is to allow a syntax like e.g.:
@@ -96,6 +98,7 @@
 (defmacro myemacs (&rest repl-args)
   ;;(format t "(myemacs) repl-args -> ~a~%" repl-args)
   `(main (quote ,repl-args) :repl))
+
 
 ;;; EXECUTABLE PROGRAM
 ;;; Entry point of 'myemacs' as a standalone executable program.
@@ -110,6 +113,7 @@
   (let ((terminal-args (cdr (get-lisp-arglist))))
     (if (funcall #'main terminal-args :standalone) 0 1)))
 
+
 ;;; SCRIPT FILE (not working yet...)
 ;;; Entry point of 'myemacs' as a standalone executable program.
 ;;; Returns:
@@ -118,6 +122,7 @@
   (defun myemacs-script ()
     (let ((terminal-args (cdr (get-lisp-arglist))))
     (if (funcall #'main terminal-args :script) 0 1)))
+
 
 ;;; ********
 

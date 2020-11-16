@@ -96,5 +96,5 @@
 ;;; 'myemacsdir
 ;;; 'saved-cfgs
 ;;; 'active-cfg
-(defparameter *data* (make-hash-table))
+(defparameter *data* (make-hash-table :size 61))
 
