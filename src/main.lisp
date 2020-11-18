@@ -25,8 +25,13 @@
 
 (in-package :myemacs)
 
+;;; doc-main-main-script
+(defun main-documentation ()
+  (format t "(main-documentation) LANGUAGE -> ~a~%" *language*)
+  (setf (documentation 'myemacs-script 'function)
+	(msg (doc-main-myemacs-script))))
 
-;; ********************* AUXILIARY FUNCTIONS
+;;; ********************* AUXILIARY FUNCTIONS
 ;;; All different forms of running the program (:repl, :standalone or :script) converge here.
 ;;; Arguments:
 ;;; 'largs': Argument list coming from :standalone, :script or :repl.
@@ -57,6 +62,10 @@
 		      (approve-num-commands cleaned-standard-args)
 		    (setf *debug-flag* debug-flag)
 		    (setf *verbose-flag*  verbose-flag)
+		    
+		    (when (eql exec-mode :repl)
+		      (main-documentation))
+		    
 		    ;; Print the appropriate message if any error was detected
 		    (cond
 		      ((not supported-exec-mode)
@@ -125,4 +134,5 @@
 
 
 ;;; ********
+
 

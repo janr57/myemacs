@@ -4,7 +4,7 @@
 ;;;; The 'myemacs' program keeps track of different configurations of 'emacs'.
 ;;;; The user can change between them.
 ;;;;
-;;;; Copyright (c) 2020 - José A. Navarro Ramón <josea.navarro1@gmail.com>
+;;;; Copyright (c) 2020 - José A. Navarro Ramón <janr.devel@gmail.com>
 ;;;; License: BSD 3-Clause
 
 ;;; Declaration specifier at compile time (unmark only one of them):

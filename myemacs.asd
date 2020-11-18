@@ -19,6 +19,10 @@
 			  :depends-on ("packages"))
 			 (:file "funcs"
 			  :depends-on ("packages"))
+			 (:file "doc-en"
+			  :depends-on ("packages"))
+			 (:file "doc-es"
+			  :depends-on ("packages"))
 			 (:file "lang-en"
 			  :depends-on ("packages"))
 			 (:file "lang-es"
@@ -63,6 +67,10 @@
 			 (:file "globals"
 			  :depends-on ("packages"))
 			 (:file "funcs"
+			  :depends-on ("packages"))
+			 (:file "doc-en"
+			  :depends-on ("packages"))
+			 (:file "doc-es"
 			  :depends-on ("packages"))
 			 (:file "lang-en"
 			  :depends-on ("packages"))

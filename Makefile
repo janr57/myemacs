@@ -20,6 +20,8 @@ target2 = $(sysname)_ccl
 FILES = src/packages.lisp \
 		src/globals.lisp \
 		src/funcs.lisp \
+		src/doc-en.lisp \
+		src/doc-es.lisp \
 		src/lang-en.lisp \
 		src/lang-es.lisp \
 		src/lang.lisp \
