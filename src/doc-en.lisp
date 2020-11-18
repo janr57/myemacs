@@ -23,6 +23,5 @@
   (with-output-to-string (stream)
     (format stream "Entry point of 'myemacs' as a script executable program.~%")
     (format stream " Returns:~%")
-    (format stream "   0: No errors~%")
-    (format stream "   1: Errors~%")
+    (format stream "   0: No errors / 1: Errors~%")
     (format stream " (EXPORTED FUNCTION)")))

@@ -27,7 +27,6 @@
 
 ;;; doc-main-main-script
 (defun main-documentation ()
-  (format t "(main-documentation) LANGUAGE -> ~a~%" *language*)
   (setf (documentation 'myemacs-script 'function)
 	(msg (doc-main-myemacs-script))))
 

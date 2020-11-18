@@ -24,4 +24,4 @@
     (format stream "Punto de entrada cuando 'myemacs' se ejecuta como un script.~%")
     (format stream " Retorna:~%")
     (format stream "   0: Sin errores / 1: Con errores~%")
-    (format stream " (FUNCIÓN EXPORTADA)~%")))
+    (format stream " (FUNCIÓN EXPORTADA)")))
