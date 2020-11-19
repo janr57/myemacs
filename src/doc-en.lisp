@@ -19,9 +19,22 @@
 
 ;;             0000000001111111111222222222233333333333444444444555555555566666666667777777777
 ;;             1234567890123456789012345678901234567809123456789012345678901234567890123456789
+(defun doc-main-myemacs-standalone-en ()
+  (with-output-to-string (stream)
+    (format stream "Entry point of 'myemacs' as a standalone executable program.~%")
+    (format stream " Parameters:~%")
+    (format stream " ---------~%")
+    (format stream " This function relies in the LISP implementation to get the arguments.~%")
+    (format stream " Returns:~%")
+    (format stream "   0: No errors / 1: Errors~%")
+    (format stream " (EXPORTED FUNCTION)")))
+
 (defun doc-main-myemacs-script-en ()
   (with-output-to-string (stream)
     (format stream "Entry point of 'myemacs' as a script executable program.~%")
+    (format stream " Parameters:~%")
+    (format stream " ---------~%")
+    (format stream " This function relies in the LISP implementation to get the arguments.~%")
     (format stream " Returns:~%")
     (format stream "   0: No errors / 1: Errors~%")
     (format stream " (EXPORTED FUNCTION)")))

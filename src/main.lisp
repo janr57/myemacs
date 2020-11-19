@@ -27,7 +27,9 @@
 
 ;;; doc-main-main-script
 (defun main-documentation ()
-  (setf (documentation 'myemacs-script 'function)
+  (setf (documentation 'myemacs-standalone 'function)
+	(msg (doc-main-myemacs-standalone))
+	(documentation 'myemacs-script 'function)
 	(msg (doc-main-myemacs-script))))
 
 ;;; ********************* AUXILIARY FUNCTIONS
