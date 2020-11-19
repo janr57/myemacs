@@ -122,8 +122,8 @@
 ;;; Registers relevant values concerning the native 'emacs' and the 'myemacs' configurations.
 (defun register-cfg-unix ()
   ;;(format t "(register-cfg-unix) ENTERING~%")
-  (multiple-value-bind (native-cfg native-emacsdir native-dotemacs
-			native-emacsdir-str native-dotemacs-str)
+  (multiple-value-bind
+	(native-cfg native-emacsdir native-dotemacs native-emacsdir-str native-dotemacs-str)
       (native-cfg-unix)
     (multiple-value-bind (active-cfg) (saved-cfgs-unix)
       ;; Cleaning spurious native files/directory

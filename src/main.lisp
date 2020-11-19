@@ -25,12 +25,17 @@
 
 (in-package :myemacs)
 
-;;; doc-main-main-script
+;;; Language aware documentation for:
+;;; - main-main
+;;; - main-standalone
+;;; - main-script
 (defun main-documentation ()
-  (setf (documentation 'myemacs-standalone 'function)
-	(msg (doc-main-myemacs-standalone))
-	(documentation 'myemacs-script 'function)
-	(msg (doc-main-myemacs-script))))
+  (setf (documentation
+	 'myemacs-standalone 'function) (msg (doc-main-myemacs-standalone))
+	 (documentation
+	  'myemacs 'function) (msg (doc-main-myemacs))
+	  (documentation
+	   'myemacs-script 'function) (msg (doc-main-myemacs-script))))
 
 ;;; ********************* AUXILIARY FUNCTIONS
 ;;; All different forms of running the program (:repl, :standalone or :script) converge here.
@@ -101,9 +106,9 @@
 ;;; It's purpose is to allow a syntax like e.g.:
 ;;; (myemacs :use config) instead of (myemacs '(:use config))
 ;;; Parameters:
-;;; 'lrepl-args': argument list, which consistes of a list of symbols, which may be:
-;;;                - keywords, representing commands
-;;;                - plain symbols, representing options for the commands
+;;; 'repl-args': argument list, which consists of a list of symbols, which may be:
+;;;               - keywords, representing commands
+;;;               - plain symbols, representing options for the commands
 ;;; It passes to 'main', this argument list and the execution mode :repl
 (defmacro myemacs (&rest repl-args)
   ;;(format t "(myemacs) repl-args -> ~a~%" repl-args)
