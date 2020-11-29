@@ -34,13 +34,13 @@
 
 ;;; ******************** TEXT STRINGS
 (defun strinfo-version-en (&optional (stream t))
-  (format stream "~a v~a ~a (~a)" *progname* *version* *production* *version-date*))
+  (format stream "~a v~a ~a (~a)" +progname+ +version+ +production+ +version-date+))
 
 (defun strinfo-copyright-en (&optional (stream t))
-  (format stream "Copyright (C) ~d ~a <~a>" *year* *author* *email*))
+  (format stream "Copyright (C) ~d ~a <~a>" +year+ +author+ +email+))
 
 (defun strinfo-license-en (&optional (stream t))
-  (format stream "License ~a." *license*))
+  (format stream "License ~a." +license+))
 
 ;;; ******************** ERROR MESSAGES
 (defun err-action-use-native-cfg-en (&optional (stream t))

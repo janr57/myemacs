@@ -30,9 +30,9 @@
   ;;(format t "(native-cfg-unix) ENTERING~%")
   ;; Aqcuire values
   (let* ((homedir-str (add-last-dirsep (uiop:getenv "HOME")))
-	 (native-emacsdir-str (directory-str-unix *emacsdir-name* homedir-str))
-	 (native-dotemacs-str (file-str-unix *dotemacs-filename* homedir-str))
-	 (native-init-str (file-str-unix *init-filename* native-emacsdir-str))
+	 (native-emacsdir-str (directory-str-unix +emacs-dirname+ homedir-str))
+	 (native-dotemacs-str (file-str-unix +dotemacs-filename+ homedir-str))
+	 (native-init-str (file-str-unix +init-filename+ native-emacsdir-str))
 	 (native-emacsdir (probe-file native-emacsdir-str))
 ;;	 (native-emacsdir-p (uiop:pathname-equal native-emacsdir
 ;;						 (uiop:ensure-pathname native-emacsdir-str)))
@@ -94,7 +94,7 @@
   ;;(format t "(saved-cfgs-unix) ENTERING~%")
   ;; Acquire values
   (let* ((homedir-str (gethash 'homedir-str *data*))
-	 (myemacsdir-str (directory-str-unix *myemacsdir-name* homedir-str))
+	 (myemacsdir-str (directory-str-unix +myemacs-dirname+ homedir-str))
 	 (myemacsdir (ensure-directories-exist (pathname myemacsdir-str)))
 	 (emacsdir-symlink (gethash 'emacsdir-symlink *data*))
 	 (saved-cfgs (get-saved-cfgs myemacsdir-str))
@@ -356,7 +356,7 @@
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir-str (cfgdir-str-from cfg))
-	 (init-file-str (file-str-unix *init-filename* cfgdir-str))
+	 (init-file-str (file-str-unix +init-filename+ cfgdir-str))
 	 (changed-p nil))
     
 ;;    (format t "(action-save-native-as) cfg -> ~a~%" cfg)

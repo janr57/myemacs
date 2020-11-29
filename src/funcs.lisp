@@ -99,7 +99,7 @@
   (intern (string-upcase cfg-str) "KEYWORD"))
 
 (defun cfgdir-str-from (txt &key (lastsep t))
-  (directory-str-unix (concatenate 'string *cfgdir-name* "-" txt)
+  (directory-str-unix (concatenate 'string +cfg-dirname+ "-" txt)
 		      (gethash 'myemacsdir-str *data*) :lastsep lastsep))
 
 (defun cfgdir-from (txt)
@@ -121,10 +121,10 @@
 
 (defun get-possible-saved-dirs (myemacsdir-str)
   (directory
-   (directory-str-unix *myemacsdir-regexp* myemacsdir-str)))
+   (directory-str-unix +myemacsdir-regexp+ myemacsdir-str)))
 
 (defun get-possible-saved-init (possible-saved-dirs)
-  (mapcar #'(lambda (x) (file-str-unix *init-filename* (namestring x))) possible-saved-dirs))
+  (mapcar #'(lambda (x) (file-str-unix +init-filename+ (namestring x))) possible-saved-dirs))
 
 (defun get-saved-cfgs (myemacsdir-str)
   (mapcar #'get-emacs-cfg-name-unix

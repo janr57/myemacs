@@ -34,13 +34,13 @@
 
 ;;; ******************** CADENAS DE TEXTO
 (defun strinfo-version-es (&optional (stream t))
-  (format stream "~a v~a ~a (~a)" *progname* *version* *production* *version-date*))
+  (format stream "~a v~a ~a (~a)" +progname+ +version+ +production+ +version-date+))
 
 (defun strinfo-copyright-es (&optional (stream t))
-  (format stream "Copyright (C) ~d ~a <~a>" *year* *author* *email*))
+  (format stream "Copyright (C) ~d ~a <~a>" +year+ +author+ +email+))
 
 (defun strinfo-license-es (&optional (stream t))
-  (format stream "Licencia ~a." *license*))
+  (format stream "Licencia ~a." +license+))
 
 ;;; ******************** MENSAJES DE ERROR
 (defun err-action-use-native-cfg-es (&optional (stream t))

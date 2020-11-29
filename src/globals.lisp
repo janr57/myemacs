@@ -15,32 +15,32 @@
 
 (in-package :myemacs)
 
-;;; 
-(defparameter *progname* "myemacs")
-(defparameter *version* "0.1.1")
-(defparameter *production* "alpha-1")
-(defparameter *version-date* "06-11-2020")
+;;;
+(alexandria:define-constant +progname+ "myemacs" :test #'string=)
+(alexandria:define-constant +version+ "0.1.1" :test #'string=)
+(alexandria:define-constant +production+ "beta-1" :test #'string=)
+(alexandria:define-constant +version-date+ "29-11-2020" :test #'string=)
 
 ;;;
-(defparameter *author* "José A. Navarro Ramón")
-(defparameter *email*  "janr.devel@gmail.com")
-(defparameter *year* 2020)
-(defparameter *license* "BSD Clause-3")
+(alexandria:define-constant +author+ "José A. Navarro Ramón" :test #'string=)
+(alexandria:define-constant +email+  "janr.devel@gmail.com" :test #'string=)
+(alexandria:define-constant +year+ 2020)
+(alexandria:define-constant +license+ "BSD Clause-3" :test #'string=)
 
 ;;;
 ;;; Emacs directory
-(defparameter *emacsdir-name* ".emacs.d")
+(alexandria:define-constant +emacs-dirname+ ".emacs.d" :test #'string=)
 ;;; Default init emacs file
-(defparameter *dotemacs-filename* ".emacs")
+(alexandria:define-constant +dotemacs-filename+ ".emacs" :test #'string=)
 ;;; Init emacs file inside directory
-(defparameter *init-filename* "init.el")
+(alexandria:define-constant +init-filename+ "init.el" :test #'string=)
 ;;; Myemacs basic directory
-(defparameter *myemacsdir-name* ".myemacs.d")
-(defparameter *cfgdir-name* (string-left-trim "." *emacsdir-name*))
-;;; Regular expression to find saved configurations
-(defparameter *myemacsdir-regexp* (concatenate 'string *cfgdir-name* "-*"))
+(alexandria:define-constant +myemacs-dirname+ ".myemacs.d" :test #'string=)
 
-;;(defparameter *myemacs-base-dir-str* nil)
+(alexandria:define-constant +cfg-dirname+ (string-left-trim "." +emacs-dirname+) :test #'string=)
+;;; Regular expression to find saved configurations
+(alexandria:define-constant +myemacsdir-regexp+ (concatenate 'string +cfg-dirname+ "-*") :test #'string=)
+
 
 ;;; Language global variables
 (defparameter *default-language* :en)
