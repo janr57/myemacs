@@ -54,7 +54,7 @@
 (defun version-list-from-string-list (lstr)
   (cond
     ((null lstr) nil)
-    ((not (string-is-integer-p (car lstr))) nil)
+    ((not (string-represents-an-integer-p (car lstr))) nil)
     (t (cons (parse-integer (car lstr)) (version-list-from-string-list (cdr lstr))))))
 
 ;;; Gets a version string from the version string provided by uiop:version-string, e.g. "2.0.9"

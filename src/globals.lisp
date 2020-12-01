@@ -17,8 +17,8 @@
 
 ;;;
 (alexandria:define-constant +progname+ "myemacs" :test #'string=)
-(alexandria:define-constant +version+ "0.1.1" :test #'string=)
-(alexandria:define-constant +production+ "beta-1" :test #'string=)
+(alexandria:define-constant +version+ "0.1.2" :test #'string=)
+(alexandria:define-constant +status+ "beta-1" :test #'string=)
 (alexandria:define-constant +version-date+ "29-11-2020" :test #'string=)
 
 ;;;

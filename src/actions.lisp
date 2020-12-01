@@ -43,8 +43,8 @@
 ;;	 (native-init (uiop:pathname-equal (probe-file native-init-str)
 ;;					   (uiop:ensure-pathname native-init-str)))
 	 (native-init (get-native-init native-init-str))
-	 (emacsdir-symlink nil)
-	 (native-cfg nil))
+	 emacsdir-symlink
+	 native-cfg)
   
     ;; Detect whether '.emacs.d' is a symlink or not and register vars accordingly:
     (when (not native-emacsdir-p)
@@ -194,7 +194,7 @@
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir (cfgdir-from cfg))
-	 (changed-p nil))
+	 changed-p)
 
 ;;    (format t "(action-use-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
 ;;    (format t "(action-use-unix) native-cfg -> ~a~%" native-cfg)
@@ -242,8 +242,8 @@
 	 (active-cfg (gethash 'active-cfg *data*))
 	 (saved-cfgs (gethash 'saved-cfgs *data*))
 	 (cfgdir (cfgdir-from cfg))
-	 (delete-dir-p nil)
-	 (changed-p nil))
+	 delete-dir-p
+	 changed-p)
 
 ;;    (format t "(action-del-unix) native-emacsdir-str -> ~a~%" native-emacsdir-str)
 ;;    (format t "(action-del-unix) active-cfg -> ~a~%" active-cfg)
@@ -357,7 +357,7 @@
 	 (cfg-in-saved-cfgs (find cfg saved-cfgs :test #'string-equal))
 	 (cfgdir-str (cfgdir-str-from cfg))
 	 (init-file-str (file-str-unix +init-filename+ cfgdir-str))
-	 (changed-p nil))
+	 changed-p)
     
 ;;    (format t "(action-save-native-as) cfg -> ~a~%" cfg)
 ;;    (format t "(action-save-native-as) native-cfg -> ~a~%" native-cfg)
@@ -393,7 +393,7 @@
   (let* ((native-cfg (gethash 'native-cfg *data*))
 	 (native-emacsdir-str (gethash 'native-emacsdir-str *data*))
 	 (active-cfg (gethash 'active-cfg *data*))
-	 (changed-p nil))
+	 changed-p)
     
 ;;    (format t "(action-restore-native-unix) cfg -> ~a~%" cfg)
 ;;    (format t "(action-restore-native-unix) native-cfg -> ~a~%" native-cfg)
