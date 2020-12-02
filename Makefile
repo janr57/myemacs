@@ -32,7 +32,7 @@ FILES = src/packages.lisp \
 		src/actions.lisp \
 		src/main.lisp
 
-all: $(target1) $(target2)
+all: $(target1) $(target2) $(target3)
 
 $(target1): $(FILES)
 	$(RM) $(sysname)
@@ -53,7 +53,8 @@ $(target2): $(FILES)
 .PHONY: clean
 
 clean:
-	$(RM) $(target1) $(target2) $(sysname) *~ src/*.fasl src/*~ *slime-repl* *.exe
+	$(RM) $(target1) $(target2) $(sysname)
+	$(RM) *~ src/*.fasl src/*~ *slime-repl* *.exe
 
 
 
