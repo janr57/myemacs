@@ -13,3 +13,4 @@ myemacs_ccl
 *.exe
 src/#*#
 src/*~
+src/*.o

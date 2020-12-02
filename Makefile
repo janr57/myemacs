@@ -54,7 +54,7 @@ $(target2): $(FILES)
 
 clean:
 	$(RM) $(target1) $(target2) $(sysname)
-	$(RM) *~ src/*.fasl src/*~ *slime-repl* *.exe
+	$(RM) *~ src/*.fasl src/*~ *slime-repl* *.exe src/*.o
 
 
 
