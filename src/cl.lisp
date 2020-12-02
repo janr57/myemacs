@@ -85,10 +85,12 @@
 ;;;        - LISPWORKS -> 'system:*line-arguments-list*'
 ;;;        - CMU -> 'extensions:command-line-words*'
 ;;;        - GCL -> ¡si::*command-args*'
+;;;        - ECL -> ext:command-args
 (defun get-lisp-arglist ()
   (or
    #+SBCL sb-ext:*posix-argv*
    #+CCL ccl:*command-line-argument-list*
+   #+ECL ext:command-args
    nil))
 
 ;;; Gets COMMON LISP used.
@@ -99,13 +101,22 @@
   (values (uiop:implementation-type)
 	  (extract-version-from-string (uiop:lisp-version-string))))
 
+(defun lisp-name-ok-p (lisp-name)
+  (let ((exec-mode (gethash 'exec-mode *data*)))
+    (case exec-mode
+      (:repl (member lisp-name *supported-lisps-repl* :key #'car))
+      (:standalone (member lisp-name *supported-lisps-standalone* :key #'car))
+       (:script (member lisp-name *supported-lisps-script* :key #'car)))))
+
 ;;; Returns the two values of the LISP program only if approved. Two 'NIL's if not.
 ;;; Arguments:
 ;;; 'name': Name of the LISP in keyword form, e.g.: :SBCL, :CCL, :ECL, ...
 ;;; 'version': The version as a string.
 (defun approve-lisp (lisp-name lisp-version)
-  (let* ((lisp-name-ok (member lisp-name *supported-lisps*))
+  (let* ((lisp-name-ok (lisp-name-ok-p lisp-name))
 	 (lisp-version-ok (uiop:version<= (car (cdr (car lisp-name-ok))) lisp-version)))
+    (when (not lisp-name-ok)
+      (setf lisp-version-ok nil))
     (values lisp-name-ok lisp-version-ok)))
 
 ;;; Register COMMON LISP characteristics:

@@ -57,7 +57,9 @@
 (defparameter *supported-exec-modes* '(:repl :standalone :script))
 (defparameter *supported-os-types* '(:unix))
 ;list of pairs (lisp-name minimum-version)
-(defparameter *supported-lisps* '((:sbcl nil) (:ccl nil)))
+(defparameter *supported-lisps-repl* '((:sbcl nil) (:ccl nil) (:ecl nil)))
+(defparameter *supported-lisps-standalone* '((:sbcl nil) (:ccl nil)))
+(defparameter *supported-lisps-script* '((:sbcl nil) (:ccl nil)))
 (defparameter *supported-languages* `(,*default-language* :es))
 (defparameter *valid-commands*
   `((:help = 0 nil) (:version = 0 nil) (:show = 0 nil)

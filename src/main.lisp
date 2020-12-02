@@ -71,7 +71,7 @@
 		    
 		    (when (eql exec-mode :repl)
 		      (main-documentation))
-		    
+
 		    ;; Print the appropriate message if any error was detected
 		    (cond
 		      ((not supported-exec-mode)
