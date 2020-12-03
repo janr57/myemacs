@@ -133,7 +133,7 @@
     (format stream "~a~%~%" (strinfo-license-en nil))
  
     ;;(format stream "- INFO: 'emacs' native configuration -> NOT FOUND~%")
-    (format stream "- INFO: Active configuration -><~a>~%" active-cfg)
+    (format stream "- INFO: Active configuration -> <~a>~%" active-cfg)
     (format stream "- INFO: Saved configurations -> ~a~%" available-cfgs)
     (terpri stream)
     
@@ -161,7 +161,7 @@
     (format stream "~a~%~%" (strinfo-license-en nil))
  
     ;;(format stream "- INFO: 'emacs' native configuration -> NOT FOUND~%")
-    (format stream "- INFO: Active configuration -><~a>~%" active-cfg)
+    (format stream "- INFO: Active configuration -> <~a>~%" active-cfg)
     (format stream "- INFO: Saved configurations -> ~a~%" available-cfgs)
     (terpri stream)
     
