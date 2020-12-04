@@ -10,7 +10,9 @@
 #*
 myemacs_sbcl
 myemacs_ccl
+myemacs_ecl
 *.exe
 src/#*#
 src/*~
 src/*.o
+saco/

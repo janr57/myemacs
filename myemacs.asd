@@ -57,7 +57,7 @@
   :perform (test-op (op c) (symbol-call :rove :run c)))
 
 (defsystem :myemacs/executable
-  :build-operation program-op
+  :build-operation "program-op"
   :build-pathname "myemacs"
   :entry-point "myemacs:myemacs-standalone"
   :depends-on ("alexandria" "osicat" "copy-directory")

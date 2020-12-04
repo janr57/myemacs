@@ -32,7 +32,7 @@ FILES = src/packages.lisp \
 		src/actions.lisp \
 		src/main.lisp
 
-all: $(target1) $(target2) $(target3)
+all: $(target1) $(target2)
 
 $(target1): $(FILES)
 	$(RM) $(sysname)
