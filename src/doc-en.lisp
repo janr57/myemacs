@@ -19,6 +19,17 @@
 
 ;;                 0000000001111111111222222222233333333333444444444555555555566666666667777777777
 ;;                 1234567890123456789012345678901234567809123456789012345678901234567890123456789
+(defun doc-main-main-documentation-en ()
+  (with-output-to-string (stream)
+    (format stream "Language aware documentation creation.~%")
+    (format stream "Included functions:~%")
+    (format stream " - main-documentation~%")
+    (format stream " - main~%")
+    (format stream " - myemacs~%")
+    (format stream " - myemacs-standalone~%")
+    (format stream " - myemacs-script~%")
+    (format stream "Functions 'doc-main-...' are defined in 'doc-[lang].lisp'")))
+
 (defun doc-main-myemacs-en ()
   (with-output-to-string (stream)
     (format stream "Entry point of 'myemacs' in the REPL.~%")

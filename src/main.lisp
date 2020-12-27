@@ -26,16 +26,26 @@
 (in-package :myemacs)
 
 ;;; Language aware documentation for:
-;;; - main-main
-;;; - main-standalone
-;;; - main-script
+;;; - main
+;;; - myemacs
+;;; - myemacs-standalone
+;;; - myemacs-script
+;;; doc-main-... are instantiated in doc-[lang].lisp
 (defun main-documentation ()
+  "Language aware documentation for functions in 'main.lisp' file, for functions:
+   - main
+   - myemacs
+   - myemacs-standalone
+   - myemacs-script
+ Functions doc-main-... are defined in doc-[lang].lisp"
   (setf (documentation
-	 'myemacs-standalone 'function) (msg (doc-main-myemacs-standalone))
+	 'main-documentation 'function) (msg (doc-main-main-documentation))
 	 (documentation
-	  'myemacs 'function) (msg (doc-main-myemacs))
+	  'myemacs-standalone 'function) (msg (doc-main-myemacs-standalone))
 	  (documentation
-	   'myemacs-script 'function) (msg (doc-main-myemacs-script))))
+	   'myemacs 'function) (msg (doc-main-myemacs))
+	   (documentation
+	    'myemacs-script 'function) (msg (doc-main-myemacs-script))))
 
 ;;; ********************* AUXILIARY FUNCTIONS
 ;;; All different forms of running the program (:repl, :standalone or :script) converge here.
